@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Promise;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,6 +47,7 @@ class PromisesController extends Controller
     public function update($id)
     {
         $requestInput = [];
+        $promise = Auth::user()->promises()->findOrFail($id);
 
         if (request('title')) {
             $requestInput['title'] = request('title');
@@ -57,13 +60,22 @@ class PromisesController extends Controller
         }
         if (request('check_list_finished')) {
             $requestInput['check_list_finished'] = request('check_list_finished');
+            if (request('check_list_finished') === $promise->check_list_quantity) {
+                $requestInput['finished_at'] = Carbon::now();
+            }
         }
 
-        $promise = Auth::user()
-            ->promises()
-            ->findOrFail($id)
-            ->update($requestInput);
+        $promise->update($requestInput);
 
         return response()->json($promise, 200);
+    }
+
+    public function destroy($id)
+    {
+        $promise = Auth::user()->promises()->findOrFail($id);
+
+        $promise->delete();
+
+        return response()->json([], 200);
     }
 }

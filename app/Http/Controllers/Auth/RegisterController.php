@@ -61,10 +61,11 @@ class RegisterController extends Controller
      */
     protected function store()
     {
-        $user=  User::create([
+        $user = User::create([
             'name' => request('name'),
             'email' => request('email'),
             'password' => bcrypt(request('password')),
+            'api_token' => str_random(60)
         ]);
 
         auth()->login($user);

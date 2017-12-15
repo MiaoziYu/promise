@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Promise;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -31,7 +32,7 @@ class PromisesTest extends TestCase
 
         // Act
 
-        $response = $this->actingAs($user)->get('/api/promises/' . $promise->id);
+        $response = $this->get('/api/promises/' . $promise->id . '?api_token=' . $user->api_token);
 
         // Assert
         $response->assertSee('KFC hot wings');
@@ -66,7 +67,7 @@ class PromisesTest extends TestCase
 
         // Act
 
-        $response = $this->actingAs($user)->get('/api/promises/');
+        $response = $this->get('/api/promises/?api_token=' . $user->api_token);
 
         // Assert
         $response->assertSee('KFC hot wings');
@@ -86,14 +87,14 @@ class PromisesTest extends TestCase
         $user = factory(User::class)->create();
 
         // Act
-        $postResponse = $this->actingAs($user)->post('/api/promises', [
+        $postResponse = $this->post('/api/promises?api_token=' . $user->api_token, [
             'title' => 'KFC hot wings',
             'description' => '18 kfc hot wings',
             'check_list_quantity' => 18,
         ]);
         $postResponse->assertStatus(201);
 
-        $getResponse = $this->actingAs($user)->get('/api/promises/');
+        $getResponse = $this->get('/api/promises/?api_token=' . $user->api_token);
 
         // Assertion
         $getResponse->assertSee('KFC hot wings');
@@ -117,15 +118,43 @@ class PromisesTest extends TestCase
         ]);
 
         // Act
-        $putResponse = $this->actingAs($user)->put('/api/promises/' . $promise->id, [
-            'title' => 'KFC sweet wings',
-            'check_list_finished' => 18,
+        $putResponse = $this->put('/api/promises/' . $promise->id . '?api_token=' . $user->api_token, [
+            'title' => 'KFC sweet wings'
         ]);
         $putResponse->assertStatus(200);
 
-        $getResponse = $this->actingAs($user)->get('/api/promises/' . $promise->id);
+        $getResponse = $this->get('/api/promises/' . $promise->id . '?api_token=' . $user->api_token);
 
         // Assertion
         $getResponse->assertSee('KFC sweet wings');
+    }
+
+    /** @test */
+    public function user_can_delete_promise()
+    {
+        $this->disableExceptionHandling();
+
+        // Arrange
+        $user = factory(User::class)->create();
+        $promise = factory(Promise::class)->create([
+            'user_id' => $user->id,
+            'title' => 'KFC hot wings',
+            'description' => '18 kfc hot wings',
+            'check_list_quantity' => 18,
+            'check_list_finished' => 14,
+            'finished_at' => null,
+        ]);
+
+        // Act
+        $deleteResponse = $this->delete('/api/promises/' . $promise->id . '?api_token=' . $user->api_token);
+        $deleteResponse->assertStatus(200);
+
+        try {
+            $this->get('/api/promises/' . $promise->id . '?api_token=' . $user->api_token);
+        } catch (ModelNotFoundException $exception) {
+            return;
+        }
+
+        $this->fail();
     }
 }

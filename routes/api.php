@@ -12,14 +12,14 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::group(['middleware' => ['auth']], function () {
+Route::group(
+    [
+        'middleware' => ['auth:api'],
+        'namespace' => 'Api'
+    ], function () {
     Route::get('/promises/{id}', 'PromisesController@show');
     Route::get('/promises/', 'PromisesController@index');
     Route::put('/promises/{id}', 'PromisesController@update');
     Route::post('/promises/', 'PromisesController@store');
+    Route::delete('/promises/{id}', 'PromisesController@destroy');
 });
