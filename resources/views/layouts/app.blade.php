@@ -14,12 +14,18 @@
             const API_TOKEN = "{{ $user->api_token }}";
         @endif
     </script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/app.css">
+
+    <!-- Scripts -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>
 </head>
 <body>
 
 {{--@include('partials.nav')--}}
 
-<main id="app">
+<main id="app" class="container">
     @yield('content')
 </main>
 

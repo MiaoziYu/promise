@@ -1,9 +1,21 @@
-
-// Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-
 // Variables
-@import "variables";
+@import "variables/breakpoints";
+@import "variables/colors";
+@import "variables/general";
 
-// Bootstrap
-@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+// Base
+@import "base/normalize";
+@import "base/reset";
+@import "base/typography";
+
+// Helpers
+@import "helpers/mixins";
+@import "helpers/helpers";
+
+// Partials
+
+// Pages
+@import "pages/general";
+@import "pages/dashboard";
+
+// Node modules

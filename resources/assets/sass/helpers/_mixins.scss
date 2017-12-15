@@ -1,0 +1,83 @@
+// MIXINS
+// ------
+// General mixins for projects
+// ======
+
+
+@mixin button($color, $padding, $font-size) {
+  display: inline-block;
+  border: none;
+  border-radius: $border-radius-base;
+  padding: $padding;
+  background-color: $color;
+  transition: background-color .5s;
+  cursor: pointer;
+  font-family: $font-family-text;
+  text-align: center;
+
+    &, a {
+      color: $white;
+      font-size: $font-size;
+      text-decoration: none;
+    }
+
+  &:hover {
+    background-color: darken($color, 10%);
+    color: $white;
+
+    &,
+    a {
+      text-decoration: none;
+    }
+  }
+}
+
+@mixin placeholder ($color) {
+  &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: $color;
+  }
+  &::-moz-placeholder { /* Firefox 19+ */
+    color: $color;
+  }
+  &:-ms-input-placeholder { /* IE 10+ */
+    color: $color;
+  }
+  &:-moz-placeholder { /* Firefox 18- */
+    color: $color;
+  }
+}
+
+@mixin float-none () {
+  float: none;
+  width: 100%;
+}
+
+@mixin padding-bottom-hack ($ratio) {
+  display: block;
+  position: relative;
+  height: 0;
+  padding-bottom: $ratio;
+  overflow: hidden;
+
+  > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+@mixin disable-margin-collapsing {
+  &:before, &:after {
+    content: ' ';
+    display: table;
+  }
+}
+
+@mixin img-cover ($height) {
+  display: block;
+  height: $height;
+  width: 100%;
+  object-fit: cover;
+}

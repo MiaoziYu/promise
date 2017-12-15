@@ -1,32 +1,38 @@
 <template>
-    <div>
-        <div>
+    <div class="dashboard">
+        <div class="promise-form">
             <input v-model="promiseFormData.title">
-            <textarea v-model="promiseFormData.description" cols="30" rows="10"></textarea>
+            <textarea v-model="promiseFormData.description"></textarea>
             <input v-model="promiseFormData.check_list_quantity" type="number">
             <button @click="createPromise()">add now promise</button>
         </div>
-        <ul>
-            <li v-for="promise in promises" v-if="promise.finished_at == null">
+        <ul class="promise-ongoing o-list-4">
+            <li v-for="promise in promises" v-if="promise.finished_at == null" class="card promise-item o-list-item">
                 <input v-model="promise.title"
                        @blur="updateText(promise.id)"
+                       class="title"
                        name="title">
                 <textarea v-model="promise.description"
                           @blur="updateText(promise.id)"
-                          name="description" cols="30" rows="10"></textarea>
-                <p>{{ promise.created_at }}</p>
-                <input v-for="n in promise.check_list_finished"
-                       @click="updateCheckbox(promise)"
-                       type="checkbox" checked>
-                <input v-for="n in (promise.check_list_quantity - promise.check_list_finished)"
-                       @click="updateCheckbox(promise)"
-                       type="checkbox">
-                <button @click="deletePromise(promise.id)">delete promise</button>
+                          class="description"
+                          name="description"></textarea>
+                <!--<p class="date">{{ promise.created_at }}</p>-->
+                <div class="checkbox-wrapper">
+                    <input v-for="n in promise.check_list_finished"
+                           @click="updateCheckbox(promise)"
+                           class="checkbox"
+                           type="checkbox" checked>
+                    <input v-for="n in (promise.check_list_quantity - promise.check_list_finished)"
+                           @click="updateCheckbox(promise)"
+                           class="checkbox"
+                           type="checkbox">
+                </div>
+                <button @click="deletePromise(promise.id)" class="delete-btn">delete promise</button>
             </li>
         </ul>
 
-        <ul>
-            <li v-for="promise in promises" v-if="promise.finished_at">
+        <ul class="promise-finished o-list-4">
+            <li v-for="promise in promises" v-if="promise.finished_at"  class="card promise-item o-list-item">
                 <p>{{ promise.title }}</p>
                 <p>{{ promise.description }}</p>
                 <p>finished at {{ promise.finished_at }}</p>
