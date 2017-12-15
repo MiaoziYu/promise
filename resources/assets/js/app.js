@@ -14,9 +14,11 @@ window.Vue = require('vue');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+import store from './store'
 
-Vue.component('example', require('./components/Example.vue'));
+Vue.component('dashboard-component', require('./components/dashboard.vue'));
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    store
 });

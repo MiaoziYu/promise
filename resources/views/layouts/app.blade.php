@@ -7,6 +7,13 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- API Token -->
+    <script>
+        @if (!empty($user->api_token))
+            const API_TOKEN = "{{ $user->api_token }}";
+        @endif
+    </script>
 </head>
 <body>
 
