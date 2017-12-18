@@ -79,6 +79,76 @@ class PromisesTest extends TestCase
     }
 
     /** @test */
+    public function user_can_view_unfinished_promises()
+    {
+        $this->disableExceptionHandling();
+
+        // Arrange
+        $user = factory(User::class)->create();
+
+        factory(Promise::class)->create([
+            'user_id' => $user->id,
+            'title' => 'KFC hot wings',
+            'description' => '18 kfc hot wings',
+            'check_list_quantity' => 18,
+            'check_list_finished' => 14,
+            'finished_at' => null,
+        ]);
+
+        factory(Promise::class)->create([
+            'user_id' => $user->id,
+            'title' => 'Ice cream',
+            'description' => 'I want ice cream',
+            'check_list_quantity' => 5,
+            'check_list_finished' => 1,
+            'finished_at' => Carbon::parse('December 13, 2016 8:00pm'),
+        ]);
+
+        // Act
+
+        $response = $this->get('/api/promises/?finished=false&api_token=' . $user->api_token);
+
+        // Assert
+        $response->assertSee('KFC hot wings');
+        $response->assertDontSee('Ice cream');
+    }
+
+    /** @test */
+    public function user_can_view_finished_promises()
+    {
+        $this->disableExceptionHandling();
+
+        // Arrange
+        $user = factory(User::class)->create();
+
+        factory(Promise::class)->create([
+            'user_id' => $user->id,
+            'title' => 'KFC hot wings',
+            'description' => '18 kfc hot wings',
+            'check_list_quantity' => 18,
+            'check_list_finished' => 14,
+            'finished_at' => null,
+        ]);
+
+        factory(Promise::class)->create([
+            'user_id' => $user->id,
+            'title' => 'Ice cream',
+            'description' => 'I want ice cream',
+            'check_list_quantity' => 5,
+            'check_list_finished' => 1,
+            'finished_at' => Carbon::parse('December 13, 2016 8:00pm'),
+        ]);
+
+        // Act
+
+        $response = $this->get('/api/promises/?finished=true&api_token=' . $user->api_token);
+
+        // Assert
+        $response->assertDontSee('KFC hot wings');
+        $response->assertSee('Ice cream');
+    }
+
+    /** @test */
     public function user_can_create_promise()
     {
         $this->disableExceptionHandling();

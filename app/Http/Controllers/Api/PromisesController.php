@@ -12,7 +12,13 @@ class PromisesController extends Controller
 {
     public function index()
     {
-        $promises = Auth::user()->promises()->get();
+        if (request('finished') === 'true') {
+            $promises = Auth::user()->promises()->finished()->get();
+        } elseif (request('finished') === 'false') {
+            $promises = Auth::user()->promises()->unfinished()->get();
+        } else {
+            $promises = Auth::user()->promises()->get();
+        }
 
         return response()->json($promises, 200);
     }
@@ -49,16 +55,16 @@ class PromisesController extends Controller
         $requestInput = [];
         $promise = Auth::user()->promises()->findOrFail($id);
 
-        if (request('title')) {
+        if (request('title') !== null) {
             $requestInput['title'] = request('title');
         }
-        if (request('description')) {
+        if (request('description') !== null) {
             $requestInput['description'] = request('description');
         }
-        if (request('check_list_quantity')) {
+        if (request('check_list_quantity') !== null) {
             $requestInput['check_list_quantity'] = request('check_list_quantity');
         }
-        if (request('check_list_finished')) {
+        if (request('check_list_finished') !== null) {
             $requestInput['check_list_finished'] = request('check_list_finished');
             if (request('check_list_finished') === $promise->check_list_quantity) {
                 $requestInput['finished_at'] = Carbon::now();

@@ -15,13 +15,13 @@ class Promise extends Model
         'finished_at'
     ];
 
-    public function getFormattedDateAttribute()
+    public function scopeUnfinished($query)
     {
-        return $this->finished_at->format('F j, Y');
+        return $query->where('finished_at', null);
     }
 
-    public function getFormattedTimeAttribute()
+    public function scopeFinished($query)
     {
-        return $this->finished_at->format('g:ia');
+        return $query->where('finished_at', '!=', null);
     }
 }
