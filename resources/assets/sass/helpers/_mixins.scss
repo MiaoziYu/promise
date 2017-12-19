@@ -4,22 +4,17 @@
 // ======
 
 
-@mixin button($color, $padding, $font-size) {
+@mixin button($color) {
   display: inline-block;
   border: none;
   border-radius: $border-radius-base;
-  padding: $padding;
+  padding: 6px 10px;
   background-color: $color;
-  transition: background-color .5s;
+  transition: background-color .3s;
   cursor: pointer;
   font-family: $font-family-text;
   text-align: center;
-
-    &, a {
-      color: $white;
-      font-size: $font-size;
-      text-decoration: none;
-    }
+  color: $white;
 
   &:hover {
     background-color: darken($color, 10%);
@@ -29,6 +24,10 @@
     a {
       text-decoration: none;
     }
+  }
+
+  &:focus {
+    outline: none;
   }
 }
 
@@ -44,27 +43,6 @@
   }
   &:-moz-placeholder { /* Firefox 18- */
     color: $color;
-  }
-}
-
-@mixin float-none () {
-  float: none;
-  width: 100%;
-}
-
-@mixin padding-bottom-hack ($ratio) {
-  display: block;
-  position: relative;
-  height: 0;
-  padding-bottom: $ratio;
-  overflow: hidden;
-
-  > img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
   }
 }
 

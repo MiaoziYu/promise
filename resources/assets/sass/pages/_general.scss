@@ -2,3 +2,51 @@
   max-width: 1200px;
   margin: auto;
 }
+
+.form {
+
+  .form-group {
+    margin: $space-small 0;
+
+    label,
+    input,
+    textarea {
+      display: block;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    input,
+    textarea {
+      border: 1px solid $border-color;
+      padding: 6px $space-xsmall;
+    }
+
+    textarea {
+      height: 100px;
+    }
+
+    label {
+      margin-bottom: $space-xsmall;
+      font-size: 14px;
+    }
+  }
+
+  .form-label {
+    .label-item {
+      @include button(darken($dark-gray, 10%));
+      margin-right: 4px;
+
+      &.active {
+        background-color: $green;
+      }
+    }
+  }
+
+  .form-submit {
+    @include button($green);
+    display: block;
+    margin-top: $space-small * 2;
+    font-size: 18px;
+  }
+}

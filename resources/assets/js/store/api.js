@@ -41,8 +41,12 @@ function remove(path, param) {
 }
 
 export default {
-    getPromises() {
-        return get('promises');
+    getPromises(param) {
+        return get(`promises`, `finished=${param}`);
+    },
+
+    getPromise(id) {
+        return get(`promises/${id}`);
     },
 
     updatePromise(id, data) {

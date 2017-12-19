@@ -19,7 +19,8 @@
     <link rel="stylesheet" href="/css/app.css">
 
     <!-- Scripts -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>
+    {{--<script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>--}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 

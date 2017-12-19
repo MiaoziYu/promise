@@ -2,44 +2,171 @@
   margin-top: 40px;
 
   .promise-form {
-    display: none;
+    .form-reward {
+
+      .label-item {
+        width: 60px;
+
+        i {
+          display: block;
+          margin-bottom: 4px;
+          font-size: 20px;
+        }
+      }
+    }
   }
 
-  .promise-item {
-    padding: $space-xsmall;
+  .promise-btns {
+    margin: $space-small 0 $space-small * 2 0;
+
+    .btn {
+      @include button($dark-gray);
+      margin-right: 10px;
+      font-size: 20px;
+
+      &.active {
+        @include button($green);
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      i {
+        margin-right: 3px;
+      }
+    }
+
+    .create-promise {
+      i {
+        margin: 0;
+      }
+    }
   }
 
-  .promise-ongoing {
+  .promise-list {
     .promise-item {
+      position: relative;
+      height: 100%;
+      padding: $space-xsmall;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken(white, 5%);
+        transition: all .3s;
+      }
+
       .title,
-      .description,
-      .checkbox-wrapper {
+      .description {
         margin-bottom: $space-xsmall;
       }
 
       .title {
-        border: none;
         font-size: 20px;
-        font-weight: 600;
+        font-weight: 500;
       }
 
       .description {
-        width: 100%;
-        border: none;
-        resize: none;
+        min-height: 40px;
       }
 
+      .progress-bar {
+        position: relative;
+        height: 10px;
+        background-color: $gray;
+        border-radius: 2px;
+
+        .progress-bar-current {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          background-color: $green;
+          border-radius: 2px;
+        }
+      }
+
+      .stamp-completed {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        opacity: .3;
+        color: $green;
+        font-size: 70px;
+        text-align: center;
+      }
+    }
+  }
+
+  .promise {
+    font-size: 16px;
+
+    .title {
+      border: none;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .description {
+      min-height: 40px;
+      width: 100%;
+      margin-top: $space-xsmall;
+      border: none;
+      resize: none;
+    }
+
+    .checkbox-wrapper {
+      margin-bottom: $space-small;
+
       .checkbox {
+        width: 36px;
         appearance: none;
+        cursor: pointer;
+
+        &:focus {
+          outline: none;
+        }
 
         &:before {
           display: inline-block;
-          margin: 4px;
           font-family: FontAwesome;
-          font-size: 24px;
-          content: "\f058"
+          font-size: 30px;
+          content: "\f096";
+          font-weight: 200;
+          color: darken($dark-gray, 10%);
+        }
+
+        &:checked:before {
+          font-family: FontAwesome;
+          content: "\f046";
+          color: $green;
+        }
+
+        &.last {
+          margin-right: -4px;
         }
       }
+
+      .checkbox-static {
+        width: 36px;
+        cursor: pointer;
+        color: $green;
+        font-size: 30px;
+      }
+    }
+
+    .date,
+    .delete-btn {
+      font-size: 14px;
+      color: lighten($black, 30%);
+    }
+
+    .delete-btn {
+      margin-top: $space-xsmall;
+      cursor: pointer;
+      text-decoration: underline;
     }
   }
 }
