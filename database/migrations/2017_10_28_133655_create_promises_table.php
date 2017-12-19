@@ -18,7 +18,7 @@ class CreatePromisesTable extends Migration
             $table->timestamps();
             $table->integer('user_id');
             $table->string('title');
-            $table->string('description');
+            $table->text('description')->nullable();
             $table->integer('check_list_quantity');
             $table->integer('check_list_finished');
             $table->dateTime('finished_at')->nullable();
