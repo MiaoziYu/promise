@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePromisesTable extends Migration
+class CreateChecklistsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreatePromisesTable extends Migration
      */
     public function up()
     {
-        Schema::create('promises', function (Blueprint $table) {
+        Schema::create('checklists', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('promise_id');
+            $table->string('text')->nullable();
+            $table->boolean('status')->nullable();
             $table->timestamps();
-            $table->integer('user_id');
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->dateTime('finished_at')->nullable();
         });
     }
 
@@ -30,6 +29,6 @@ class CreatePromisesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('promises');
+        Schema::dropIfExists('checklists');
     }
 }

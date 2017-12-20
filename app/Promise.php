@@ -15,6 +15,11 @@ class Promise extends Model
         'finished_at'
     ];
 
+    public function checklists()
+    {
+        return $this->hasMany('App\Checklist');
+    }
+
     public function scopeUnfinished($query)
     {
         return $query->where('finished_at', null);
@@ -23,5 +28,13 @@ class Promise extends Model
     public function scopeFinished($query)
     {
         return $query->where('finished_at', '!=', null);
+    }
+
+    public function createChecklist($text)
+    {
+        return $this->checklists()->create([
+            'text' => $text,
+            'status' => false
+        ]);
     }
 }

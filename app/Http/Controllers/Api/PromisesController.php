@@ -3,21 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Promise;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 
 class PromisesController extends Controller
 {
     public function index()
     {
         if (request('finished') === 'true') {
-            $promises = Auth::user()->promises()->finished()->get();
+            $promises = auth()->user()->promises()->with('checklists')->finished()->get();
         } elseif (request('finished') === 'false') {
-            $promises = Auth::user()->promises()->unfinished()->get();
+            $promises = auth()->user()->promises()->with('checklists')->unfinished()->get();
         } else {
-            $promises = Auth::user()->promises()->get();
+            $promises = auth()->user()->promises()->with('checklists')->get();
         }
 
         return response()->json($promises, 200);
@@ -25,22 +22,23 @@ class PromisesController extends Controller
 
     public function show($id)
     {
-        $promise = Auth::user()->promises()->findOrFail($id);
+        $promise = auth()->user()->promises()->with('checklists')->findOrFail($id);
 
         return response()->json($promise, 200);
     }
 
     public function store()
     {
+        $promise = [
+            'title' => request('title'),
+            'description' => request('description')
+        ];
+
+        $checklists = request('checklists');
+
         try {
-            $response = Promise::create([
-                'user_id' => Auth::id(),
-                'title' => request('title'),
-                'description' => request('description'),
-                'check_list_quantity' => request('check_list_quantity'),
-                'check_list_finished' => 0,
-                'finished_at' => null,
-            ]);
+            auth()->user()->createPromise($promise, $checklists);
+            $response = [];
             $responseCode = 201;
         } catch (Exception $e) {
             $response = $e->getMessage();
@@ -52,35 +50,24 @@ class PromisesController extends Controller
 
     public function update($id)
     {
-        $requestInput = [];
-        $promise = Auth::user()->promises()->findOrFail($id);
+        $promise = [];
 
         if (request('title') !== null) {
-            $requestInput['title'] = request('title');
+            $promise['title'] = request('title');
         }
+
         if (request('description') !== null) {
-            $requestInput['description'] = request('description');
-        }
-        if (request('check_list_quantity') !== null) {
-            $requestInput['check_list_quantity'] = request('check_list_quantity');
-        }
-        if (request('check_list_finished') !== null) {
-            $requestInput['check_list_finished'] = request('check_list_finished');
-            if (request('check_list_finished') === $promise->check_list_quantity) {
-                $requestInput['finished_at'] = Carbon::now();
-            }
+            $promise['description'] = request('description');
         }
 
-        $promise->update($requestInput);
+        auth()->user()->promises()->findOrFail($id)->update($promise);
 
-        return response()->json($promise, 200);
+        return response()->json([], 200);
     }
 
     public function destroy($id)
     {
-        $promise = Auth::user()->promises()->findOrFail($id);
-
-        $promise->delete();
+        auth()->user()->deletePromise($id);
 
         return response()->json([], 200);
     }
