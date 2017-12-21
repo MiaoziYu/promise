@@ -10,8 +10,8 @@ class Promise extends Model
         'user_id',
         'title',
         'description',
-        'check_list_quantity',
-        'check_list_finished',
+        'reward_type',
+        'reward_content',
         'finished_at'
     ];
 

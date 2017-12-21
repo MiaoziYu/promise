@@ -32,7 +32,9 @@ class PromisesController extends Controller
     {
         $promise = [
             'title' => request('title'),
-            'description' => request('description')
+            'description' => request('description'),
+            'reward_type' => request('reward_type'),
+            'reward_content' => request('reward_content')
         ];
 
         try {
