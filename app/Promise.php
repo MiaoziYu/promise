@@ -29,12 +29,4 @@ class Promise extends Model
     {
         return $query->where('finished_at', '!=', null);
     }
-
-    public function createChecklist($text)
-    {
-        return $this->checklists()->create([
-            'text' => $text,
-            'status' => false
-        ]);
-    }
 }

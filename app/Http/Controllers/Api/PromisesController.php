@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class PromisesController extends Controller
 {
@@ -34,10 +35,8 @@ class PromisesController extends Controller
             'description' => request('description')
         ];
 
-        $checklists = request('checklists');
-
         try {
-            auth()->user()->createPromise($promise, $checklists);
+            auth()->user()->promises()->create($promise);
             $response = [];
             $responseCode = 201;
         } catch (Exception $e) {
@@ -67,7 +66,12 @@ class PromisesController extends Controller
 
     public function destroy($id)
     {
-        auth()->user()->deletePromise($id);
+        $promise = auth()->user()->promises()->findOrFail($id);
+
+        DB::transaction(function () use ($promise) {
+            $promise->checklists()->delete();
+            $promise->delete();
+        });
 
         return response()->json([], 200);
     }

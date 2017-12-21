@@ -159,8 +159,7 @@ class PromiseTest extends TestCase
         // Act
         $postResponse = $this->post('/api/promises?api_token=' . $user->api_token, [
             'title' => 'KFC hot wings',
-            'description' => '18 kfc hot wings',
-            'checklists' => [['text' => 'go to gym'], ['text' => 'read books']]
+            'description' => '18 kfc hot wings'
         ]);
 
         $getResponse = $this->get('/api/promises/?api_token=' . $user->api_token);
@@ -169,8 +168,6 @@ class PromiseTest extends TestCase
         $postResponse->assertStatus(201);
         $getResponse->assertSee('KFC hot wings');
         $getResponse->assertSee('18 kfc hot wings');
-        $getResponse->assertSee('go to gym');
-        $getResponse->assertSee('read books');
     }
 
     /** @test */

@@ -22,6 +22,7 @@ Route::group(
     Route::put('/promises/{id}', 'PromisesController@update');
     Route::post('/promises/', 'PromisesController@store');
     Route::delete('/promises/{id}', 'PromisesController@destroy');
+    Route::post('/promises/{promiseId}/checklists/', 'ChecklistsController@store');
     Route::put('/promises/{promiseId}/checklists/{checklistId}', 'ChecklistsController@update');
     Route::delete('/promises/{promiseId}/checklists/{checklistId}', 'ChecklistsController@destroy');
 });
