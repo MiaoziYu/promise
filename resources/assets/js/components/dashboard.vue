@@ -20,7 +20,7 @@
                 <div class="card promise-item">
                     <p class="title">{{ promise.title }}</p>
                     <p class="description">{{ promise.description }}</p>
-                    <div class="progress-bar" v-if="!showFinishedPromises">
+                    <div class="progress-bar" v-if="!showFinishedPromises && promise.checklists.length > 0">
                         <div class="progress-bar-current" :style="calculateProgressBarWidth(promise)"></div>
                     </div>
                     <i v-if="showFinishedPromises" class="stamp-completed fa fa-check" aria-hidden="true"></i>
@@ -44,26 +44,26 @@
                     <label for="new-promise-description">Description</label>
                     <textarea v-model="promiseFormData.description" id="new-promise-description"></textarea>
                 </div>
-                <div class="form-group form-label">
-                    <label>Options</label>
-                    <div class="label-item">
-                        <i class="fa fa-list-ol" aria-hidden="true"></i><span> Checklist</span>
-                    </div>
-                    <div class="label-item">
-                        <i class="fa fa-check-square-o" aria-hidden="true"></i><span> Count</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input v-model="promiseFormData.check_list_quantity" placeholder="the amount of the tasks">
-                </div>
                 <div class="form-group form-label form-reward">
                     <label>Select a reward</label>
-                    <div class="label-item">
+                    <div @click="promiseFormData.reward_type = 'gift'"
+                        :class="{ active: promiseFormData.reward_type == 'gift' }"
+                        class="label-item">
                         <i class="fa fa-gift" aria-hidden="true"></i><span>Gift</span>
                     </div>
-                    <div class="label-item">
+                    <div @click="promiseFormData.reward_type = 'points'"
+                        :class="{ active: promiseFormData.reward_type == 'points' }"
+                        class="label-item">
                         <i class="fa fa-usd" aria-hidden="true"></i><span>Points</span>
                     </div>
+                </div>
+                <div v-if="promiseFormData.reward_type != null" class="form-group">
+                    <input v-if="promiseFormData.reward_type == 'gift'"
+                           v-model="promiseFormData.reward_content"
+                           placeholder="a image link for your gift">
+                    <input v-if="promiseFormData.reward_type == 'points'"
+                           v-model="promiseFormData.reward_content"
+                           placeholder="how much points does it worth?">
                 </div>
                 <button @click="createPromise" class="form-submit">Finish and create</button>
             </div>
@@ -84,14 +84,14 @@
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </div>
                 </div>
-                <div class="content">
+                <div class="content form">
                     <textarea v-model="promise.description"
                               v-if="promise.finished_at == null"
                               @blur="updateText(promise.id)"
                               class="description"
                               name="description"></textarea>
                     <div v-if="promise.finished_at" class="description">{{ promise.description }}</div>
-                    <div class="checkbox-wrapper">
+                    <div v-if="promise.checklists.length > 0" class="checkbox-wrapper">
                         <input v-for="n in promise.check_list_finished"
                                v-if="promise.finished_at == null"
                                @click="updateCheckbox(promise)"
@@ -108,9 +108,21 @@
                            v-if="promise.finished_at"
                            class="checkbox-static fa fa-check-square-o" aria-hidden="true"></i>
                     </div>
+
+                    <div class="form-group form-label">
+                        <label>Options</label>
+                        <div class="label-item">
+                            <i class="fa fa-list-ol" aria-hidden="true"></i><span> Checklist</span>
+                        </div>
+                        <div class="label-item">
+                            <i class="fa fa-tags" aria-hidden="true"></i><span> Labels</span>
+                        </div>
+                    </div>
+
                     <p v-if="promise.finished_at == null" class="date">created at {{ promise.created_at }}</p>
                     <p v-if="promise.finished_at" class="date">finished at {{ promise.finished_at }}</p>
                     <div @click="deletePromise(promise.id)" class="delete-btn">delete promise</div>
+                    <button @click="createPromise" class="form-submit">Finish promise</button>
                 </div>
             </div>
         </div>
@@ -129,10 +141,8 @@
                 promiseFormData: {
                     title: "",
                     description: "",
-                    task_type: null,
-                    check_list_quantity: "",
-                    check_list: [],
-                    reward_type: null
+                    reward_type: null,
+                    reward_content: ''
                 },
                 showFinishedPromises: null
             }
@@ -171,6 +181,16 @@
 
             togglePromiseForm() {
                 this.promiseForm = !this.promiseForm;
+                this.clearFormData();
+            },
+
+            clearFormData() {
+                this.promiseFormData = {
+                    title: "",
+                    description: "",
+                    reward_type: null,
+                    reward_content: ''
+                };
             },
 
             updateText(id) {
@@ -193,11 +213,7 @@
                 api.createPromise(this.promiseFormData).then(response => {
                     if (response.status == 201) {
                         this.getPromises();
-                        this.promiseFormData = {
-                            title: "",
-                            description: "",
-                            check_list_quantity: 0
-                        };
+                        this.clearFormData();
                         this.togglePromiseForm();
                     }
                 })
