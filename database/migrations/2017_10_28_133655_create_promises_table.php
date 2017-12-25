@@ -19,8 +19,8 @@ class CreatePromisesTable extends Migration
             $table->integer('user_id');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->integer('punch_card_total');
-            $table->integer('punch_card_finished');
+            $table->integer('punch_card_total')->nullable();
+            $table->integer('punch_card_finished')->nullable();
             $table->text('reward_type');
             $table->text('reward_content');
             $table->dateTime('finished_at')->nullable();
