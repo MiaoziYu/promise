@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -33,6 +34,8 @@ class PromisesController extends Controller
         $promise = [
             'title' => request('title'),
             'description' => request('description'),
+            'punch_card_total' => request('punch_card_total'),
+            'punch_card_finished' => request('punch_card_finished'),
             'reward_type' => request('reward_type'),
             'reward_content' => request('reward_content')
         ];
@@ -59,6 +62,18 @@ class PromisesController extends Controller
 
         if (request('description') !== null) {
             $promise['description'] = request('description');
+        }
+
+        if (request('punch_card_total') !== null) {
+            $promise['punch_card_total'] = request('punch_card_total');
+        }
+
+        if (request('punch_card_finished') !== null) {
+            $promise['punch_card_finished'] = request('punch_card_finished');
+        }
+
+        if (request('finished') === 'true') {
+            $promise['finished_at'] = Carbon::now();
         }
 
         auth()->user()->promises()->findOrFail($id)->update($promise);

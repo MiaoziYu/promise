@@ -160,6 +160,8 @@ class PromiseTest extends TestCase
         $postResponse = $this->post('/api/promises?api_token=' . $user->api_token, [
             'title' => 'KFC hot wings',
             'description' => '18 kfc hot wings',
+            'punch_card_total' => '10',
+            'punch_card_finished' => '5',
             'reward_type' => 'points',
             'reward_content' => '500'
         ]);
@@ -185,6 +187,8 @@ class PromiseTest extends TestCase
             'user_id' => $user->id,
             'title' => 'KFC hot wings',
             'description' => '18 kfc hot wings',
+            'punch_card_total' => 11,
+            'punch_card_finished' => 3,
         ]);
 
         // Act
@@ -197,6 +201,8 @@ class PromiseTest extends TestCase
 
         // Assertion
         $getResponse->assertSee('KFC sweet wings');
+        $getResponse->assertSee('11');
+        $getResponse->assertSee('3');
     }
 
     /** @test */
