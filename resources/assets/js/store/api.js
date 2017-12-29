@@ -53,8 +53,16 @@ export default {
         return put(`promises/${id}`, data)
     },
 
+    updateChecklist(promiseId, checklistId, data) {
+        return put(`promises/${promiseId}/checklists/${checklistId}`, data);
+    },
+
     createPromise(data) {
         return post(`promises/`, data)
+    },
+
+    createChecklist(promiseId, data) {
+        return post(`promises/${promiseId}/checklists`, data);
     },
 
     deletePromise(id) {

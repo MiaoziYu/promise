@@ -1,7 +1,7 @@
 .dashboard {
   margin-top: 40px;
 
-  .promise-form {
+  .promise-create-form {
     .form-reward {
 
       .label-item {
@@ -16,7 +16,7 @@
     }
   }
 
-  .promise-btns {
+  .promise-action-btns {
     margin: $space-small 0 $space-small * 2 0;
 
     .btn {
@@ -118,7 +118,7 @@
     }
 
     .checkbox-wrapper {
-      margin-bottom: $space-small;
+      margin-bottom: $space-xsmall;
 
       .checkbox {
         width: 36px;
@@ -149,6 +149,20 @@
         }
       }
 
+      &.checklist {
+        margin-bottom: 2px;
+
+        .checkbox {
+          width: 20px;
+          margin-right: 6px;
+
+          &:before {
+            vertical-align: middle;
+            font-size: 24px;
+          }
+        }
+      }
+
       .checkbox-static {
         width: 36px;
         cursor: pointer;
@@ -157,16 +171,46 @@
       }
     }
 
-    .date,
-    .delete-btn {
+    .btn-secondary {
+      font-size: 14px;
+      color: lighten($black, 30%);
+      cursor: pointer;
+      text-decoration: underline;
+
+      &:hover {
+        color: $black;
+      }
+
+      &.checklist-edit-btn {
+        margin-top: $space-small;
+      }
+    }
+
+    .task-form {
+      .edit-btn {
+        margin-bottom: $space-xsmall;
+      }
+    }
+
+    .date {
+      margin-top: $space-small * 2;
       font-size: 14px;
       color: lighten($black, 30%);
     }
 
-    .delete-btn {
-      margin-top: $space-xsmall;
-      cursor: pointer;
-      text-decoration: underline;
+    .form-btns {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: $space-small;
+
+      .form-submit {
+        margin-top: 0;
+      }
+
+      .delete-btn {
+
+      }
     }
   }
 }

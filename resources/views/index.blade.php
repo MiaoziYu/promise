@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-    <dashboard-component></dashboard-component>
+    <promise-component></promise-component>
 @endsection
