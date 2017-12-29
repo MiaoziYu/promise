@@ -56,18 +56,44 @@
         transition: all .3s;
       }
 
-      .title,
-      .description {
-        margin-bottom: $space-xsmall;
-      }
-
       .title {
+        margin-bottom: $space-xsmall;
         font-size: 20px;
         font-weight: 500;
       }
 
       .description {
         min-height: 40px;
+      }
+
+      .reward-points {
+        height: 100px;
+        width: 100px;
+        margin-bottom: $space-small * 2;
+        border-radius: 3px;
+        background-color: $dark-gray;
+        text-align: center;
+
+        .reward-content {
+          line-height: 100px;
+          color: #FFF;
+          font-size: 30px;
+
+          i {
+            margin-right: 2px;
+          }
+        }
+      }
+
+      .reward-img {
+        height: 100px;
+        margin-bottom: $space-small * 2;
+        overflow: hidden;
+        border-radius: 3px;
+
+        img {
+          @include img-cover(100%);
+        }
       }
 
       .progress-bar {
@@ -94,7 +120,7 @@
         left: 10px;
         opacity: .3;
         color: $green;
-        font-size: 70px;
+        font-size: 200px;
         text-align: center;
       }
     }

@@ -63,7 +63,6 @@
                 api.createPromise(this.promiseFormData).then(response => {
                     if (response.status == 201) {
                         this.clearFormData();
-                        this.togglePromiseForm();
                         this.clearNewPromiseForm();
                     }
                 })

@@ -22,6 +22,14 @@
                 <div class="card promise-item">
                     <p class="title">{{ promise.title }}</p>
                     <p class="description">{{ promise.description }}</p>
+                    <div v-if="promise.reward_type === 'points'" class="reward-points">
+                        <div class="reward-content">
+                            <i class="fa fa-usd" aria-hidden="true"></i><span>{{ promise.reward_content }}</span>
+                        </div>
+                    </div>
+                    <div v-if="promise.reward_type === 'gift'" class="reward-img">
+                        <img :src="promise.reward_content" alt="">
+                    </div>
                     <div class="progress-bar" v-if="promiseListStatus === 'ongoing' && promise.checklists.length > 0">
                         <div class="progress-bar-current" :style="calculateProgressBarWidth(promise)"></div>
                     </div>
