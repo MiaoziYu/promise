@@ -75,12 +75,12 @@
 
                     <checklist :promise="promise" v-on:updateChecklist="getPromises"></checklist>
 
-                    <task-form :promise="promise" v-on:addTask="getPromise(promise.id)"></task-form>
+                    <task-form :promise="promise" v-on:addTask="getPromise(promise.id); getPromises()"></task-form>
 
                     <p v-if="promise.finished_at == null" class="date">created at {{ promise.created_at }}</p>
                     <p v-if="promise.finished_at" class="date">finished at {{ promise.finished_at }}</p>
                     <div class="form-btns">
-                        <button v-if="promise.finished_at == null" class="form-submit">Finish promise</button>
+                        <button v-if="promise.finished_at == null" @click="finishPromise(promise.id)" class="form-submit">Finish promise</button>
                         <div @click="deletePromise(promise.id)" class="delete-btn btn-secondary">delete promise</div>
                     </div>
                 </div>
@@ -154,10 +154,20 @@
                 });
             },
 
+            finishPromise(id) {
+                let data = {
+                    finished: "true"
+                };
+                api.updatePromise(id, data).then(response => {
+                    this.resetPromise();
+                    this.getPromises();
+                });
+            },
+
             deletePromise(id) {
                 api.deletePromise(id).then(response => {
                     if (response.status == 200) {
-                        this.promise = null;
+                        this.resetPromise();
                         this.getPromises();
                     }
                 })
