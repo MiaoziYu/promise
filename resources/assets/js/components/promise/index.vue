@@ -1,5 +1,5 @@
 <template>
-    <div class="dashboard">
+    <div class="promise-page">
 
         <!--action buttons-->
         <div class="promise-action-btns">
@@ -30,10 +30,7 @@
                     <div v-if="promise.reward_type === 'gift'" class="reward-img">
                         <img :src="promise.reward_content" alt="">
                     </div>
-                    <div class="progress-bar" v-if="promiseListStatus === 'ongoing' && promise.checklists.length > 0">
-                        <div class="progress-bar-current" :style="calculateProgressBarWidth(promise)"></div>
-                    </div>
-                    <div class="progress-bar" v-if="promiseListStatus === 'ongoing' && promise.punch_card_total > 0">
+                    <div class="progress-bar" v-if="hasTasks(promise)">
                         <div class="progress-bar-current" :style="calculateProgressBarWidth(promise)"></div>
                     </div>
                     <i v-if="promiseListStatus === 'finished'" class="stamp-completed fa fa-check" aria-hidden="true"></i>
@@ -47,17 +44,15 @@
                 v-on:clearNewPromiseForm="getPromises(); togglePromiseForm();">
         </new-promise-form>
 
-        <!--promise detail-->
-        <div class="promise o-overlay" v-if="promise">
+        <!--ongoing promise detail-->
+        <div class="promise o-overlay" v-if="promise && promise.finished_at === null">
             <div class="card o-overlay-content">
                 <div class="title-wrapper">
                     <div class="title">
                         <input v-model="promise.title"
-                               v-if="promise.finished_at == null"
                                @blur="updateText(promise.id)"
                                class="title"
                                name="title">
-                        <div v-if="promise.finished_at">{{ promise.title }}</div>
                     </div>
                     <div @click="resetPromise" class="close-btn">
                         <i class="fa fa-times" aria-hidden="true"></i>
@@ -65,25 +60,77 @@
                 </div>
                 <div class="content form">
                     <textarea v-model="promise.description"
-                              v-if="promise.finished_at == null"
                               @blur="updateText(promise.id)"
                               class="description"
-                              name="description"></textarea>
-                    <div v-if="promise.finished_at" class="description">{{ promise.description }}</div>
+                              name="description">
+                    </textarea>
 
-                    <punch-card :promise="promise" v-on:updatePunchCard="getPromises"></punch-card>
+                    <!--component to show and update punch card-->
+                    <punch-card :promise="promise"
+                                v-on:updatePunchCard="getPromises"
+                                v-on:finishPunchCard="finishPromise(promise.id)">
+                    </punch-card>
 
-                    <checklist :promise="promise" v-on:updateChecklist="getPromises"></checklist>
+                    <!--component to show and update checklist-->
+                    <checklist :promise="promise"
+                            v-on:updateChecklist="getPromises"
+                            v-on:finishChecklist="finishPromise(promise.id)">
+                    </checklist>
 
-                    <task-form :promise="promise" v-on:addTask="getPromise(promise.id); getPromises()"></task-form>
+                    <!--component to add and edit tasks-->
+                    <task-form :promise="promise"
+                               v-on:addTask="getPromise(promise.id); getPromises()">
+                    </task-form>
 
-                    <p v-if="promise.finished_at == null" class="date">created at {{ promise.created_at }}</p>
-                    <p v-if="promise.finished_at" class="date">finished at {{ promise.finished_at }}</p>
+                    <!--promise created date-->
+                    <p class="date">created at {{ promise.created_at }}</p>
+
+                    <!--buttons to finish or delete promise-->
                     <div class="form-btns">
-                        <button v-if="promise.finished_at == null" @click="finishPromise(promise.id)" class="form-submit">Finish promise</button>
+                        <button v-if="!hasTasks(promise)" @click="finishPromise(promise.id)" class="form-submit">Finish promise</button>
                         <div @click="deletePromise(promise.id)" class="delete-btn btn-secondary">delete promise</div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!--finished promise detail-->
+        <div class="promise o-overlay" v-if="promise && promise.finished_at">
+            <div class="card o-overlay-content">
+                <div class="title-wrapper">
+                    <div class="title">{{ promise.title }}</div>
+                    <div @click="resetPromise" class="close-btn">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="content form">
+                    <div class="description">{{ promise.description }}</div>
+                    <div class="checkbox-wrapper">
+                        <i v-for="n in promise.punch_card_total"
+                           class="checkbox-static fa fa-check-square-o" aria-hidden="true"></i>
+                    </div>
+                    <ul v-if="promise.checklists.length > 0">
+                        <li v-for="checklist in promise.checklists" class="checkbox-wrapper checklist">
+                            <i class="checkbox-static fa fa-check-square-o" aria-hidden="true"></i>
+                            <label class="label-static" for="">{{ checklist.text }}</label>
+                        </li>
+                    </ul>
+                    <p class="date">finished at {{ promise.finished_at }}</p>
+                    <div class="form-btns">
+                        <div @click="deletePromise(promise.id)" class="delete-btn btn-secondary">delete promise</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="successMsg" class="o-overlay">
+            <div class="promise-success card o-overlay-content">
+                <p class="success-msg">Congrats! you've finished a promise!!</p>
+                <div class="success-icon">
+                    <i class="fa fa-smile-o" aria-hidden="true"></i>
+                    <i class="fa fa-heart" aria-hidden="true"></i>
+                </div>
+                <div @click="successMsg = false" class="success-btn">YAY!</div>
             </div>
         </div>
     </div>
@@ -99,6 +146,7 @@
                 promiseListStatus: "ongoing",
                 promise: null,
                 promiseForm: false,
+                successMsg: false,
             }
         },
 
@@ -121,6 +169,10 @@
                 api.getPromise(id).then(data => {
                     this.promise = data;
                 })
+            },
+
+            hasTasks: function(promise) {
+                return this.promiseListStatus === 'ongoing' && (promise.checklists.length > 0 || promise.punch_card_total > 0);
             },
 
             calculateProgressBarWidth(promise) {
@@ -161,6 +213,7 @@
                 api.updatePromise(id, data).then(response => {
                     this.resetPromise();
                     this.getPromises();
+                    this.successMsg = true;
                 });
             },
 

@@ -12,9 +12,6 @@
                @click="updatePunchCard(promise)"
                class="checkbox"
                type="checkbox">
-        <i v-for="n in promise.punch_card_total"
-           v-if="promise.finished_at"
-           class="checkbox-static fa fa-check-square-o" aria-hidden="true"></i>
     </div>
 </template>
 
@@ -26,16 +23,20 @@
 
         methods: {
             updatePunchCard(promise) {
-                let punchCardFinished = $("input[type=checkbox]:checked", $(event.target).parent()).length;
                 let data = {
-                    "punch_card_finished": $("input[type=checkbox]:checked", $(event.target).parent()).length
+                    punch_card_finished: $("input[type=checkbox]:checked", $(event.target).parent()).length
                 };
-                if (punchCardFinished === promise.punch_card_total) {
-                    data["finished"] = "true";
-                }
-                api.updatePromise(promise.id, data);
-                this.$emit("updatePunchCard");
+                api.updatePromise(promise.id, data).then(response => {
+                    if (this.punchCardFinished(data)) {
+                        this.$emit("finishPunchCard");
+                    }
+                    this.$emit("updatePunchCard");
+                });
             },
+
+            punchCardFinished(data) {
+                return data.punch_card_finished === this.promise.punch_card_total;
+            }
         }
     }
 </script>

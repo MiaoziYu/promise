@@ -1,4 +1,4 @@
-.dashboard {
+.promise-page {
   margin-top: 40px;
 
   .promise-create-form {
@@ -175,10 +175,18 @@
         }
       }
 
+      .checkbox-static {
+        width: 36px;
+        cursor: pointer;
+        color: $green;
+        font-size: 30px;
+      }
+
       &.checklist {
         margin-bottom: 2px;
 
-        .checkbox {
+        .checkbox,
+        .checkbox-static {
           width: 20px;
           margin-right: 6px;
 
@@ -187,14 +195,18 @@
             font-size: 24px;
           }
         }
+
+        .checkbox-static {
+          vertical-align: middle;
+          font-size: 24px;
+        }
+
+        .label-static {
+          vertical-align: middle;
+        }
       }
 
-      .checkbox-static {
-        width: 36px;
-        cursor: pointer;
-        color: $green;
-        font-size: 30px;
-      }
+
     }
 
     .btn-secondary {
@@ -237,6 +249,26 @@
       .delete-btn {
 
       }
+    }
+  }
+
+  .promise-success {
+    text-align: center;
+
+    .success-msg {
+      margin: $space-small * 2 0;
+      font-size: 20px;
+    }
+
+    .success-icon {
+      margin-bottom: $space-small * 2;
+      font-size: 30px;
+    }
+
+    .success-btn {
+      @include button($green);
+      margin-bottom: $space-small * 2;
+      font-size: 20px;
     }
   }
 }
