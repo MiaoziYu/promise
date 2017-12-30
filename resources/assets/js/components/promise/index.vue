@@ -74,6 +74,7 @@
                     <!--component to show and update checklist-->
                     <checklist :promise="promise"
                             v-on:updateChecklist="getPromises"
+                            v-on:deleteChecklist="getPromise(promise.id)"
                             v-on:finishChecklist="finishPromise(promise.id)">
                     </checklist>
 

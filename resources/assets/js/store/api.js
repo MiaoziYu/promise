@@ -68,4 +68,8 @@ export default {
     deletePromise(id) {
         return remove(`promises/${id}`);
     },
+
+    deleteChecklist(promiseId, checklistId) {
+        return remove(`promises/${promiseId}/checklists/${checklistId}`);
+    }
 }

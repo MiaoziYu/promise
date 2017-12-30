@@ -1,11 +1,14 @@
 <template>
     <ul v-if="promise.checklists.length > 0">
-        <li v-for="checklist in promise.checklists" class="checkbox-wrapper checklist">
-            <input @click="updateChecklist(promise.id, checklist.id)"
-                   v-model="checklist.status"
-                   class="checkbox"
-                   type="checkbox">
-            <label for="">{{ checklist.text }}</label>
+        <li v-for="checklist in promise.checklists" class="checkbox-wrapper checklist checklist-flex">
+            <div class="">
+                <input @click="updateChecklist(promise.id, checklist.id)"
+                       v-model="checklist.status"
+                       class="checkbox"
+                       type="checkbox">
+                <label for="">{{ checklist.text }}</label>
+            </div>
+            <i @click="deleteChecklist(promise.id, checklist.id)" class="delete-btn fa fa-times" aria-hidden="true"></i>
         </li>
     </ul>
 </template>
@@ -26,6 +29,12 @@
                         this.$emit("finishChecklist");
                     }
                     this.$emit("updateChecklist");
+                });
+            },
+
+            deleteChecklist(promiseId, checklistId) {
+                api.deleteChecklist(promiseId, checklistId).then(response => {
+                    this.$emit("deleteChecklist");
                 });
             },
 

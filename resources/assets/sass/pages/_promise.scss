@@ -206,7 +206,22 @@
         }
       }
 
+      &.checklist-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
+        .delete-btn {
+          display: none;
+          font-size: 20px;
+          color: $dark-gray;
+          cursor: pointer;
+        }
+
+        &:hover .delete-btn {
+          display: block;
+        }
+      }
     }
 
     .btn-secondary {
