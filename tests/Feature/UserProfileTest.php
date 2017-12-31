@@ -62,7 +62,7 @@ class UserProfileTest extends TestCase {
         $user = factory(User::class)->create();
         $userProfile = factory(UserProfile::class)->create([
             'user_id' => $user->id,
-            'credits' => 0
+            'credits' => 100
         ]);
         $promise = factory(Promise::class)->create([
             'user_id' => $user->id,
@@ -77,6 +77,6 @@ class UserProfileTest extends TestCase {
 
         // Assertion
         $getResponse = $this->get('/api/profile/' . '?api_token=' . $user->api_token);
-        $getResponse->assertSee('500');
+        $getResponse->assertSee('600');
     }
 }
