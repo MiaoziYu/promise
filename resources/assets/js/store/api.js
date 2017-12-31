@@ -49,6 +49,10 @@ export default {
         return get(`promises/${id}`);
     },
 
+    getUserInfo() {
+        return get(`profile`);
+    },
+
     updatePromise(id, data) {
         return put(`promises/${id}`, data)
     },

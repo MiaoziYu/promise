@@ -27,6 +27,7 @@
 {{--@include('partials.nav')--}}
 
 <main id="app" class="container">
+    <top-nav></top-nav>
     @yield('content')
 </main>
 

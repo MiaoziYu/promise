@@ -215,6 +215,7 @@
                     this.resetPromise();
                     this.getPromises();
                     this.successMsg = true;
+                    EventBus.$emit("finishPromise");
                 });
             },
 
