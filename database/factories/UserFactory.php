@@ -24,3 +24,9 @@ $factory->define(App\User::class, function (Faker $faker) {
         'api_token' => str_random(60),
     ];
 });
+
+$factory->define(App\UserProfile::class, function (Faker $faker) {
+    return [
+        'credits' => 500
+    ];
+});

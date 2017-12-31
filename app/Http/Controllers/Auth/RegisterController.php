@@ -68,6 +68,10 @@ class RegisterController extends Controller
             'api_token' => str_random(60)
         ]);
 
+        $user->userProfile()->create([
+            'credit' => 0
+        ]);
+
         auth()->login($user);
 
         return redirect('/');

@@ -27,6 +27,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function userProfile()
+    {
+        return $this->hasOne('App\UserProfile');
+    }
+
     public function promises()
     {
         return $this->hasMany('App\Promise');
@@ -35,5 +40,15 @@ class User extends Authenticatable
     public function checklists()
     {
         return $this->hasMany('App\Checklist');
+    }
+
+    public function updateCredits($promiseId)
+    {
+        $promise = $this->promises()->findOrFail($promiseId);
+        if ($promise->reward_type === 'points') {
+            $this->userProfile()->update([
+                'credits' => $promise->reward_content
+            ]);
+        }
     }
 }

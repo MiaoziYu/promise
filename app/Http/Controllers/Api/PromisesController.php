@@ -54,29 +54,30 @@ class PromisesController extends Controller
 
     public function update($id)
     {
-        $promise = [];
+        $data = [];
 
         if (request('title') !== null) {
-            $promise['title'] = request('title');
+            $data['title'] = request('title');
         }
 
         if (request('description') !== null) {
-            $promise['description'] = request('description');
+            $data['description'] = request('description');
         }
 
         if (request('punch_card_total') !== null) {
-            $promise['punch_card_total'] = request('punch_card_total');
+            $data['punch_card_total'] = request('punch_card_total');
         }
 
         if (request('punch_card_finished') !== null) {
-            $promise['punch_card_finished'] = request('punch_card_finished');
+            $data['punch_card_finished'] = request('punch_card_finished');
         }
 
         if (request('finished') === 'true') {
-            $promise['finished_at'] = Carbon::now();
+            $data['finished_at'] = Carbon::now();
+            auth()->user()->updateCredits($id);
         }
 
-        auth()->user()->promises()->findOrFail($id)->update($promise);
+        auth()->user()->promises()->findOrFail($id)->update($data);
 
         return response()->json([], 200);
     }
