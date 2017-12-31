@@ -69,7 +69,7 @@ class RegisterController extends Controller
         ]);
 
         $user->userProfile()->create([
-            'credit' => 0
+            'credits' => 0
         ]);
 
         auth()->login($user);

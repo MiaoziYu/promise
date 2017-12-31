@@ -17,7 +17,7 @@ class CreateUserProfilesTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->integer('user_id');
-            $table->integer('credits');
+            $table->integer('credits')->nullable();
         });
     }
 
