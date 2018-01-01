@@ -25,7 +25,7 @@
                 <div @click="promiseFormData.reward_type = 'points'"
                      :class="{ active: promiseFormData.reward_type == 'points' }"
                      class="label-item">
-                    <i class="fa fa-usd" aria-hidden="true"></i><span>Points</span>
+                    <i class="fa fa-diamond" aria-hidden="true"></i><span>Points</span>
                 </div>
             </div>
             <div v-if="promiseFormData.reward_type != null" class="form-group">
