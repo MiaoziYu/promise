@@ -1,0 +1,45 @@
+.top-nav {
+  background-color: $green;
+
+  .nav-wrapper {
+    display: flex;
+    justify-content: space-between;
+    height: 60px;
+    line-height: 60px;
+    color: #FFF;
+
+    .menu-item {
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 18px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+
+    .menu-link {
+      color: #FFF;
+      text-decoration: none;
+    }
+
+    .nav-menu-left {
+      .brand {
+        margin-right: 10px;
+
+        .logo {
+          font-size: 40px;
+          vertical-align: middle;
+        }
+
+        .text {
+          margin-left: 4px;
+          font-size: 24px;
+        }
+      }
+    }
+
+    .nav-menu-right {
+    }
+  }
+}

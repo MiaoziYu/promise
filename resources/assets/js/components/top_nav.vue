@@ -1,12 +1,22 @@
 <template>
     <nav class="top-nav">
-        <div class="brand">
-            <i class="fa fa-check-square-o" aria-hidden="true"></i>
+        <div class="nav-wrapper container">
+            <div class="nav-menu-left">
+                <div class="brand menu-item">
+                    <i class="logo fa fa-check-square-o" aria-hidden="true"></i>
+                    <span class="text">Promise</span>
+                </div>
+                <div class="menu-item"><a class="menu-link" href="/wishes/">Wish market</a></div>
+            </div>
+            <div v-if="user" class="nav-menu-right">
+                <div class="menu-item">{{ user.name }}</div>
+                <div class="menu-item">
+                    <i class="fa fa-diamond" aria-hidden="true"></i>
+                    {{ user.user_profile.credits }}
+                </div>
+                <div class="menu-item"><i class="fa fa-bell" aria-hidden="true"></i></div>
+            </div>
         </div>
-        <ul v-if="user" class="nav-menu">
-            <li>{{ user.name }}</li>
-            <li>{{ user.user_profile.credits }}</li>
-        </ul>
     </nav>
 </template>
 

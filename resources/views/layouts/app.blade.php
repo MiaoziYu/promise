@@ -26,9 +26,11 @@
 
 {{--@include('partials.nav')--}}
 
-<main id="app" class="container">
+<main id="app">
     <top-nav></top-nav>
-    @yield('content')
+    <div class="container">
+        @yield('content')
+    </div>
 </main>
 
 <!-- Scripts -->
