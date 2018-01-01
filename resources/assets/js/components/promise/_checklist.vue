@@ -26,15 +26,15 @@
                 };
                 api.updateChecklist(promiseId, checklistId, data).then(response => {
                     if (this.checklistFinished()) {
-                        this.$emit("finishChecklist");
+                        EventBus.$emit("finishChecklist");
                     }
-                    this.$emit("updateChecklist");
+                    EventBus.$emit("updateChecklist");
                 });
             },
 
             deleteChecklist(promiseId, checklistId) {
                 api.deleteChecklist(promiseId, checklistId).then(response => {
-                    this.$emit("deleteChecklist");
+                    EventBus.$emit("deleteChecklist");
                 });
             },
 

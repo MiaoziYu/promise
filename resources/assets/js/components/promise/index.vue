@@ -40,8 +40,7 @@
 
         <!--new promise form-->
         <new-promise-form
-                :promiseForm="promiseForm"
-                v-on:clearNewPromiseForm="getPromises(); togglePromiseForm();">
+                :promiseForm="promiseForm">
         </new-promise-form>
 
         <!--ongoing promise detail-->
@@ -66,22 +65,13 @@
                     </textarea>
 
                     <!--component to show and update punch card-->
-                    <punch-card :promise="promise"
-                                v-on:updatePunchCard="getPromises"
-                                v-on:finishPunchCard="finishPromise(promise.id)">
-                    </punch-card>
+                    <punch-card :promise="promise"></punch-card>
 
                     <!--component to show and update checklist-->
-                    <checklist :promise="promise"
-                            v-on:updateChecklist="getPromises"
-                            v-on:deleteChecklist="getPromise(promise.id)"
-                            v-on:finishChecklist="finishPromise(promise.id)">
-                    </checklist>
+                    <checklist :promise="promise"></checklist>
 
                     <!--component to add and edit tasks-->
-                    <task-form :promise="promise"
-                               v-on:addTask="getPromise(promise.id); getPromises()">
-                    </task-form>
+                    <task-form :promise="promise"></task-form>
 
                     <!--promise created date-->
                     <p class="date">created at {{ promise.created_at }}</p>
@@ -156,6 +146,20 @@
 
         beforeMount() {
             this.getPromises();
+        },
+
+        created() {
+            EventBus.$on("clearNewPromiseForm", () => {
+                this.getPromises();
+                this.togglePromiseForm();
+            });
+            EventBus.$on(["updateChecklist", "updatePunchCard", "addTask"], this.getPromises);
+            EventBus.$on(["deleteChecklist", "addTask"], () => {
+                this.getPromise(this.promise.id);
+            });
+            EventBus.$on(["finishChecklist", "finishPunchCard"], () => {
+                this.finishPromise(this.promise.id);
+            });
         },
 
         methods: {

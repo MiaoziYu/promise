@@ -141,7 +141,7 @@
                     this.punchCardEditForm = false;
                     this.punchCardValue = "";
                     this.hasTask = true;
-                    this.$emit("addTask");
+                    EventBus.$emit("addTask");
                 });
             },
 
@@ -154,7 +154,7 @@
                     this.checklistEditForm = true;
                     this.checklistValue = "";
                     this.hasTask = true;
-                    this.$emit("addTask");
+                    EventBus.$emit("addTask");
                 });
             },
         }

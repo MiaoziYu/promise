@@ -28,9 +28,9 @@
                 };
                 api.updatePromise(promise.id, data).then(response => {
                     if (this.punchCardFinished(data)) {
-                        this.$emit("finishPunchCard");
+                        EventBus.$emit("finishPunchCard");
                     }
-                    this.$emit("updatePunchCard");
+                    EventBus.$emit("updatePunchCard");
                 });
             },
 

@@ -60,7 +60,6 @@
         methods: {
             createPromise() {
                 api.createPromise(this.promiseFormData).then(response => {
-                    console.log(response)
                     if (response.status == 201) {
                         this.clearFormData();
                         this.clearNewPromiseForm();
@@ -70,7 +69,7 @@
 
             clearNewPromiseForm() {
                 this.clearFormData();
-                this.$emit("clearNewPromiseForm");
+                EventBus.$emit("clearNewPromiseForm");
             },
 
             clearFormData() {
