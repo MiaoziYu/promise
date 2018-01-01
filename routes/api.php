@@ -25,6 +25,12 @@ Route::group(
     Route::post('/promises/{promiseId}/checklists/', 'ChecklistsController@store');
     Route::put('/promises/{promiseId}/checklists/{checklistId}', 'ChecklistsController@update');
     Route::delete('/promises/{promiseId}/checklists/{checklistId}', 'ChecklistsController@destroy');
+
     Route::get('/profile/', 'UserProfileController@show');
     Route::put('/profile/', 'UserProfileController@update');
+
+    Route::get('/wishes/{id}', 'WishesController@show');
+    Route::get('/wishes/', 'WishesController@index');
+    Route::post('/wishes/', 'WishesController@store');
+    Route::put('/wishes/{id}', 'WishesController@update');
 });
