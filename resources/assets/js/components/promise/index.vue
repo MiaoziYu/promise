@@ -20,7 +20,7 @@
                 @click="getPromise(promise.id)"
                 class="o-list-item">
                 <div class="card promise-item">
-                    <p class="title">{{ promise.title }}</p>
+                    <p class="title">{{ promise.name }}</p>
                     <p class="description">{{ promise.description }}</p>
                     <div v-if="promise.reward_type === 'points'" class="reward-points">
                         <div class="reward-content">
@@ -49,7 +49,7 @@
             <div class="card o-overlay-content">
                 <div class="title-wrapper">
                     <div class="title">
-                        <input v-model="promise.title"
+                        <input v-model="promise.name"
                                @blur="updateText(promise.id)"
                                class="title"
                                name="title">
@@ -99,7 +99,7 @@
         <div class="promise o-overlay" v-if="promise && promise.finished_at">
             <div class="card o-overlay-content">
                 <div class="title-wrapper">
-                    <div class="title">{{ promise.title }}</div>
+                    <div class="title">{{ promise.name }}</div>
                     <div @click="resetPromise" class="close-btn">
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </div>

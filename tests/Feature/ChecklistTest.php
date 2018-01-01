@@ -43,7 +43,7 @@ class ChecklistTest extends TestCase
 
         $promise = factory(Promise::class)->create([
             'user_id' => $user->id,
-            'title' => 'KFC hot wings',
+            'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings'
         ]);
 
@@ -75,7 +75,7 @@ class ChecklistTest extends TestCase
 
         $promise = factory(Promise::class)->create([
             'user_id' => $user->id,
-            'title' => 'KFC hot wings',
+            'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings'
         ]);
 

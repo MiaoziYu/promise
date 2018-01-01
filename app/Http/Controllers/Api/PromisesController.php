@@ -32,7 +32,7 @@ class PromisesController extends Controller
     public function store()
     {
         $promise = [
-            'title' => request('title'),
+            'name' => request('name'),
             'description' => request('description'),
             'punch_card_total' => request('punch_card_total'),
             'punch_card_finished' => request('punch_card_finished'),
@@ -56,8 +56,8 @@ class PromisesController extends Controller
     {
         $data = [];
 
-        if (request('title') !== null) {
-            $data['title'] = request('title');
+        if (request('name') !== null) {
+            $data['name'] = request('name');
         }
 
         if (request('description') !== null) {

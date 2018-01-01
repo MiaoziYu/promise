@@ -8,7 +8,7 @@ class Promise extends Model
 {
     protected $fillable = [
         'user_id',
-        'title',
+        'name',
         'description',
         'reward_type',
         'punch_card_total',

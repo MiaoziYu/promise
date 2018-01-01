@@ -24,7 +24,7 @@ class PromiseTest extends TestCase
 
         $promise = factory(Promise::class)->create([
             'user_id' => $user->id,
-            'title' => 'KFC hot wings',
+            'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings'
         ]);
 
@@ -52,7 +52,7 @@ class PromiseTest extends TestCase
 
         $promiseOne = factory(Promise::class)->create([
             'user_id' => $user->id,
-            'title' => 'KFC hot wings',
+            'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings'
         ]);
 
@@ -63,7 +63,7 @@ class PromiseTest extends TestCase
 
         $promiseTwo = factory(Promise::class)->create([
             'user_id' => $user->id,
-            'title' => 'Ice cream',
+            'name' => 'Ice cream',
             'description' => 'I want ice cream',
             'finished_at' => Carbon::parse('December 13, 2016 8:00pm'),
         ]);
@@ -98,13 +98,13 @@ class PromiseTest extends TestCase
 
         factory(Promise::class)->create([
             'user_id' => $user->id,
-            'title' => 'KFC hot wings',
+            'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings'
         ]);
 
         factory(Promise::class)->create([
             'user_id' => $user->id,
-            'title' => 'Ice cream',
+            'name' => 'Ice cream',
             'description' => 'I want ice cream',
             'finished_at' => Carbon::parse('December 13, 2016 8:00pm'),
         ]);
@@ -128,13 +128,13 @@ class PromiseTest extends TestCase
 
         factory(Promise::class)->create([
             'user_id' => $user->id,
-            'title' => 'KFC hot wings',
+            'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings'
         ]);
 
         factory(Promise::class)->create([
             'user_id' => $user->id,
-            'title' => 'Ice cream',
+            'name' => 'Ice cream',
             'description' => 'I want ice cream',
             'finished_at' => Carbon::parse('December 13, 2016 8:00pm'),
         ]);
@@ -158,7 +158,7 @@ class PromiseTest extends TestCase
 
         // Act
         $postResponse = $this->post('/api/promises?api_token=' . $user->api_token, [
-            'title' => 'KFC hot wings',
+            'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings',
             'punch_card_total' => '10',
             'punch_card_finished' => '5',
@@ -185,7 +185,7 @@ class PromiseTest extends TestCase
         $user = factory(User::class)->create();
         $promise = factory(Promise::class)->create([
             'user_id' => $user->id,
-            'title' => 'KFC hot wings',
+            'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings',
             'punch_card_total' => 11,
             'punch_card_finished' => 3,
@@ -193,7 +193,7 @@ class PromiseTest extends TestCase
 
         // Act
         $putResponse = $this->put('/api/promises/' . $promise->id . '?api_token=' . $user->api_token, [
-            'title' => 'KFC sweet wings'
+            'name' => 'KFC sweet wings'
         ]);
         $putResponse->assertStatus(200);
 
@@ -214,7 +214,7 @@ class PromiseTest extends TestCase
         $user = factory(User::class)->create();
         $promise = factory(Promise::class)->create([
             'user_id' => $user->id,
-            'title' => 'KFC hot wings',
+            'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings'
         ]);
 

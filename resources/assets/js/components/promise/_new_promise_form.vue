@@ -9,7 +9,7 @@
             </div>
             <div class="form-group">
                 <label for="new-promise-name">Name</label>
-                <input v-model="promiseFormData.title" id="new-promise-name">
+                <input v-model="promiseFormData.name" id="new-promise-name">
             </div>
             <div class="form-group">
                 <label for="new-promise-description">Description</label>
@@ -50,7 +50,7 @@
         data() {
             return {
                 promiseFormData: {
-                    title: "",
+                    name: "",
                     description: "",
                     reward_type: null,
                     reward_content: ''
@@ -61,6 +61,7 @@
         methods: {
             createPromise() {
                 api.createPromise(this.promiseFormData).then(response => {
+                    console.log(response)
                     if (response.status == 201) {
                         this.clearFormData();
                         this.clearNewPromiseForm();
@@ -75,7 +76,7 @@
 
             clearFormData() {
                 this.promiseFormData = {
-                    title: "",
+                    name: "",
                     description: "",
                     reward_type: null,
                     reward_content: ""
