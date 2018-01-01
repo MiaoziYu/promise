@@ -30,10 +30,10 @@
             </div>
             <div v-if="promiseFormData.reward_type != null" class="form-group">
                 <input v-if="promiseFormData.reward_type == 'gift'"
-                       v-model="promiseFormData.reward_content"
+                       v-model="promiseFormData.reward_image_link"
                        placeholder="a image link for your gift">
                 <input v-if="promiseFormData.reward_type == 'points'"
-                       v-model="promiseFormData.reward_content"
+                       v-model="promiseFormData.reward_credits"
                        placeholder="how much points does it worth?">
             </div>
             <button @click="createPromise" class="form-submit">Finish and create</button>
@@ -49,13 +49,12 @@
 
         data() {
             return {
-                promiseFormData: {
-                    name: "",
-                    description: "",
-                    reward_type: null,
-                    reward_content: ''
-                },
+                promiseFormData: {},
             }
+        },
+
+        beforeMount() {
+            this.clearFormData();
         },
 
         methods: {
@@ -79,7 +78,8 @@
                     name: "",
                     description: "",
                     reward_type: null,
-                    reward_content: ""
+                    reward_credits: "",
+                    reward_image_link: ""
                 };
             },
         }

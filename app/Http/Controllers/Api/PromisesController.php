@@ -37,7 +37,8 @@ class PromisesController extends Controller
             'punch_card_total' => request('punch_card_total'),
             'punch_card_finished' => request('punch_card_finished'),
             'reward_type' => request('reward_type'),
-            'reward_content' => request('reward_content')
+            'reward_credits' => request('reward_credits'),
+            'reward_image_link' => request('reward_image_link')
         ];
 
         try {

@@ -67,7 +67,7 @@ class UserProfileTest extends TestCase {
         $promise = factory(Promise::class)->create([
             'user_id' => $user->id,
             'reward_type' => 'points',
-            'reward_content' => 500,
+            'reward_credits' => 500,
         ]);
 
         // Act

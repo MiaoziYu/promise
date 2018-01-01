@@ -163,7 +163,7 @@ class PromiseTest extends TestCase
             'punch_card_total' => '10',
             'punch_card_finished' => '5',
             'reward_type' => 'points',
-            'reward_content' => '500'
+            'reward_credits' => '500'
         ]);
 
         $getResponse = $this->get('/api/promises/?api_token=' . $user->api_token);

@@ -10,10 +10,11 @@ class Promise extends Model
         'user_id',
         'name',
         'description',
-        'reward_type',
         'punch_card_total',
         'punch_card_finished',
-        'reward_content',
+        'reward_type',
+        'reward_credits',
+        'reward_image_link',
         'finished_at'
     ];
 

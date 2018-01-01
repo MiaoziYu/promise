@@ -53,7 +53,7 @@ class User extends Authenticatable
         if ($promise->reward_type === 'points') {
             $userProfile = $this->userProfile();
             $userProfile->update([
-                'credits' => $userProfile->first()->credits + $promise->reward_content
+                'credits' => $userProfile->first()->credits + $promise->reward_credits
             ]);
         }
     }

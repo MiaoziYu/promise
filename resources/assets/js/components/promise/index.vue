@@ -24,11 +24,11 @@
                     <p class="description">{{ promise.description }}</p>
                     <div v-if="promise.reward_type === 'points'" class="reward-points">
                         <div class="reward-content">
-                            <i class="fa fa-usd" aria-hidden="true"></i><span>{{ promise.reward_content }}</span>
+                            <i class="fa fa-usd" aria-hidden="true"></i><span>{{ promise.reward_credits }}</span>
                         </div>
                     </div>
                     <div v-if="promise.reward_type === 'gift'" class="reward-img">
-                        <img :src="promise.reward_content" alt="">
+                        <img :src="promise.reward_image_link" alt="">
                     </div>
                     <div class="progress-bar" v-if="hasTasks(promise)">
                         <div class="progress-bar-current" :style="calculateProgressBarWidth(promise)"></div>
