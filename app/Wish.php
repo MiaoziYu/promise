@@ -10,6 +10,8 @@ class Wish extends Model
         'user_id',
         'name',
         'description',
-        'image_link'
+        'credits',
+        'image_link',
+        'purchased_at'
     ];
 }

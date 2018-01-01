@@ -18,7 +18,9 @@ class CreateWishesTable extends Migration
             $table->integer('user_id');
             $table->string('name');
             $table->string('description')->nullable();
+            $table->integer('credits');
             $table->string('image_link')->nullable();
+            $table->dateTime('purchased_at')->nullable();
             $table->timestamps();
         });
     }

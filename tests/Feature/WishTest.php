@@ -20,7 +20,8 @@ class WishTest extends TestCase
         $user = factory(User::class)->create();
         $wish = factory(Wish::class)->create([
             'user_id' => $user->id,
-            'name' => 'nachos'
+            'name' => 'nachos',
+            'credits' => 500
         ]);
 
         // Act
@@ -29,6 +30,7 @@ class WishTest extends TestCase
         // Assertion
         $response->assertStatus(200);
         $response->assertSee('nachos');
+        $response->assertSee('500');
     }
 
     /** @test */
@@ -40,12 +42,14 @@ class WishTest extends TestCase
         $user = factory(User::class)->create();
         factory(Wish::class)->create([
             'user_id' => $user->id,
-            'name' => 'nachos'
+            'name' => 'nachos',
+            'credits' => 500
         ]);
 
         factory(Wish::class)->create([
             'user_id' => $user->id,
-            'name' => 'potato chip'
+            'name' => 'potato chip',
+            'credits' => 400
         ]);
 
         // Act
@@ -56,6 +60,8 @@ class WishTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('nachos');
         $response->assertSee('potato chip');
+        $response->assertSee('500');
+        $response->assertSee('400');
     }
 
     /** @test */
@@ -70,6 +76,7 @@ class WishTest extends TestCase
         $postResponse = $this->post('/api/wishes/' . '?api_token=' . $user->api_token, [
             'name' => 'potato chip',
             'description' => 'buy a package of potato chip',
+            'credits' => 500,
             'image_link' =>'example_link'
         ]);
 
@@ -79,6 +86,7 @@ class WishTest extends TestCase
         $postResponse->assertStatus(201);
         $getResponse->assertSee('potato chip');
         $getResponse->assertSee('buy a package of potato chip');
+        $getResponse->assertSee('500');
         $getResponse->assertSee('example_link');
     }
 
@@ -104,11 +112,32 @@ class WishTest extends TestCase
         ]);
 
         // Assertion
-        $getResponse = $this->get('/api/wishes/?api_token=' . $user->api_token);
+        $getResponse = $this->get('/api/wishes/?api_token=' . $wish->id . $user->api_token);
 
         $putResponse->assertStatus(200);
         $getResponse->assertSee('nachos');
         $getResponse->assertSee('buy a nachos');
         $getResponse->assertSee('another_example_link');
+    }
+
+    /** @test */
+    public function can_purchase_a_wish()
+    {
+        $this->disableExceptionHandling();
+
+        // Arrange
+        $user = factory(User::class)->create();
+        $wish = factory(Wish::class)->create([
+            'user_id' => $user->id,
+            'name' => 'nachos',
+            'credits' => 500
+        ]);
+
+        // Act
+        $this->put('/api/wishes/' . $wish->id . '/purchase' .'?api_token=' . $user->api_token, []);
+
+        // Assertion
+        $getResponse = $this->get('/api/wishes/?api_token=' . $wish->id . $user->api_token);
+        $getResponse->assertStatus(200);
     }
 }

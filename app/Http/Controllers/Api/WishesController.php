@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Exception;
 
 class WishesController extends Controller
@@ -26,6 +27,7 @@ class WishesController extends Controller
         $wish = [
           'name' => request('name'),
           'description' => request('description'),
+          'credits' => request('credits'),
           'image_link' => request('image_link'),
         ];
 
@@ -58,6 +60,15 @@ class WishesController extends Controller
         }
 
         auth()->user()->wishes()->findOrFail($id)->update($data);
+
+        return response()->json([], 200);
+    }
+
+    public function purchase($id)
+    {
+        auth()->user()->wishes()->findOrFail($id)->update([
+            'purchased_at' => Carbon::now()
+        ]);
 
         return response()->json([], 200);
     }
