@@ -223,7 +223,7 @@
                 api.deletePromise(id).then(response => {
                     if (response.status == 200) {
                         this.resetPromise();
-                        this.getPromises();
+                        this.getPromises(this.promiseListStatus);
                     }
                 })
             }
