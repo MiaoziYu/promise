@@ -6,7 +6,14 @@
                     <i class="logo fa fa-check-square-o" aria-hidden="true"></i>
                     <a href="/" class="menu-link text">Promise</a>
                 </div>
-                <div class="menu-item"><a class="menu-link" href="/wishes/">Wish market</a></div>
+                <div class="menu-item"
+                     :class="{ active:pageName === 'promises' }">
+                    <a class="menu-link" href="/">My promises</a>
+                </div>
+                <div class="menu-item"
+                     :class="{ active:pageName === 'wishes' }">
+                    <a class="menu-link" href="/wishes/">Wish market</a>
+                </div>
             </div>
             <div v-if="user" class="nav-menu-right">
                 <div class="menu-item">{{ user.name }}</div>
@@ -26,7 +33,8 @@
     export default {
         data() {
             return {
-                user: null
+                user: null,
+                pageName: null
             }
         },
 
@@ -36,6 +44,9 @@
 
         created() {
             EventBus.$on(["finishPromise", "purchaseWish"], this.getUserInfo);
+            EventBus.$on("setPageName", name => {
+                this.pageName = name;
+            })
         },
 
         methods: {
