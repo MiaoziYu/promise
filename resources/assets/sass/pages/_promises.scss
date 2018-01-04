@@ -16,34 +16,6 @@
     }
   }
 
-  .promise-action-btns {
-    margin: $space-small 0 $space-small * 2 0;
-
-    .btn {
-      @include button($dark-gray);
-      margin-right: 10px;
-      font-size: 20px;
-
-      &.active {
-        @include button($green);
-      }
-
-      &:last-child {
-        margin-right: 0;
-      }
-
-      i {
-        margin-right: 3px;
-      }
-    }
-
-    .create-promise {
-      i {
-        margin: 0;
-      }
-    }
-  }
-
   .promise-list {
     .promise-item {
       position: relative;

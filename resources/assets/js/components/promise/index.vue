@@ -2,14 +2,14 @@
     <div class="promise-page">
 
         <!--action buttons-->
-        <div class="promise-action-btns">
-            <button @click="getPromises()" class="btn" :class="{ active: promiseListStatus === 'ongoing'}">
+        <div class="action-btns">
+            <button @click="getPromises()" class="btn" :class="{ active: currentList === 'ongoing'}">
                 <i class="fa fa-car" aria-hidden="true"></i> ongoing
             </button>
-            <button @click="getPromises('finished')" class="btn" :class="{ active: promiseListStatus === 'finished'}">
+            <button @click="getPromises('finished')" class="btn" :class="{ active: currentList === 'finished'}">
                 <i class="fa fa-check-square-o" aria-hidden="true"></i> finished
             </button>
-            <button @click="togglePromiseForm" class="btn create-promise">
+            <button @click="togglePromiseForm" class="btn create-btn">
                 <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
         </div>
@@ -33,15 +33,13 @@
                     <div class="progress-bar" v-if="hasTasks(promise)">
                         <div class="progress-bar-current" :style="calculateProgressBarWidth(promise)"></div>
                     </div>
-                    <i v-if="promiseListStatus === 'finished'" class="stamp-completed fa fa-check" aria-hidden="true"></i>
+                    <i v-if="currentList === 'finished'" class="stamp-completed fa fa-check" aria-hidden="true"></i>
                 </div>
             </li>
         </ul>
 
         <!--new promise form-->
-        <new-promise-form
-                :promiseForm="promiseForm">
-        </new-promise-form>
+        <new-promise-form :promiseForm="promiseForm"></new-promise-form>
 
         <!--ongoing promise detail-->
         <div class="promise o-overlay" v-if="promise && promise.finished_at === null">
@@ -134,7 +132,7 @@
         data() {
             return {
                 promises: null,
-                promiseListStatus: "ongoing",
+                currentList: "ongoing",
                 promise: null,
                 promiseForm: false,
                 successMsg: false,
@@ -146,6 +144,7 @@
 
         beforeMount() {
             this.getPromises();
+            EventBus.$emit("setPageName", "promises");
         },
 
         created() {
@@ -166,7 +165,7 @@
             getPromises(status = "ongoing") {
                 api.getPromises(status !== "ongoing").then(data => {
                     this.promises = data;
-                    this.promiseListStatus = status;
+                    this.currentList = status;
                 })
             },
 
@@ -177,7 +176,7 @@
             },
 
             hasTasks: function(promise) {
-                return this.promiseListStatus === 'ongoing' && (promise.checklists.length > 0 || promise.punch_card_total > 0);
+                return this.currentList === 'ongoing' && (promise.checklists.length > 0 || promise.punch_card_total > 0);
             },
 
             calculateProgressBarWidth(promise) {
@@ -227,7 +226,7 @@
                 api.deletePromise(id).then(response => {
                     if (response.status == 200) {
                         this.resetPromise();
-                        this.getPromises(this.promiseListStatus);
+                        this.getPromises(this.currentList);
                     }
                 })
             }

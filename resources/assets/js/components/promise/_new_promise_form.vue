@@ -61,7 +61,6 @@
             createPromise() {
                 api.createPromise(this.promiseFormData).then(response => {
                     if (response.status == 201) {
-                        this.clearFormData();
                         this.clearNewPromiseForm();
                     }
                 })

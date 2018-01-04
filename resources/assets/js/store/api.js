@@ -58,7 +58,7 @@ export default {
     },
 
     updatePromise(id, data) {
-        return put(`promises/${id}`, data)
+        return put(`promises/${id}`, data);
     },
 
     updateChecklist(promiseId, checklistId, data) {
@@ -70,11 +70,15 @@ export default {
     },
 
     createPromise(data) {
-        return post(`promises/`, data)
+        return post(`promises/`, data);
     },
 
     createChecklist(promiseId, data) {
         return post(`promises/${promiseId}/checklists`, data);
+    },
+
+    createWish(data) {
+        return post(`wishes/`, data);
     },
 
     deletePromise(id) {
@@ -83,5 +87,9 @@ export default {
 
     deleteChecklist(promiseId, checklistId) {
         return remove(`promises/${promiseId}/checklists/${checklistId}`);
-    }
+    },
+
+    deleteWish(id) {
+        return remove(`wishes/${id}`);
+    },
 }

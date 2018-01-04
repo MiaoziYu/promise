@@ -33,5 +33,6 @@ Route::group(
     Route::get('/wishes/', 'WishesController@index');
     Route::post('/wishes/', 'WishesController@store');
     Route::put('/wishes/{id}', 'WishesController@update');
+    Route::delete('/wishes/{id}', 'WishesController@destroy');
     Route::put('/wishes/{id}/purchase', 'WishesController@purchase');
 });
