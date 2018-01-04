@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class WishesController extends Controller
 {
@@ -66,9 +67,17 @@ class WishesController extends Controller
 
     public function purchase($id)
     {
-        auth()->user()->wishes()->findOrFail($id)->update([
-            'purchased_at' => Carbon::now()
-        ]);
+        DB::transaction(function() use ($id){
+            $user = auth()->user();
+            $userProfile = $user->userProfile();
+            $wish = $user->wishes()->findOrFail($id);
+            $wish->update([
+                'purchased_at' => Carbon::now()
+            ]);
+            $userProfile->update([
+                'credits' => $userProfile->first()->credits - $wish->credits
+            ]);
+        });
 
         return response()->json([], 200);
     }

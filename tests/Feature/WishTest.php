@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\User;
+use App\UserProfile;
 use App\Wish;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
@@ -127,6 +128,10 @@ class WishTest extends TestCase
 
         // Arrange
         $user = factory(User::class)->create();
+        $userProfile = factory(UserProfile::class)->create([
+            'user_id' => $user->id,
+            'credits' => 800
+        ]);
         $wish = factory(Wish::class)->create([
             'user_id' => $user->id,
             'name' => 'nachos',
@@ -139,5 +144,8 @@ class WishTest extends TestCase
         // Assertion
         $getResponse = $this->get('/api/wishes/?api_token=' . $wish->id . $user->api_token);
         $getResponse->assertStatus(200);
+
+        $userProfileGetResponse = $this->get('/api/profile/' . '?api_token=' . $user->api_token);
+        $userProfileGetResponse->assertSee('300');
     }
 }
