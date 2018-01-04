@@ -65,12 +65,24 @@ class WishesController extends Controller
         return response()->json([], 200);
     }
 
+    public function destroy($id)
+    {
+        auth()->user()->wishes()->findOrFail($id)->delete();
+
+        return response()->json([], 200);
+    }
+
     public function purchase($id)
     {
-        DB::transaction(function() use ($id){
-            $user = auth()->user();
-            $userProfile = $user->userProfile();
-            $wish = $user->wishes()->findOrFail($id);
+        $user = auth()->user();
+        $userProfile = $user->userProfile();
+        $wish = $user->wishes()->findOrFail($id);
+
+        if ($userProfile->first()->credits < $wish->credits) {
+            return response()->json([], 422);
+        }
+
+        DB::transaction(function() use ($userProfile, $wish){
             $wish->update([
                 'purchased_at' => Carbon::now()
             ]);

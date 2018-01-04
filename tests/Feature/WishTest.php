@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\User;
 use App\UserProfile;
 use App\Wish;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -122,6 +123,35 @@ class WishTest extends TestCase
     }
 
     /** @test */
+    public function can_delete_a_wish()
+    {
+        $this->disableExceptionHandling();
+
+        // Arrange
+        $user = factory(User::class)->create();
+        $wish = factory(Wish::class)->create([
+            'user_id' => $user->id,
+            'name' => 'potato chip',
+            'description' => 'buy a package of potato chip',
+            'image_link' =>'example_link'
+        ]);
+
+        // Act
+        $deleteResponse = $this->delete('/api/wishes/' . $wish->id . '?api_token=' . $user->api_token);
+
+        // Assertion
+        $deleteResponse->assertStatus(200);
+
+        try {
+            $this->get('/api/promises/' . $wish->id . '?api_token=' . $user->api_token);
+        } catch (ModelNotFoundException $exception) {
+            return;
+        }
+
+        $this->fail();
+    }
+
+    /** @test */
     public function can_purchase_a_wish()
     {
         $this->disableExceptionHandling();
@@ -139,13 +169,39 @@ class WishTest extends TestCase
         ]);
 
         // Act
-        $this->put('/api/wishes/' . $wish->id . '/purchase' .'?api_token=' . $user->api_token, []);
+        $putResponse = $this->put('/api/wishes/' . $wish->id . '/purchase' .'?api_token=' . $user->api_token, []);
 
         // Assertion
-        $getResponse = $this->get('/api/wishes/?api_token=' . $wish->id . $user->api_token);
-        $getResponse->assertStatus(200);
+        $putResponse->assertStatus(200);
 
         $userProfileGetResponse = $this->get('/api/profile/' . '?api_token=' . $user->api_token);
         $userProfileGetResponse->assertSee('300');
+    }
+
+    /** @test */
+    public function cannot_purchase_a_wish_when_credits_are_not_enough()
+    {
+        $this->disableExceptionHandling();
+
+        // Arrange
+        $user = factory(User::class)->create();
+        $userProfile = factory(UserProfile::class)->create([
+            'user_id' => $user->id,
+            'credits' => 100
+        ]);
+        $wish = factory(Wish::class)->create([
+            'user_id' => $user->id,
+            'name' => 'nachos',
+            'credits' => 500
+        ]);
+
+        // Act
+        $putResponse = $this->put('/api/wishes/' . $wish->id . '/purchase' .'?api_token=' . $user->api_token, []);
+
+        // Assertion
+        $putResponse->assertStatus(422);
+
+        $getResponse = $this->get('/api/profile/' . '?api_token=' . $user->api_token);
+        $getResponse->assertSee('100');
     }
 }
