@@ -1,0 +1,13 @@
+.wishes-page {
+  margin-top: 40px;
+
+  .wish-purchase-btn {
+    @include button($green);
+    width: 100%;
+    font-size: 18px;
+
+    i {
+      margin-right: 4px;
+    }
+  }
+}

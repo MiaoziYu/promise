@@ -1,5 +1,8 @@
 <?php
-Route::get('/', 'IndexController@index');
+Route::group(['middleware' => ['auth'],], function() {
+    Route::get('/', 'IndexController@index');
+    Route::get('/wishes/', 'WishesController@index');
+});
 
 Route::group(['namespace' => 'Auth'], function () {
     Route::get('/register', 'RegisterController@create');

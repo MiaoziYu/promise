@@ -4,7 +4,7 @@
             <div class="nav-menu-left">
                 <div class="brand menu-item">
                     <i class="logo fa fa-check-square-o" aria-hidden="true"></i>
-                    <span class="text">Promise</span>
+                    <a href="/" class="menu-link text">Promise</a>
                 </div>
                 <div class="menu-item"><a class="menu-link" href="/wishes/">Wish market</a></div>
             </div>
@@ -35,7 +35,7 @@
         },
 
         created() {
-            EventBus.$on("finishPromise", this.getUserInfo);
+            EventBus.$on(["finishPromise", "purchaseWish"], this.getUserInfo);
         },
 
         methods: {

@@ -49,6 +49,10 @@ export default {
         return get(`promises/${id}`);
     },
 
+    getWishes() {
+        return get(`wishes/`);
+    },
+
     getUserInfo() {
         return get(`profile`);
     },
@@ -59,6 +63,10 @@ export default {
 
     updateChecklist(promiseId, checklistId, data) {
         return put(`promises/${promiseId}/checklists/${checklistId}`, data);
+    },
+
+    purchaseWish(id) {
+        return put(`wishes/${id}/purchase`, [])
     },
 
     createPromise(data) {

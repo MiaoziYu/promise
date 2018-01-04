@@ -48,22 +48,11 @@
     .promise-item {
       position: relative;
       height: 100%;
-      padding: $space-xsmall;
       cursor: pointer;
 
       &:hover {
         background-color: darken(white, 5%);
         transition: all .3s;
-      }
-
-      .title {
-        margin-bottom: $space-xsmall;
-        font-size: 20px;
-        font-weight: 500;
-      }
-
-      .description {
-        min-height: 40px;
       }
 
       .reward-points {
@@ -77,22 +66,11 @@
         .reward-content {
           line-height: 100px;
           color: #FFF;
-          font-size: 30px;
+          font-size: 24px;
 
           i {
             margin-right: 2px;
           }
-        }
-      }
-
-      .reward-img {
-        height: 100px;
-        margin-bottom: $space-small * 2;
-        overflow: hidden;
-        border-radius: 3px;
-
-        img {
-          @include img-cover(100%);
         }
       }
 

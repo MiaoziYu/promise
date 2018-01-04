@@ -25,6 +25,8 @@ Vue.component('checklist', require('./components/promise/_checklist.vue'));
 Vue.component('task-form', require('./components/promise/_task_form.vue'));
 Vue.component('new-promise-form', require('./components/promise/_new_promise_form.vue'));
 
+Vue.component('wishes', require('./components/wish/index.vue'));
+
 const app = new Vue({
     el: '#app',
     store
