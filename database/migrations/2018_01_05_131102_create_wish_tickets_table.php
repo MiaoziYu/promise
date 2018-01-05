@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWishesTable extends Migration
+class CreateWishTicketsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateWishesTable extends Migration
      */
     public function up()
     {
-        Schema::create('wishes', function (Blueprint $table) {
+        Schema::create('wish_tickets', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->string('name');
-            $table->string('description')->nullable();
-            $table->integer('credits');
-            $table->string('image_link')->nullable();
+            $table->string('image_link');
+            $table->dateTime('used_at')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreateWishesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wishes');
+        Schema::dropIfExists('wish_tickets');
     }
 }

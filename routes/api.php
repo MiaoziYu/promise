@@ -35,4 +35,8 @@ Route::group(
     Route::put('/wishes/{id}', 'WishesController@update');
     Route::delete('/wishes/{id}', 'WishesController@destroy');
     Route::put('/wishes/{id}/purchase', 'WishesController@purchase');
+
+    Route::get('/wish-tickets/', 'WishTicketsController@index');
+    Route::put('/wish-tickets/{id}', 'WishTicketsController@update');
+    Route::delete('/wish-tickets/{id}', 'WishTicketsController@destroy');
 });

@@ -47,6 +47,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Wish');
     }
 
+    public function wishTickets()
+    {
+        return $this->hasMany('App\WishTicket');
+    }
+
     public function updateCredits($promiseId)
     {
         $promise = $this->promises()->findOrFail($promiseId);

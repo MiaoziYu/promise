@@ -79,13 +79,15 @@ class WishesController extends Controller
         $wish = $user->wishes()->findOrFail($id);
 
         if ($userProfile->first()->credits < $wish->credits) {
-            return response()->json([], 422);
+            return response()->json(['not enough credits'], 422);
         }
 
-        DB::transaction(function() use ($userProfile, $wish){
-            $wish->update([
-                'purchased_at' => Carbon::now()
+        DB::transaction(function() use ($user, $userProfile, $wish){
+            $user->wishTickets()->create([
+                'name' => $wish->name,
+                'image_link' => $wish->image_link,
             ]);
+
             $userProfile->update([
                 'credits' => $userProfile->first()->credits - $wish->credits
             ]);
