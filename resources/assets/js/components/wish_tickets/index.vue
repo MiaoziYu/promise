@@ -8,7 +8,7 @@
                     <div v-if="ticket.image_link !== null" class="o-card-img">
                         <img :src="ticket.image_link" alt="">
                     </div>
-                    <p class="o-card-title">{{ ticket.name }}</p>
+                    <p class="title o-card-title">{{ ticket.name }}</p>
                     <button @click="claimWishTicket(ticket.id)"
                             class="claim-btn o-card-btn">
                         claim ticket

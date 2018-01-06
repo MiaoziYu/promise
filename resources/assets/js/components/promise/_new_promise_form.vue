@@ -11,10 +11,10 @@
                 <label for="new-promise-name">Name</label>
                 <input v-model="promiseFormData.name" id="new-promise-name">
             </div>
-            <div class="form-group">
-                <label for="new-promise-description">Description</label>
-                <textarea v-model="promiseFormData.description" id="new-promise-description"></textarea>
-            </div>
+            <!--<div class="form-group">-->
+                <!--<label for="new-promise-description">Description</label>-->
+                <!--<textarea v-model="promiseFormData.description" id="new-promise-description"></textarea>-->
+            <!--</div>-->
             <div class="form-group form-label form-reward">
                 <label>Select a reward</label>
                 <div @click="promiseFormData.reward_type = 'gift'"
@@ -31,6 +31,7 @@
             <div v-if="promiseFormData.reward_type != null" class="form-group">
                 <input v-if="promiseFormData.reward_type == 'gift'"
                        v-model="promiseFormData.reward_name"
+                       class="u-margin-b-1"
                        placeholder="reward name">
                 <input v-if="promiseFormData.reward_type == 'gift'"
                        v-model="promiseFormData.reward_image_link"

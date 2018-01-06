@@ -29,7 +29,7 @@
       .reward-points {
         height: 100px;
         width: 100px;
-        margin-bottom: $space-small * 2;
+        margin-bottom: $space-xsmall * 2;
         border-radius: 3px;
         background-color: $dark-gray;
         text-align: center;
@@ -40,7 +40,7 @@
           font-size: 24px;
 
           i {
-            margin-right: 2px;
+            margin-right: 4px;
           }
         }
       }
@@ -48,6 +48,7 @@
       .progress-bar {
         position: relative;
         height: 10px;
+        margin-top: $space-xsmall * 2;
         background-color: $gray;
         border-radius: 2px;
 
@@ -94,6 +95,10 @@
 
     .checkbox-wrapper {
       margin-bottom: $space-xsmall;
+
+      &:first-child {
+        margin-top: $space-xsmall * 2;
+      }
 
       .checkbox {
         width: 36px;
@@ -221,6 +226,26 @@
 
     .success-msg {
       margin: $space-small * 2 0;
+      font-size: 20px;
+    }
+
+    .success-points {
+      margin-bottom: $space-small * 2;
+      font-size: 40px;
+
+      i {
+        margin-right: 4px;
+      }
+    }
+
+    .success-img {
+      width: 300px;
+      height: 200px;
+      margin: 0 auto ;
+    }
+
+    .success-name {
+      margin: $space-xsmall 0 $space-small * 2 0;
       font-size: 20px;
     }
 

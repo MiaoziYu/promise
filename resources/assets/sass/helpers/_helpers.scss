@@ -17,7 +17,7 @@
   background-color: $white;
 
   .o-card-title {
-    margin-bottom: $space-xsmall;
+    margin-bottom: $space-small;
     font-size: 20px;
     font-weight: 500;
   }
@@ -51,7 +51,6 @@
 
   .o-card-img {
     height: 100px;
-    margin-bottom: $space-xsmall * 2;
     overflow: hidden;
     border-radius: 3px;
 
@@ -63,6 +62,7 @@
   .o-card-btn {
     @include button($green);
     width: 100%;
+    margin-top: $space-small;
     font-size: 18px;
 
     i {

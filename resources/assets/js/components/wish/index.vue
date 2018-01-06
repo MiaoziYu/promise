@@ -15,7 +15,7 @@
                     <div v-if="wish.image_link !== null" class="o-card-img">
                         <img :src="wish.image_link" alt="">
                     </div>
-                    <p class="o-card-title">{{ wish.name }}</p>
+                    <p class="title o-card-title">{{ wish.name }}</p>
                     <button @click="purchaseWish(wish)"
                             :class="{ active: hasEnoughCredits(wish) }"
                             class="wish-purchase-btn">

@@ -1,6 +1,6 @@
 <template>
     <div class="wish-create-form o-overlay" v-if="wishForm">
-        <div class="card o-overlay-content form">
+        <div class="o-card o-overlay-content form">
             <div class="title-wrapper">
                 <div class="title">Create new wish</div>
                 <div @click="clearNewWishForm" class="close-btn">

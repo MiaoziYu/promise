@@ -21,7 +21,7 @@
                 class="o-list-item">
                 <div class="o-card promise-item">
                     <p class="o-card-title">{{ promise.name }}</p>
-                    <p class="o-card-description">{{ promise.description }}</p>
+                    <!--<p class="o-card-description">{{ promise.description }}</p>-->
                     <div v-if="promise.reward_type === 'points'" class="reward-points">
                         <div class="reward-content">
                             <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ promise.reward_credits }}</span>
@@ -56,11 +56,11 @@
                     </div>
                 </div>
                 <div class="content form">
-                    <textarea v-model="promise.description"
-                              @blur="updateText(promise.id)"
-                              class="description"
-                              name="description">
-                    </textarea>
+                    <!--<textarea v-model="promise.description"-->
+                              <!--@blur="updateText(promise.id)"-->
+                              <!--class="description"-->
+                              <!--name="description">-->
+                    <!--</textarea>-->
 
                     <!--component to show and update punch card-->
                     <punch-card :promise="promise"></punch-card>
@@ -76,7 +76,7 @@
 
                     <!--buttons to finish or delete promise-->
                     <div class="form-btns">
-                        <button v-if="!hasTasks(promise)" @click="finishPromise(promise.id)" class="form-submit">Finish promise</button>
+                        <button v-if="!hasTasks(promise)" @click="finishPromise(promise)" class="form-submit">Finish promise</button>
                         <div @click="deletePromise(promise.id)" class="delete-btn btn-secondary">delete promise</div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                     </div>
                 </div>
                 <div class="content form">
-                    <div class="description">{{ promise.description }}</div>
+                    <!--<div class="description">{{ promise.description }}</div>-->
                     <div class="checkbox-wrapper">
                         <i v-for="n in promise.punch_card_total"
                            class="checkbox-static fa fa-check-square-o" aria-hidden="true"></i>
@@ -112,14 +112,20 @@
             </div>
         </div>
 
-        <div v-if="successMsg" class="o-overlay">
-            <div class="promise-success card o-overlay-content">
-                <p class="success-msg">Congrats! you've finished a promise!!</p>
-                <div class="success-icon">
-                    <i class="fa fa-smile-o" aria-hidden="true"></i>
-                    <i class="fa fa-heart" aria-hidden="true"></i>
+        <div v-if="successMsg !== null" class="o-overlay">
+            <div class="promise-success o-card o-overlay-content">
+                <div class="success-msg">
+                    <p>Congrats! you've finished a promise!!</p>
+                    <p>and you got</p>
                 </div>
-                <div @click="successMsg = false" class="success-btn">YAY!</div>
+                <div v-if="successMsg.reward_type === 'points'" class="success-points">
+                    <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ successMsg.reward_credits }}</span>
+                </div>
+                <div v-if="successMsg.reward_type === 'gift'" class="success-img o-card-img">
+                    <img :src="successMsg.reward_image_link" alt="">
+                </div>
+                <div class="success-name" v-if="successMsg.reward_type === 'gift'">{{ successMsg.reward_name }}</div>
+                <div @click="successMsg = null" class="success-btn"><i class="fa fa-smile-o" aria-hidden="true"></i> YAY!</div>
             </div>
         </div>
     </div>
@@ -135,7 +141,7 @@
                 currentList: "ongoing",
                 promise: null,
                 promiseForm: false,
-                successMsg: false,
+                successMsg: null,
             }
         },
 
@@ -157,7 +163,7 @@
                 this.getPromise(this.promise.id);
             });
             EventBus.$on(["finishChecklist", "finishPunchCard"], () => {
-                this.finishPromise(this.promise.id);
+                this.finishPromise(this.promise);
             });
         },
 
@@ -210,14 +216,19 @@
                 });
             },
 
-            finishPromise(id) {
+            finishPromise(promise) {
                 let data = {
                     finished: "true"
                 };
-                api.finishPromise(id).then(response => {
+                api.finishPromise(promise.id).then(response => {
                     this.resetPromise();
                     this.getPromises();
-                    this.successMsg = true;
+                    this.successMsg = {
+                        reward_type: promise.reward_type,
+                        reward_name: promise.reward_name,
+                        reward_credits: promise.reward_credits,
+                        reward_image_link: promise.reward_image_link,
+                    };
                     EventBus.$emit("finishPromise");
                 });
             },
