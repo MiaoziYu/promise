@@ -37,6 +37,7 @@ class PromisesController extends Controller
             'punch_card_total' => request('punch_card_total'),
             'punch_card_finished' => request('punch_card_finished'),
             'reward_type' => request('reward_type'),
+            'reward_name' => request('reward_name'),
             'reward_credits' => request('reward_credits'),
             'reward_image_link' => request('reward_image_link')
         ];
@@ -73,12 +74,30 @@ class PromisesController extends Controller
             $data['punch_card_finished'] = request('punch_card_finished');
         }
 
-        if (request('finished') === 'true') {
-            $data['finished_at'] = Carbon::now();
-            auth()->user()->updateCredits($id);
-        }
-
         auth()->user()->promises()->findOrFail($id)->update($data);
+
+        return response()->json([], 200);
+    }
+
+    public function finish($id)
+    {
+        $user = auth()->user();
+        $promise = $user->promises()->findOrFail($id);
+
+        DB::transaction(function () use ($user, $promise) {
+            $promise->update([
+                'finished_at' => Carbon::now()
+            ]);
+            if ($promise->reward_type === 'points') {
+                $user->updateCredits($promise->id);
+            } else if ($promise->reward_type = 'gift') {
+                $user->wishTickets()->create([
+                    'name' => $promise->reward_name,
+                    'image_link' => $promise->reward_image_link,
+                ]);
+            }
+
+        });
 
         return response()->json([], 200);
     }

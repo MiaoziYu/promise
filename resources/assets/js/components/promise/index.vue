@@ -214,7 +214,7 @@
                 let data = {
                     finished: "true"
                 };
-                api.updatePromise(id, data).then(response => {
+                api.finishPromise(id).then(response => {
                     this.resetPromise();
                     this.getPromises();
                     this.successMsg = true;

@@ -12,6 +12,7 @@ $factory->define(App\Promise::class, function (Faker $faker) {
         'punch_card_finished' => 5,
         'reward_type' => 'points',
         'reward_credits' => '500',
+        'reward_name' => 'kfc hot wings',
         'reward_image_link' => 'example_link',
         'finished_at' => null,
     ];

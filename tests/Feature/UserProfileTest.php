@@ -52,31 +52,4 @@ class UserProfileTest extends TestCase {
         $putResponse->assertStatus(200);
         $getResponse->assertSee('miaozi');
     }
-
-    /** @test */
-    public function can_update_credits_when_a_promise_finished()
-    {
-        $this->disableExceptionHandling();
-
-        // Arrange
-        $user = factory(User::class)->create();
-        $userProfile = factory(UserProfile::class)->create([
-            'user_id' => $user->id,
-            'credits' => 100
-        ]);
-        $promise = factory(Promise::class)->create([
-            'user_id' => $user->id,
-            'reward_type' => 'points',
-            'reward_credits' => 500,
-        ]);
-
-        // Act
-        $putResponse = $this->put('/api/promises/' . $promise->id . '?api_token=' . $user->api_token, [
-            'finished' => 'true'
-        ]);
-
-        // Assertion
-        $getResponse = $this->get('/api/profile/' . '?api_token=' . $user->api_token);
-        $getResponse->assertSee('600');
-    }
 }

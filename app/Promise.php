@@ -13,6 +13,7 @@ class Promise extends Model
         'punch_card_total',
         'punch_card_finished',
         'reward_type',
+        'reward_name',
         'reward_credits',
         'reward_image_link',
         'finished_at'

@@ -6,6 +6,7 @@ function get(path, param) {
             return response.data;
         })
         .catch(err => {
+            console.log(err);
             return err
         });
 }
@@ -59,6 +60,10 @@ export default {
 
     updatePromise(id, data) {
         return put(`promises/${id}`, data);
+    },
+
+    finishPromise(id) {
+        return put(`promises/${id}/finish`, []);
     },
 
     updateChecklist(promiseId, checklistId, data) {

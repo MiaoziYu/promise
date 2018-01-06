@@ -30,6 +30,9 @@
             </div>
             <div v-if="promiseFormData.reward_type != null" class="form-group">
                 <input v-if="promiseFormData.reward_type == 'gift'"
+                       v-model="promiseFormData.reward_name"
+                       placeholder="reward name">
+                <input v-if="promiseFormData.reward_type == 'gift'"
                        v-model="promiseFormData.reward_image_link"
                        placeholder="a image link for your gift">
                 <input v-if="promiseFormData.reward_type == 'points'"
@@ -76,6 +79,7 @@
                     name: "",
                     description: "",
                     reward_type: null,
+                    reward_name: "",
                     reward_credits: "",
                     reward_image_link: ""
                 };
