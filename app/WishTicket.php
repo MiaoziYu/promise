@@ -10,11 +10,11 @@ class WishTicket extends Model
         'user_id',
         'name',
         'image_link',
-        'used_at'
+        'claimed_at'
     ];
 
-    public function scopeUnused($query)
+    public function scopeUnclaimed($query)
     {
-        return $query->where('used_at', null);
+        return $query->where('claimed_at', null);
     }
 }

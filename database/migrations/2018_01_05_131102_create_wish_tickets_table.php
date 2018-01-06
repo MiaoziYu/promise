@@ -18,7 +18,7 @@ class CreateWishTicketsTable extends Migration
             $table->integer('user_id');
             $table->string('name');
             $table->string('image_link');
-            $table->dateTime('used_at')->nullable();
+            $table->dateTime('claimed_at')->nullable();
             $table->timestamps();
         });
     }

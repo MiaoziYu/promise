@@ -9,6 +9,6 @@ $factory->define(WishTicket::class, function (Faker $faker) {
     return [
         'name' => 'funny frisch',
         'image_link' => 'example image link',
-        'used_at' => null
+        'claimed_at' => null
     ];
 });

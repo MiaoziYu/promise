@@ -10,16 +10,18 @@ class WishTicketsController extends Controller
 {
     public function index()
     {
-        $wishTickets = auth()->user()->wishTickets()->unused()->get();
+        $wishTickets = auth()->user()->wishTickets()->unclaimed()->get();
 
         return response()->json($wishTickets, 200);
     }
 
-    public function update($id)
+    public function claim($id)
     {
         auth()->user()->wishTickets()->findOrFail($id)->update([
-            'used_at' => Carbon::now()
+            'claimed_at' => Carbon::now()
         ]);
+
+        return response()->json([], 200);
     }
 
     public function destroy($id)

@@ -13,7 +13,7 @@ class WishTicketTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function can_view_unused_wish_tickets()
+    public function can_view_unclaimed_wish_tickets()
     {
         $this->disableExceptionHandling();
 
@@ -27,7 +27,7 @@ class WishTicketTest extends TestCase
         factory(WishTicket::class)->create([
             'user_id' => $user->id,
             'name' => 'nachos',
-            'used_at' => Carbon::now()
+            'claimed_at' => Carbon::now()
         ]);
 
         // Act
@@ -41,7 +41,7 @@ class WishTicketTest extends TestCase
     }
 
     /** @test */
-    public function can_use_a_wish_ticket()
+    public function can_claim_a_wish_ticket()
     {
         $this->disableExceptionHandling();
 
@@ -54,12 +54,12 @@ class WishTicketTest extends TestCase
         ]);
 
         // Act
-        $response = $this->put('/api/wish-tickets/' . $wishTicket->id . '?api_token=' . $user->api_token, []);
+        $response = $this->put('/api/wish-tickets/' . $wishTicket->id . '/claim?api_token=' . $user->api_token, []);
 
         // Assertion
         $response->assertStatus(200);
 
-        $this->assertNotNull($user->wishTickets()->find($wishTicket->id)->used_at);
+        $this->assertNotNull($user->wishTickets()->find($wishTicket->id)->claimed_at);
     }
 
     /** @test */
