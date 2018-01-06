@@ -1,27 +1,21 @@
 <template>
-    <div class="wishes-page">
+    <div class="wishes-page page-wrapper">
         <!--action buttons-->
         <div class="action-btns">
-            <button @click="getWishes()" class="btn" :class="{ active: currentList === 'market'}">
-                <i class="fa fa-car" aria-hidden="true"></i> market
-            </button>
-            <button @click="" class="btn" :class="{ active: currentList === 'purchases'}">
-                <i class="fa fa-check-square-o" aria-hidden="true"></i> purchased
-            </button>
             <button @click="toggleWishForm" class="btn create-btn">
-                <i class="fa fa-plus" aria-hidden="true"></i>
+                <i class="fa fa-plus" aria-hidden="true"></i> add new wish
             </button>
         </div>
 
         <ul class="wish-list o-list-4">
             <li v-for="wish in wishes"
                 class="wish-item o-list-item">
-                <div class="card wish-item">
-                    <div class="delete-btn" @click="deleteWish(wish.id)"><i class="fa fa-trash-o" aria-hidden="true"></i></div>
-                    <div v-if="wish.image_link !== null" class="card-img">
+                <div class="o-card wish-item">
+                    <div class="o-card-delete-btn" @click="deleteWish(wish.id)"><i class="fa fa-trash-o" aria-hidden="true"></i></div>
+                    <div v-if="wish.image_link !== null" class="o-card-img">
                         <img :src="wish.image_link" alt="">
                     </div>
-                    <p class="card-title">{{ wish.name }}</p>
+                    <p class="o-card-title">{{ wish.name }}</p>
                     <button @click="purchaseWish(wish)"
                             :class="{ active: hasEnoughCredits(wish) }"
                             class="wish-purchase-btn">

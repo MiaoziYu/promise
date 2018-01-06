@@ -1,6 +1,6 @@
 <template>
     <div class="promise-create-form o-overlay" v-if="promiseForm">
-        <div class="card o-overlay-content form">
+        <div class="o-card o-overlay-content form">
             <div class="title-wrapper">
                 <div class="title">Create new promise</div>
                 <div @click="clearNewPromiseForm" class="close-btn">

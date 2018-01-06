@@ -1,5 +1,5 @@
 <template>
-    <div class="promise-page">
+    <div class="promise-page page-wrapper">
 
         <!--action buttons-->
         <div class="action-btns">
@@ -19,15 +19,15 @@
             <li v-for="promise in promises"
                 @click="getPromise(promise.id)"
                 class="o-list-item">
-                <div class="card promise-item">
-                    <p class="card-title">{{ promise.name }}</p>
-                    <p class="card-description">{{ promise.description }}</p>
+                <div class="o-card promise-item">
+                    <p class="o-card-title">{{ promise.name }}</p>
+                    <p class="o-card-description">{{ promise.description }}</p>
                     <div v-if="promise.reward_type === 'points'" class="reward-points">
                         <div class="reward-content">
                             <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ promise.reward_credits }}</span>
                         </div>
                     </div>
-                    <div v-if="promise.reward_type === 'gift'" class="card-img">
+                    <div v-if="promise.reward_type === 'gift'" class="o-card-img">
                         <img :src="promise.reward_image_link" alt="">
                     </div>
                     <div class="progress-bar" v-if="hasTasks(promise)">
@@ -43,7 +43,7 @@
 
         <!--ongoing promise detail-->
         <div class="promise o-overlay" v-if="promise && promise.finished_at === null">
-            <div class="card o-overlay-content">
+            <div class="o-card o-overlay-content">
                 <div class="title-wrapper">
                     <div class="title">
                         <input v-model="promise.name"
@@ -85,7 +85,7 @@
 
         <!--finished promise detail-->
         <div class="promise o-overlay" v-if="promise && promise.finished_at">
-            <div class="card o-overlay-content">
+            <div class="o-card o-overlay-content">
                 <div class="title-wrapper">
                     <div class="title">{{ promise.name }}</div>
                     <div @click="resetPromise" class="close-btn">

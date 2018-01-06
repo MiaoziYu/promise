@@ -58,6 +58,10 @@ export default {
         return get(`profile`);
     },
 
+    getWishTickets() {
+        return get(`wish-tickets`);
+    },
+
     updatePromise(id, data) {
         return put(`promises/${id}`, data);
     },
@@ -72,6 +76,10 @@ export default {
 
     purchaseWish(id) {
         return put(`wishes/${id}/purchase`, [])
+    },
+
+    claimWishTicket(id) {
+        return put(`wish-tickets/${id}/claim`, [])
     },
 
     createPromise(data) {
@@ -96,5 +104,9 @@ export default {
 
     deleteWish(id) {
         return remove(`wishes/${id}`);
+    },
+
+    deleteWishTicket(id) {
+        return remove(`wish-tickets/${id}`);
     },
 }
