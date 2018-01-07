@@ -41,4 +41,9 @@ Route::group(
     Route::get('/wish-tickets/', 'WishTicketsController@index');
     Route::put('/wish-tickets/{id}/claim', 'WishTicketsController@claim');
     Route::delete('/wish-tickets/{id}', 'WishTicketsController@destroy');
+
+    Route::get('/habits/', 'HabitsController@index');
+    Route::post('/habits/', 'HabitsController@store');
+    Route::put('/habits/{id}/check', 'HabitsController@check');
+    Route::delete('/habits/{id}', 'HabitsController@destroy');
 });
