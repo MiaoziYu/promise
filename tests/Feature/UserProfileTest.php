@@ -33,8 +33,8 @@ class UserProfileTest extends TestCase {
         ]);
 
         // Act
-        $responseOne = $this->get('/api/profile/' . '?api_token=' . $userOne->api_token);
-        $responseTwo = $this->get('/api/profile/' . '?api_token=' . $userOne->api_token);
+        $responseOne = $this->actingAs($userOne)->get('/api/profile/' . '?api_token=' . $userOne->api_token);
+        $responseTwo = $this->actingAs($userTwo)->get('/api/profile/' . '?api_token=' . $userOne->api_token);
 
         // Assertion
         $responseOne->assertSee($userOne->name);
