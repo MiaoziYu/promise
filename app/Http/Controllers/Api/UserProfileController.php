@@ -14,7 +14,7 @@ class UserProfileController extends Controller
         $user = auth()->user();
         $userProfile = $user->userProfile()->first();
 
-        $user->userProfile = $userProfile;
+        $user->user_profile = $userProfile;
 
         return response()->json($user, 200);
     }
