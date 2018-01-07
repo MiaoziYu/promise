@@ -6,15 +6,15 @@
                     <i class="logo fa fa-check-square-o" aria-hidden="true"></i>
                     <a href="/" class="menu-link text">Promise</a>
                 </div>
-                <div class="menu-item"
+                <div v-if="user" class="menu-item"
                      :class="{ active:pageName === 'promises' }">
                     <a class="menu-link" href="/">My promises</a>
                 </div>
-                <div class="menu-item"
+                <div v-if="user" class="menu-item"
                      :class="{ active:pageName === 'wishes' }">
                     <a class="menu-link" href="/wishes/">Wish market</a>
                 </div>
-                <div class="menu-item"
+                <div v-if="user" class="menu-item"
                      :class="{ active:pageName === 'wishTickets' }">
                     <a class="menu-link" href="/wish-tickets/">wish tickets</a>
                 </div>
@@ -43,7 +43,9 @@
         },
 
         beforeMount() {
-            this.getUserInfo();
+            if (typeof API_TOKEN !== "undefined") {
+                this.getUserInfo();
+            }
         },
 
         created() {
