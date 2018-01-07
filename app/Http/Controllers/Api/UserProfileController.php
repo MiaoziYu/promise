@@ -11,7 +11,7 @@ class UserProfileController extends Controller
     public function show()
     {
         /* @var User $user */
-        $user = auth()->user()->with('userProfile')->first();
+        $user = auth()->user()->with('userProfile')->get();
 
         return response()->json($user, 200);
     }

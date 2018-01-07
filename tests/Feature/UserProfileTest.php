@@ -17,18 +17,31 @@ class UserProfileTest extends TestCase {
         $this->disableExceptionHandling();
 
         // Arrange
-        $user = factory(User::class)->create();
-        $userProfile = factory(UserProfile::class)->create([
-            'user_id' => $user->id,
+        $userOne = factory(User::class)->create([
+            'name' => 'mao mao',
+        ]);
+        $userTwo = factory(User::class)->create([
+            'name' => 'bearzk',
+        ]);
+        $userProfileOne = factory(UserProfile::class)->create([
+            'user_id' => $userOne->id,
             'credits' => 650
+        ]);
+        $userProfileTwo = factory(UserProfile::class)->create([
+            'user_id' => $userTwo->id,
+            'credits' => 400
         ]);
 
         // Act
-        $response = $this->get('/api/profile/' . '?api_token=' . $user->api_token);
+        $responseOne = $this->get('/api/profile/' . '?api_token=' . $userOne->api_token);
+        $responseTwo = $this->get('/api/profile/' . '?api_token=' . $userOne->api_token);
 
         // Assertion
-        $response->assertSee($user->name);
-        $response->assertSee('650');
+        $responseOne->assertSee($userOne->name);
+        $responseOne->assertSee('650');
+
+        $responseTwo->assertSee($userTwo->name);
+        $responseTwo->assertSee('400');
     }
 
     /** @test */
