@@ -18,7 +18,7 @@
 
   .o-card-title {
     margin-bottom: $space-small;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 500;
   }
 
@@ -74,6 +74,7 @@
 .o-list-4 {
   display: flex;
   flex-flow: row wrap;
+  align-items: flex-start;
 
   .o-list-item {
     flex: 0 1 25%;

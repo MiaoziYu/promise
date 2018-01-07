@@ -11,10 +11,10 @@
                 <label for="new-promise-name">Name</label>
                 <input v-model="promiseFormData.name" id="new-promise-name">
             </div>
-            <!--<div class="form-group">-->
-                <!--<label for="new-promise-description">Description</label>-->
-                <!--<textarea v-model="promiseFormData.description" id="new-promise-description"></textarea>-->
-            <!--</div>-->
+            <div class="form-group">
+                <label for="new-promise-description">Description</label>
+                <textarea v-model="promiseFormData.description" id="new-promise-description"></textarea>
+            </div>
             <div class="form-group form-label form-reward">
                 <label>Select a reward</label>
                 <div @click="promiseFormData.reward_type = 'gift'"
@@ -58,7 +58,7 @@
         },
 
         beforeMount() {
-            this.clearFormData();
+            this.resetFormData();
         },
 
         methods: {
@@ -71,11 +71,11 @@
             },
 
             clearNewPromiseForm() {
-                this.clearFormData();
+                this.resetFormData();
                 EventBus.$emit("clearNewPromiseForm");
             },
 
-            clearFormData() {
+            resetFormData() {
                 this.promiseFormData = {
                     name: "",
                     description: "",

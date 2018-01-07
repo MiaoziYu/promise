@@ -43,11 +43,15 @@ function remove(path, param) {
 
 export default {
     getPromises(param) {
-        return get(`promises`, `finished=${param}`);
+        return get(`promises/`, `finished=${param}`);
     },
 
     getPromise(id) {
         return get(`promises/${id}`);
+    },
+
+    getHabits() {
+        return get(`habits/`);
     },
 
     getWishes() {
@@ -78,12 +82,20 @@ export default {
         return put(`wishes/${id}/purchase`, [])
     },
 
+    checkHabit(id) {
+        return put(`habits/${id}/check`, [])
+    },
+
     claimWishTicket(id) {
         return put(`wish-tickets/${id}/claim`, [])
     },
 
     createPromise(data) {
         return post(`promises/`, data);
+    },
+
+    createHabit(data) {
+        return post(`habits/`, data);
     },
 
     createChecklist(promiseId, data) {
@@ -100,6 +112,10 @@ export default {
 
     deleteChecklist(promiseId, checklistId) {
         return remove(`promises/${promiseId}/checklists/${checklistId}`);
+    },
+
+    deleteHabit(id) {
+        return remove(`habits/${id}`);
     },
 
     deleteWish(id) {
