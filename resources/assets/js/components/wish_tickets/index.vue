@@ -8,13 +8,24 @@
                         <img :src="ticket.image_link" alt="">
                     </div>
                     <p class="title o-card-title">{{ ticket.name }}</p>
-                    <button @click="claimWishTicket(ticket.id)"
+                    <button @click="claimConfirmMessage = ticket.id"
                             class="claim-btn o-card-btn">
                         claim ticket
                     </button>
                 </div>
             </li>
         </ul>
+
+        <!-- ========== promise success message ========== -->
+        <div v-if="claimConfirmMessage !== null" class="o-overlay">
+            <div class="wish-ticket-confirm o-card o-overlay-content">
+                <div class="confirm-msg">
+                    <p>Do you want to claim this ticket?</p>
+                </div>
+                <div @click="claimWishTicket(claimConfirmMessage)" class="confirm-btn">I'm sure</div>
+                <div @click="claimConfirmMessage = null" class="cancel-btn">maybe not</div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -24,7 +35,8 @@
     export default {
         data() {
             return {
-                wishTickets: null
+                wishTickets: null,
+                claimConfirmMessage: null
             }
         },
 
@@ -48,6 +60,7 @@
 
             claimWishTicket(id) {
                 api.claimWishTicket(id).then(response => {
+                    this.claimConfirmMessage = null;
                     this.getWishTickets()
                 });
             }

@@ -10,13 +10,14 @@
         <!-- ========== wish list ========== -->
         <ul class="wish-list o-list-4">
             <li v-for="wish in wishes"
-                @click="getWish(wish.id)"
                 class="o-list-item">
                 <div class="o-card wish-item">
-                    <div v-if="wish.image_link !== null" class="o-card-img">
+                    <div v-if="wish.image_link !== null"
+                         @click="getWish(wish.id)"
+                         class="o-card-img">
                         <img :src="wish.image_link" alt="">
                     </div>
-                    <p class="title o-card-title">{{ wish.name }}</p>
+                    <p @click="getWish(wish.id)" class="title o-card-title">{{ wish.name }}</p>
                     <button @click="purchaseWish(wish)"
                             :class="{ active: hasEnoughCredits(wish) }"
                             class="wish-purchase-btn">
