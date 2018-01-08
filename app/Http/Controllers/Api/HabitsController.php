@@ -15,6 +15,13 @@ class HabitsController extends Controller
         return response()->json($habits, 200);
     }
 
+    public function show($id)
+    {
+        $habit = auth()->user()->habits()->findOrFail($id);
+
+        return response()->json($habit, 200);
+    }
+
     public function store()
     {
         auth()->user()->habits()->create([
@@ -26,6 +33,27 @@ class HabitsController extends Controller
         ]);
 
         return response()->json([], 201);
+    }
+
+    public function update($id)
+    {
+        $data = [];
+
+        if (request('name')) {
+            $data['name'] = request('name');
+        }
+
+        if (request('description')) {
+            $data['description'] = request('description');
+        }
+
+        if (request('credits')) {
+            $data['credits'] = request('credits');
+        }
+
+        auth()->user()->habits()->findOrFail($id)->update($data);
+
+        return response()->json([], 200);
     }
 
     public function check($id)

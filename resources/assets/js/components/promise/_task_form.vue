@@ -29,6 +29,7 @@
         <!--form to create tasks-->
         <div v-if="punchCardCreateForm " class="form-group">
             <input v-model="punchCardValue"
+                   @keyup.enter="updatePunchCard(promise.id)"
                    class="u-margin-b-1"
                    placeholder="How many tasks do you want to have?">
             <div class="form-label">
@@ -38,6 +39,7 @@
         </div>
         <div v-if="checklistCreateForm" class="form-group">
             <input v-model="checklistValue"
+                   @keyup.enter="addChecklist(promise.id)"
                    class="u-margin-b-1"
                    placeholder="add checklist element">
             <div class="form-label">
@@ -49,6 +51,7 @@
         <!--form to edit tasks-->
         <div v-if="punchCardEditForm" class="form-group">
             <input v-model="punchCardValue"
+                   @keyup.enter="updatePunchCard(promise.id)"
                    class="u-margin-b-1"
                    placeholder="new punch card number">
             <div class="form-label">
@@ -58,6 +61,7 @@
         </div>
         <div v-if="checklistEditForm" class="form-group">
             <input v-model="checklistValue"
+                   @keyup.enter="addChecklist(promise.id)"
                    class="u-margin-b-1"
                    placeholder="add checklist element">
             <div class="form-label">

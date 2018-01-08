@@ -54,6 +54,10 @@ export default {
         return get(`habits/`);
     },
 
+    getHabit(id) {
+        return get(`habits/${id}`);
+    },
+
     getWishes() {
         return get(`wishes/`);
     },
@@ -64,6 +68,10 @@ export default {
 
     getWishTickets() {
         return get(`wish-tickets`);
+    },
+
+    updateHabit(id, data) {
+        return put(`habits/${id}`, data);
     },
 
     updatePromise(id, data) {

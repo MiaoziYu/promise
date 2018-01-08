@@ -66,6 +66,10 @@ class PromisesController extends Controller
             $data['description'] = request('description');
         }
 
+        if (request('reward_credits') !== null) {
+            $data['reward_credits'] = request('reward_credits');
+        }
+
         if (request('punch_card_total') !== null) {
             $data['punch_card_total'] = request('punch_card_total');
         }

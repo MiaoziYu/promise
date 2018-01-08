@@ -17,7 +17,7 @@ class CreateHabitsTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->string('name');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->integer('credits');
             $table->integer('count');
             $table->integer('streak');

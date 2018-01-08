@@ -1,5 +1,5 @@
 <template>
-    <div class="checkbox-wrapper">
+    <div class="punch-card checkbox-wrapper">
         <input v-for="n in promise.punch_card_finished"
                v-if="promise.finished_at == null"
                @click="updatePunchCard(promise)"

@@ -1,14 +1,8 @@
 <template>
-    <div class="promise-page page-wrapper">
+    <div class="dashboard page-wrapper">
 
-        <!--action buttons-->
+        <!-- ========== action buttons ========== -->
         <div class="action-btns">
-            <!--<button @click="getPromises()" class="btn" :class="{ active: currentList === 'ongoing'}">-->
-                <!--<i class="fa fa-car" aria-hidden="true"></i> ongoing-->
-            <!--</button>-->
-            <!--<button @click="getPromises('finished')" class="btn" :class="{ active: currentList === 'finished'}">-->
-                <!--<i class="fa fa-check-square-o" aria-hidden="true"></i> finished-->
-            <!--</button>-->
             <button @click="toggleHabitForm" class="btn create-btn">
                 <i class="fa fa-plus" aria-hidden="true"></i> add habit
             </button>
@@ -18,14 +12,14 @@
         </div>
 
         <div class="task-list">
-            <!--habit list-->
+
+            <!-- ========== habit list ========== -->
             <div class="habit-list">
                 <h2 class="task-title">Habits</h2>
                 <ul>
                     <li v-for="habit in habits" class="o-card habit-item">
-                        <!--<div class="o-card-delete-btn" @click="deleteHabit(habit.id)"><i class="fa fa-trash-o" aria-hidden="true"></i></div>-->
                         <div class="habit-content">
-                            <div class="habit-text">
+                            <div @click="getHabit(habit.id)" class="habit-text">
                                 <p class="o-card-title">{{ habit.name }}</p>
                                 <p v-if="habit.description" class="o-card-description">{{ habit.description }}</p>
                                 <p class="habit-credits-wrapper">
@@ -40,14 +34,14 @@
                                 <button>Done</button>
                             </div>
                         </div>
-                        <ul class="habit-streak" :class="{ streak: habit.streak >= 7 }">
+                        <ul @click="getHabit(habit.id)" class="habit-streak" :class="{ streak: habit.streak >= 7 }">
                             <li v-for="(steak, index) in habit.streak" v-if="index < 7" class="streak-item"></li>
                         </ul>
                     </li>
                 </ul>
             </div>
 
-            <!--promise list-->
+            <!-- ========== promise list ========== -->
             <div class="promise-list">
                 <h2 class="task-title">Promise</h2>
                 <ul class="o-list-4">
@@ -75,19 +69,61 @@
             </div>
         </div>
 
-        <!--new habit form-->
+        <!-- ========== new habit form ========== -->
         <new-habit-form :habitForm="habitForm"></new-habit-form>
 
-        <!--new promise form-->
+        <!-- ========== new promise form ========== -->
         <new-promise-form :promiseForm="promiseForm"></new-promise-form>
 
-        <!--ongoing promise detail-->
+        <!-- ========== habit detail ========== -->
+        <div v-if="habit" class="habit o-overlay">
+            <div class="o-card o-overlay-content">
+                <div class="title-wrapper">
+                    <div class="title">
+                        <input v-model="habit.name"
+                               @blur="habit ? updateHabit(habit.id) : null"
+                               @keyup.enter="updateHabit(habit.id)"
+                               class="title"
+                               name="name">
+                    </div>
+                    <div @click="habit = null" class="close-btn">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="content form">
+                    <textarea v-model="habit.description"
+                              @blur="habit ? updateHabit(habit.id) : null"
+                              @keyup.enter="updateHabit(habit.id)"
+                              class="description"
+                              name="description"
+                              placeholder="add description">
+                    </textarea>
+                    <i class="fa fa-diamond" aria-hidden="true"></i>
+                    <input v-model="habit.credits"
+                           @blur="habit ? updateHabit(habit.id) : null"
+                           @keyup.enter="updateHabit(habit.id)"
+                           class="credits"
+                           name="credits">
+
+                    <!--habit created date-->
+                    <p class="date">created at {{ habit.created_at }}</p>
+
+                    <!--buttons to finish or delete habit-->
+                    <div class="form-btns">
+                        <div @click="deleteHabit(habit.id)" class="delete-btn btn-secondary">delete habit</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== promise detail ========== -->
         <div class="promise o-overlay" v-if="promise && promise.finished_at === null">
             <div class="o-card o-overlay-content">
                 <div class="title-wrapper">
                     <div class="title">
                         <input v-model="promise.name"
-                               @blur="updateText(promise.id)"
+                               @blur="promise ? updatePromiseText(promise.id) : null"
+                               @keyup.enter="updatePromiseText(promise.id)"
                                class="title"
                                name="name">
                     </div>
@@ -97,11 +133,19 @@
                 </div>
                 <div class="content form">
                     <textarea v-model="promise.description"
-                              @blur="updateText(promise.id)"
+                              @blur="promise ? updatePromiseText(promise.id) : null"
+                              @keyup.enter="updatePromiseText(promise.id)"
                               class="description"
                               name="description"
                               placeholder="add description">
                     </textarea>
+
+                    <i class="fa fa-diamond" aria-hidden="true"></i>
+                    <input v-model="promise.reward_credits"
+                           @blur="promise ? updatePromiseText(promise.id) : null"
+                           @keyup.enter="updatePromiseText(promise.id)"
+                           class="credits"
+                           name="reward_credits">
 
                     <!--component to show and update punch card-->
                     <punch-card :promise="promise"></punch-card>
@@ -124,35 +168,7 @@
             </div>
         </div>
 
-        <!--finished promise detail-->
-        <div class="promise o-overlay" v-if="promise && promise.finished_at">
-            <div class="o-card o-overlay-content">
-                <div class="title-wrapper">
-                    <div class="title">{{ promise.name }}</div>
-                    <div @click="resetPromise" class="close-btn">
-                        <i class="fa fa-times" aria-hidden="true"></i>
-                    </div>
-                </div>
-                <div class="content form">
-                    <!--<div class="description">{{ promise.description }}</div>-->
-                    <div class="checkbox-wrapper">
-                        <i v-for="n in promise.punch_card_total"
-                           class="checkbox-static fa fa-check-square-o" aria-hidden="true"></i>
-                    </div>
-                    <ul v-if="promise.checklists.length > 0">
-                        <li v-for="checklist in promise.checklists" class="checkbox-wrapper checklist">
-                            <i class="checkbox-static fa fa-check-square-o" aria-hidden="true"></i>
-                            <label class="label-static" for="">{{ checklist.text }}</label>
-                        </li>
-                    </ul>
-                    <p class="date">finished at {{ promise.finished_at }}</p>
-                    <div class="form-btns">
-                        <div @click="deletePromise(promise.id)" class="delete-btn btn-secondary">delete promise</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <!-- ========== promise success message ========== -->
         <div v-if="successMsg !== null" class="o-overlay">
             <div class="promise-success o-card o-overlay-content">
                 <div class="success-msg">
@@ -183,6 +199,7 @@
                 promise: null,
                 promiseForm: false,
                 habits: null,
+                habit: null,
                 habitForm: false,
                 successMsg: null,
             }
@@ -213,6 +230,15 @@
             EventBus.$on(["finishChecklist", "finishPunchCard"], () => {
                 this.finishPromise(this.promise);
             });
+
+            $(document).keyup(even => {
+                if (even.keyCode == 27) {
+                    this.promise = null;
+                    this.habit = null;
+                    this.promiseForm = null;
+                    this.habitForm = null;
+                }
+            })
         },
 
         methods: {
@@ -232,6 +258,12 @@
             getHabits() {
                 api.getHabits().then(data => {
                     this.habits = data;
+                })
+            },
+
+            getHabit(id) {
+                api.getHabit(id).then(data => {
+                    this.habit = data;
                 })
             },
 
@@ -275,11 +307,13 @@
                 this.promise = null;
             },
 
-            updateText(id) {
-                let data = {};
-                data[$(event.target).attr("name")] = $(event.target).val();
-                api.updatePromise(id, data).then(response => {
-                    this.getPromises();
+            updateHabit(id) {
+                let data = {},
+                    eventTarget = $(event.target);
+                data[eventTarget.attr("name")] = $(event.target).val();
+                api.updateHabit(id, data).then(response => {
+                    this.getHabits();
+                    eventTarget.blur();
                 });
             },
 
@@ -287,6 +321,16 @@
                 api.checkHabit(id).then(response => {
                     this.getHabits();
                     EventBus.$emit("checkHabit");
+                });
+            },
+
+            updatePromiseText(id) {
+                let data = {},
+                    eventTarget = $(event.target);
+                data[eventTarget.attr("name")] = $(event.target).val();
+                api.updatePromise(id, data).then(response => {
+                    this.getPromises();
+                    eventTarget.blur();
                 });
             },
 
