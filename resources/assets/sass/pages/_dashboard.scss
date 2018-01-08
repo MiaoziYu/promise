@@ -10,11 +10,16 @@
     }
 
     .habit-list {
-      width: 20%;
+      width: 24%;
     }
 
     .promise-list {
-      width: 78%;
+      width: 74%;
+    }
+
+    @media (max-width: $breakpoint-md) {
+      align-items: stretch;
+      flex-flow: column wrap;
     }
   }
 }
@@ -39,9 +44,6 @@
     width: 100%;
     margin-top: $space-xsmall;
     resize: none;
-  }
-
-  .credits {
   }
 
   .date {

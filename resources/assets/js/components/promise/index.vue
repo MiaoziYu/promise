@@ -24,13 +24,19 @@
                                 <p v-if="habit.description" class="o-card-description">{{ habit.description }}</p>
                                 <p class="habit-credits-wrapper">
                                     <span class="habit-credits"><i class="fa fa-diamond" aria-hidden="true"></i>{{ habit.credits }}</span>
-                                    <span v-if="habit.streak >= 7" class="habit-bonus">+ {{ habit.credits }}</span>
+                                    <span v-if="hasStreak(habit)" class="habit-bonus">+ {{ habit.credits }}</span>
+                                    <span class="check-count">
+                                        <i class="fa fa-check-circle" aria-hidden="true"></i>{{ habit.count }}
+                                    </span>
+                                    <span v-if="hasStreak(habit)" class="streak-count">
+                                        <i class="fa fa-bolt" aria-hidden="true"></i>{{ habit.streak - 6 }}
+                                    </span>
                                 </p>
                             </div>
-                            <div v-if="!hasCheckedToday(habit)" class="habit-btn">
+                            <div v-if="!hasCheckedToday(habit)" class="habit-btn" :class="{streak: hasStreak(habit)}">
                                 <button @click="checkHabit(habit.id)">Check</button>
                             </div>
-                            <div v-if="hasCheckedToday(habit)" class="habit-btn checked">
+                            <div v-if="hasCheckedToday(habit)" class="habit-btn checked" :class="{streak: hasStreak(habit)}">
                                 <button>Done</button>
                             </div>
                         </div>
@@ -44,7 +50,7 @@
             <!-- ========== promise list ========== -->
             <div class="promise-list">
                 <h2 class="task-title">Promise</h2>
-                <ul class="o-list-4">
+                <ul class="o-list-3">
                     <li v-for="promise in promises"
                         @click="getPromise(promise.id)"
                         class="o-list-item">
@@ -267,8 +273,12 @@
                 })
             },
 
-            hasTasks: function(promise) {
+            hasTasks(promise) {
                 return this.currentList === 'ongoing' && (promise.checklists.length > 0 || promise.punch_card_total > 0);
+            },
+
+            hasStreak(habit) {
+                return habit.streak >= 7;
             },
 
             hasCheckedToday(habit) {
