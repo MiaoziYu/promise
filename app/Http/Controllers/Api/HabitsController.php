@@ -119,7 +119,7 @@ class HabitsController extends Controller
     {
         $userProfile = $user->userProfile();
 
-        if ($habit->streak > 7) {
+        if ($habit->streak > 6) {
             $credits = $habit->credits * 2;
         } else {
             $credits = $habit->credits;
