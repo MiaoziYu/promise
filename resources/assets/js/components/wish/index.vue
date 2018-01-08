@@ -19,7 +19,7 @@
                     <button @click="purchaseWish(wish)"
                             :class="{ active: hasEnoughCredits(wish) }"
                             class="wish-purchase-btn">
-                        Get for <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ wish.credits }}</span>
+                        <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ wish.credits }}</span>
                     </button>
                 </div>
             </li>

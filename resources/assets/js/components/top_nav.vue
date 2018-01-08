@@ -8,11 +8,11 @@
                 </div>
                 <div v-if="user" class="menu-item"
                      :class="{ active:pageName === 'promises' }">
-                    <a class="menu-link" href="/">My promises</a>
+                    <a class="menu-link" href="/">tasks</a>
                 </div>
                 <div v-if="user" class="menu-item"
                      :class="{ active:pageName === 'wishes' }">
-                    <a class="menu-link" href="/wishes/">Wish market</a>
+                    <a class="menu-link" href="/wishes/">market</a>
                 </div>
                 <div v-if="user" class="menu-item"
                      :class="{ active:pageName === 'wishTickets' }">
