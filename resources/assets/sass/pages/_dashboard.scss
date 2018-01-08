@@ -25,12 +25,14 @@
 }
 
 .habit,
-.promise {
+.promise,
+.wish {
   font-size: 16px;
 
   .title,
   .description,
-  .credits {
+  .credits,
+  .image-link {
     border: none;
   }
 

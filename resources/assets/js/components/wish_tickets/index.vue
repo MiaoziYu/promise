@@ -4,7 +4,6 @@
             <li v-for="ticket in wishTickets"
                 class="wish-ticket-item o-list-item">
                 <div class="o-card wish-item">
-                    <div class="o-card-delete-btn" @click="deleteWishTicket(ticket.id)"><i class="fa fa-trash-o" aria-hidden="true"></i></div>
                     <div v-if="ticket.image_link !== null" class="o-card-img">
                         <img :src="ticket.image_link" alt="">
                     </div>

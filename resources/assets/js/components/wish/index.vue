@@ -7,11 +7,12 @@
             </button>
         </div>
 
+        <!-- ========== wish list ========== -->
         <ul class="wish-list o-list-4">
             <li v-for="wish in wishes"
-                class="wish-item o-list-item">
+                @click="getWish(wish.id)"
+                class="o-list-item">
                 <div class="o-card wish-item">
-                    <div class="o-card-delete-btn" @click="deleteWish(wish.id)"><i class="fa fa-trash-o" aria-hidden="true"></i></div>
                     <div v-if="wish.image_link !== null" class="o-card-img">
                         <img :src="wish.image_link" alt="">
                     </div>
@@ -25,6 +26,48 @@
             </li>
         </ul>
 
+        <!-- ========== wish detail ========== -->
+        <div v-if="wish" class="wish o-overlay">
+            <div class="o-card o-overlay-content">
+                <div class="title-wrapper">
+                    <div class="title">
+                        <input v-model="wish.name"
+                               @blur="wish ? updateWish(wish.id) : null"
+                               @keyup.enter="updateWish(wish.id)"
+                               class="title"
+                               name="name">
+                    </div>
+                    <div @click="wish = null" class="close-btn">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="content form">
+                    <div class="form-group">
+                        <label for="">image link</label>
+                        <input v-model="wish.image_link"
+                               @blur="wish ? updateWish(wish.id) : null"
+                               @keyup.enter="updateWish(wish.id)"
+                               class="image_link"
+                               name="image_link">
+                    </div>
+                    <i class="fa fa-diamond" aria-hidden="true"></i>
+                    <input v-model="wish.credits"
+                           @blur="wish ? updateWish(wish.id) : null"
+                           @keyup.enter="updateWish(wish.id)"
+                           class="credits"
+                           name="credits">
+
+                    <!--wish created date-->
+                    <p class="date">created at {{ wish.created_at }}</p>
+
+                    <!--buttons to finish or delete wish-->
+                    <div class="form-btns">
+                        <div @click="deleteWish(wish.id)" class="delete-btn btn-secondary">delete wish</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <new-wish-form :wishForm="wishForm"></new-wish-form>
     </div>
 </template>
@@ -37,6 +80,7 @@
             return {
                 user: null,
                 wishes: [],
+                wish: null,
                 wishForm: false,
                 currentList: "market",
             }
@@ -53,6 +97,12 @@
                 this.toggleWishForm();
                 this.getWishes();
             })
+
+            $(document).keyup(even => {
+                if (even.keyCode === 27) {
+                    this.wish = null;
+                }
+            })
         },
 
         methods: {
@@ -62,9 +112,25 @@
                 });
             },
 
+            getWish(id) {
+                api.getWish(id).then(data => {
+                    this.wish = data;
+                });
+            },
+
             getUserInfo() {
                 api.getUserInfo().then(data => {
                     this.user = data;
+                });
+            },
+
+            updateWish(id) {
+                let data = {},
+                    eventTarget = $(event.target);
+                data[eventTarget.attr("name")] = $(event.target).val();
+                api.updateWish(id, data).then(response => {
+                    this.getWishes();
+                    eventTarget.blur();
                 });
             },
 
@@ -84,12 +150,13 @@
 
             hasEnoughCredits(wish) {
                 if(this.user) {
-                    return this.user.user_profile.credits > wish.credits;
+                    return this.user.user_profile.credits >= wish.credits;
                 }
             },
 
             deleteWish(id) {
                 api.deleteWish(id).then(response => {
+                    this.wish = null;
                     this.getWishes();
                 });
             }

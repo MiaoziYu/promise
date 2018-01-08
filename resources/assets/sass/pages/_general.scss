@@ -83,3 +83,14 @@
     }
   }
 }
+
+.habit-item,
+.promise-item,
+.wish-item {
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken(white, 5%);
+    transition: all .3s;
+  }
+}

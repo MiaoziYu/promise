@@ -3,12 +3,6 @@
   .habit-item {
     width: 100%;
     margin-bottom: $space-small;
-    cursor: pointer;
-
-    &:hover {
-      background-color: darken(white, 5%);
-      transition: all .3s;
-    }
   }
 
   .habit-content {

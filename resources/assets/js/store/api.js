@@ -62,6 +62,10 @@ export default {
         return get(`wishes/`);
     },
 
+    getWish(id) {
+        return get(`wishes/${id}`);
+    },
+
     getUserInfo() {
         return get(`profile`);
     },
@@ -84,6 +88,10 @@ export default {
 
     updateChecklist(promiseId, checklistId, data) {
         return put(`promises/${promiseId}/checklists/${checklistId}`, data);
+    },
+
+    updateWish(id, data) {
+        return put(`wishes/${id}`, data)
     },
 
     purchaseWish(id) {

@@ -238,7 +238,7 @@
             });
 
             $(document).keyup(even => {
-                if (even.keyCode == 27) {
+                if (even.keyCode === 27) {
                     this.promise = null;
                     this.habit = null;
                     this.promiseForm = null;

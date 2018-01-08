@@ -60,6 +60,10 @@ class WishesController extends Controller
             $data['image_link'] = request('image_link');
         }
 
+        if (request('credits')) {
+            $data['credits'] = request('credits');
+        }
+
         auth()->user()->wishes()->findOrFail($id)->update($data);
 
         return response()->json([], 200);
