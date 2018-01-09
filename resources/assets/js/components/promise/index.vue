@@ -28,8 +28,8 @@
                                     <span class="check-count">
                                         <i class="fa fa-check-circle" aria-hidden="true"></i>{{ habit.count }}
                                     </span>
-                                    <span v-if="hasStreak(habit)" class="streak-count">
-                                        <i class="fa fa-bolt" aria-hidden="true"></i>{{ habit.streak - 6 }}
+                                    <span class="streak-count">
+                                        <i class="fa fa-bolt" aria-hidden="true"></i>{{ habit.streak }}
                                     </span>
                                 </p>
                             </div>
