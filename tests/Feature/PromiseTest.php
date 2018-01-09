@@ -15,16 +15,24 @@ class PromiseTest extends TestCase
 {
     use DatabaseMigrations;
 
+    private $user;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->disableExceptionHandling();
+
+        $this->user = factory(User::class)->create();
+    }
+
     /** @test */
     public function can_view_promise_with_checklists()
     {
-        $this->disableExceptionHandling();
 
         // Arrange
-        $user = factory(User::class)->create();
-
         $promise = factory(Promise::class)->create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings'
         ]);
@@ -35,7 +43,7 @@ class PromiseTest extends TestCase
         ]);
 
         // Act
-        $response = $this->get('/api/promises/' . $promise->id . '?api_token=' . $user->api_token);
+        $response = $this->get('/api/promises/' . $promise->id . '?api_token=' . $this->user->api_token);
 
         // Assert
         $response->assertSee('KFC hot wings');
@@ -46,13 +54,11 @@ class PromiseTest extends TestCase
     /** @test */
     public function can_view_all_promises_with_checklists()
     {
-        $this->disableExceptionHandling();
 
         // Arrange
-        $user = factory(User::class)->create();
 
         $promiseOne = factory(Promise::class)->create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings'
         ]);
@@ -63,7 +69,7 @@ class PromiseTest extends TestCase
         ]);
 
         $promiseTwo = factory(Promise::class)->create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'name' => 'Ice cream',
             'description' => 'I want ice cream',
             'finished_at' => Carbon::parse('December 13, 2016 8:00pm'),
@@ -76,7 +82,7 @@ class PromiseTest extends TestCase
 
         // Act
 
-        $response = $this->get('/api/promises/?api_token=' . $user->api_token);
+        $response = $this->get('/api/promises/?api_token=' . $this->user->api_token);
 
         // Assert
         $response->assertSee('KFC hot wings');
@@ -92,19 +98,15 @@ class PromiseTest extends TestCase
     /** @test */
     public function can_view_unfinished_promises()
     {
-        $this->disableExceptionHandling();
-
         // Arrange
-        $user = factory(User::class)->create();
-
         factory(Promise::class)->create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings'
         ]);
 
         factory(Promise::class)->create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'name' => 'Ice cream',
             'description' => 'I want ice cream',
             'finished_at' => Carbon::parse('December 13, 2016 8:00pm'),
@@ -112,7 +114,7 @@ class PromiseTest extends TestCase
 
         // Act
 
-        $response = $this->get('/api/promises/?finished=false&api_token=' . $user->api_token);
+        $response = $this->get('/api/promises/?finished=false&api_token=' . $this->user->api_token);
 
         // Assert
         $response->assertSee('KFC hot wings');
@@ -122,19 +124,15 @@ class PromiseTest extends TestCase
     /** @test */
     public function can_view_finished_promises()
     {
-        $this->disableExceptionHandling();
-
         // Arrange
-        $user = factory(User::class)->create();
-
         factory(Promise::class)->create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings'
         ]);
 
         factory(Promise::class)->create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'name' => 'Ice cream',
             'description' => 'I want ice cream',
             'finished_at' => Carbon::parse('December 13, 2016 8:00pm'),
@@ -142,7 +140,7 @@ class PromiseTest extends TestCase
 
         // Act
 
-        $response = $this->get('/api/promises/?finished=true&api_token=' . $user->api_token);
+        $response = $this->get('/api/promises/?finished=true&api_token=' . $this->user->api_token);
 
         // Assert
         $response->assertDontSee('KFC hot wings');
@@ -150,15 +148,45 @@ class PromiseTest extends TestCase
     }
 
     /** @test */
-    public function can_create_promise_with_points_reward()
+    public function can_not_view_expired_promises()
     {
-        $this->disableExceptionHandling();
-
         // Arrange
-        $user = factory(User::class)->create();
+        factory(Promise::class)->create([
+            'user_id' => $this->user->id,
+            'name' => 'KFC hot wings',
+            'description' => '18 kfc hot wings',
+            'expired' => null
+        ]);
+
+        factory(Promise::class)->create([
+            'user_id' => $this->user->id,
+            'name' => 'nachos',
+            'description' => 'nachos wont hurt',
+            'expired' => 'pending'
+        ]);
+
+        factory(Promise::class)->create([
+            'user_id' => $this->user->id,
+            'name' => 'Ice cream',
+            'description' => 'I want ice cream',
+            'expired' => 'true'
+        ]);
 
         // Act
-        $postResponse = $this->post('/api/promises?api_token=' . $user->api_token, [
+
+        $response = $this->get('/api/promises/?finished=false&api_token=' . $this->user->api_token);
+
+        // Assert
+        $response->assertSee('KFC hot wings');
+        $response->assertSee('nachos');
+        $response->assertDontSee('Ice cream');
+    }
+
+    /** @test */
+    public function can_create_promise_with_points_reward()
+    {
+        // Act
+        $postResponse = $this->post('/api/promises?api_token=' . $this->user->api_token, [
             'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings',
             'punch_card_total' => '10',
@@ -167,7 +195,7 @@ class PromiseTest extends TestCase
             'reward_credits' => '500'
         ]);
 
-        $getResponse = $this->get('/api/promises/?api_token=' . $user->api_token);
+        $getResponse = $this->get('/api/promises/?api_token=' . $this->user->api_token);
 
         // Assertion
         $postResponse->assertStatus(201);
@@ -180,13 +208,8 @@ class PromiseTest extends TestCase
     /** @test */
     public function can_create_promise_with_gift_reward()
     {
-        $this->disableExceptionHandling();
-
-        // Arrange
-        $user = factory(User::class)->create();
-
         // Act
-        $response = $this->post('/api/promises?api_token=' . $user->api_token, [
+        $response = $this->post('/api/promises?api_token=' . $this->user->api_token, [
             'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings',
             'punch_card_total' => '10',
@@ -199,7 +222,7 @@ class PromiseTest extends TestCase
         // Assertion
         $response->assertStatus(201);
 
-        $promise = $user->promises()->first();
+        $promise = $this->user->promises()->first();
         $this->assertEquals('KFC hot wings', $promise->name);
         $this->assertEquals('18 kfc hot wings', $promise->description);
         $this->assertEquals('gift', $promise->reward_type);
@@ -210,12 +233,9 @@ class PromiseTest extends TestCase
     /** @test */
     public function can_update_promise()
     {
-        $this->disableExceptionHandling();
-
         // Arrange
-        $user = factory(User::class)->create();
         $promise = factory(Promise::class)->create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings',
             'punch_card_total' => 11,
@@ -223,12 +243,12 @@ class PromiseTest extends TestCase
         ]);
 
         // Act
-        $putResponse = $this->put('/api/promises/' . $promise->id . '?api_token=' . $user->api_token, [
+        $putResponse = $this->put('/api/promises/' . $promise->id . '?api_token=' . $this->user->api_token, [
             'name' => 'KFC sweet wings'
         ]);
         $putResponse->assertStatus(200);
 
-        $getResponse = $this->get('/api/promises/' . $promise->id . '?api_token=' . $user->api_token);
+        $getResponse = $this->get('/api/promises/' . $promise->id . '?api_token=' . $this->user->api_token);
 
         // Assertion
         $getResponse->assertSee('KFC sweet wings');
@@ -239,55 +259,50 @@ class PromiseTest extends TestCase
     /** @test */
     public function can_finish_a_promise_with_credits_reward()
     {
-        $this->disableExceptionHandling();
 
         // Arrange
-        $user = factory(User::class)->create();
         factory(UserProfile::class)->create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'credits' => 100
         ]);
         $promise = factory(Promise::class)->create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'reward_type' => 'points',
             'reward_credits' => 500,
         ]);
 
         // Act
-        $response = $this->put('/api/promises/' . $promise->id . '/finish?api_token=' . $user->api_token, []);
+        $response = $this->put('/api/promises/' . $promise->id . '/finish?api_token=' . $this->user->api_token, []);
 
         // Assertion
         $response->assertStatus(200);
 
-        $this->assertNotNull($user->promises()->find($promise->id)->finished_at);
+        $this->assertNotNull($this->user->promises()->find($promise->id)->finished_at);
 
-        $userProfile = $user->userProfile()->first();
+        $userProfile = $this->user->userProfile()->first();
         $this->assertEquals(600, $userProfile->credits);
     }
 
     /** @test */
     public function can_finish_a_promise_with_gift_reward()
     {
-        $this->disableExceptionHandling();
-
         // Arrange
-        $user = factory(User::class)->create();
         $promise = factory(Promise::class)->create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'reward_type' => 'gift',
             'reward_name' => 'kfc hot wings',
             'reward_image_link' => 'example_link',
         ]);
 
         // Act
-        $response = $this->put('/api/promises/' . $promise->id . '/finish?api_token=' . $user->api_token, []);
+        $response = $this->put('/api/promises/' . $promise->id . '/finish?api_token=' . $this->user->api_token, []);
 
         // Assertion
         $response->assertStatus(200);
 
-        $this->assertNotNull($user->promises()->find($promise->id)->finished_at);
+        $this->assertNotNull($this->user->promises()->find($promise->id)->finished_at);
 
-        $wishTicket = $user->wishTickets()->first();
+        $wishTicket = $this->user->wishTickets()->first();
         $this->assertNotNull($wishTicket);
         $this->assertEquals('kfc hot wings', $wishTicket->name);
         $this->assertEquals('example_link', $wishTicket->image_link);
@@ -296,26 +311,49 @@ class PromiseTest extends TestCase
     /** @test */
     public function can_delete_promise()
     {
-        $this->disableExceptionHandling();
-
         // Arrange
-        $user = factory(User::class)->create();
         $promise = factory(Promise::class)->create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'name' => 'KFC hot wings',
             'description' => '18 kfc hot wings'
         ]);
 
         // Act
-        $deleteResponse = $this->delete('/api/promises/' . $promise->id . '?api_token=' . $user->api_token);
+        $deleteResponse = $this->delete('/api/promises/' . $promise->id . '?api_token=' . $this->user->api_token);
         $deleteResponse->assertStatus(200);
 
         try {
-            $this->get('/api/promises/' . $promise->id . '?api_token=' . $user->api_token);
+            $this->get('/api/promises/' . $promise->id . '?api_token=' . $this->user->api_token);
         } catch (ModelNotFoundException $exception) {
             return;
         }
 
         $this->fail();
+    }
+    
+    /** @test */
+    public function promise_with_due_data_can_be_expired()
+    {
+        // Arrange
+        $promise = factory(Promise::class)->create([
+            'user_id' => $this->user->id,
+            'reward_credits' => 50,
+            'due_date' => Carbon::yesterday(),
+        ]);
+
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id,
+            'credits' => 100
+        ]);
+        
+        // Act
+        $response = $this->get('/api/promises/?finished=false&api_token=' . $this->user->api_token);
+        
+        // Assert
+        $response->assertStatus(200);
+
+        $this->assertEquals('pending', $this->user->promises()->findOrFail($promise->id)->expired);
+
+        $this->assertEquals(50, $this->user->userProfile()->first()->credits);
     }
 }

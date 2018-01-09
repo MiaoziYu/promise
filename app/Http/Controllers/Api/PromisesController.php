@@ -12,12 +12,14 @@ class PromisesController extends Controller
     public function index()
     {
         if (request('finished') === 'true') {
-            $promises = auth()->user()->promises()->with('checklists')->finished()->get();
+            $promises = auth()->user()->promises()->with('checklists')->finished()->unexpired()->get();
         } elseif (request('finished') === 'false') {
-            $promises = auth()->user()->promises()->with('checklists')->unfinished()->get();
+            $promises = auth()->user()->promises()->with('checklists')->unfinished()->unexpired()->get();
         } else {
             $promises = auth()->user()->promises()->with('checklists')->get();
         }
+
+        $promises = $this->checkDueDate($promises);
 
         return response()->json($promises, 200);
     }
@@ -78,6 +80,14 @@ class PromisesController extends Controller
             $data['punch_card_finished'] = request('punch_card_finished');
         }
 
+        if (request('due_date') !== null) {
+            $data['due_date'] = request('due_date');
+        }
+
+        if (request('expired') !== null) {
+            $data['expired'] = request('expired');
+        }
+
         auth()->user()->promises()->findOrFail($id)->update($data);
 
         return response()->json([], 200);
@@ -116,5 +126,26 @@ class PromisesController extends Controller
         });
 
         return response()->json([], 200);
+    }
+
+    private function checkDueDate($promises)
+    {
+        return collect($promises)->map(function($item) {
+            if (Carbon::parse($item->due_date)->isYesterday()) {
+
+                DB::transaction(function () use ($item) {
+                    $item->update([
+                        'expired' => 'pending'
+                    ]);
+
+                    $userProfile = auth()->user()->userProfile;
+                    $userProfile->update([
+                        'credits' => $userProfile->first()->credits - $item->reward_credits
+                    ]);
+                });
+            }
+
+            return $item;
+        });
     }
 }

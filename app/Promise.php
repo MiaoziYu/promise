@@ -16,6 +16,8 @@ class Promise extends Model
         'reward_name',
         'reward_credits',
         'reward_image_link',
+        'due_date',
+        'expired',
         'finished_at'
     ];
 
@@ -32,5 +34,10 @@ class Promise extends Model
     public function scopeFinished($query)
     {
         return $query->where('finished_at', '!=', null);
+    }
+
+    public function scopeUnexpired($query)
+    {
+        return $query->where('expired', null)->orWhere('expired', 'pending');
     }
 }
