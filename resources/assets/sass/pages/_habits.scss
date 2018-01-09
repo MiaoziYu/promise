@@ -1,106 +1,130 @@
-.habit-list {
+.habit-list-wrapper {
 
-  .habit-item {
-    width: 100%;
-    margin-bottom: $space-small;
-  }
-
-  .habit-content {
+  .habit-list {
     display: flex;
-    justify-content: space-between;
+    flex-flow: column wrap;
 
-    .habit-text {
-      width: 70%;
+    .habit-item {
+      width: 100%;
+      margin-bottom: $space-small;
+    }
 
-      .habit-credits-wrapper {
-        margin-top: $space-xsmall;
+    @media (max-width: $breakpoint-md) {
+      flex-flow: row wrap;
 
-        i {
-          margin-right: 4px;
-        }
+      .habit-item {
+        flex: 0 1 50%;
+        padding: 0 $space-small $space-small 0;
 
-        .habit-bonus {
-          margin-left: 4px;
-          padding: 2px 8px;
-          background-color: $orange;
-          color: $white;
-          border-radius: 6px;
-        }
-
-        .check-count,
-        .streak-count {
-          margin-left: 6px;
-          color: $text-color-secondary;
+        &:nth-child(2n) {
+          padding-right: 0;
         }
       }
     }
 
-    .habit-btn {
-      width: 30%;
+    @media (max-width: $breakpoint-xs) {
+      flex-flow: column wrap;
 
-      button {
-        @include button($green);
-        margin: $space-xsmall * 2 auto;
-        padding: 0;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        border: 3px solid $white;
-        box-shadow: 0 2px 10px rgba(0,0,0,.12), 0 2px 3px rgba(0,0,0,.24);
+      .habit-item {
+        flex: 1;
+        padding-right: 0;
       }
+    }
 
-      &.streak {
-        button {
-          background-color: $orange;
+    .habit-content {
+      display: flex;
+      justify-content: space-between;
 
-          &:hover {
-            background-color: darken($orange, 10%);
+      .habit-text {
+        width: 70%;
+
+        .habit-credits-wrapper {
+          margin-top: $space-xsmall;
+
+          i {
+            margin-right: 4px;
+          }
+
+          .habit-bonus {
+            margin-left: 4px;
+            padding: 2px 8px;
+            background-color: $orange;
+            color: $white;
+            border-radius: 6px;
+          }
+
+          .check-count,
+          .streak-count {
+            margin-left: 6px;
+            color: $text-color-secondary;
           }
         }
       }
 
-      &.checked {
-        button {
-          background-color: $dark-gray;
-          box-shadow: none;
-          cursor: default;
-        }
-      }
+      .habit-btn {
+        width: 30%;
 
-      &.streak.checked {
         button {
-          background-color: lighten($orange, 20%);
+          @include button($green);
+          margin: $space-xsmall * 2 auto;
+          padding: 0;
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          border: 3px solid $white;
+          box-shadow: 0 2px 10px rgba(0,0,0,.12), 0 2px 3px rgba(0,0,0,.24);
+        }
+
+        &.streak {
+          button {
+            background-color: $orange;
+
+            &:hover {
+              background-color: darken($orange, 10%);
+            }
+          }
+        }
+
+        &.checked {
+          button {
+            background-color: $dark-gray;
+            box-shadow: none;
+            cursor: default;
+          }
+        }
+
+        &.streak.checked {
+          button {
+            background-color: lighten($orange, 20%);
+          }
         }
       }
     }
-  }
 
-  .habit-streak {
-    height: 10px;
-    margin-top: $space-small;
-    background-color: $gray;
-
-    .streak-item {
-      display: inline-block;
+    .habit-streak {
       height: 10px;
-      width: 1 / 7 * 100% - 6% / 7;
-      margin-right: 1%;
-      background-color: $green;
-      vertical-align: top;
-
-      &:last-child {
-        margin-right: 0;
-      }
-    }
-
-    &.streak {
+      margin-top: $space-small;
+      background-color: $gray;
 
       .streak-item {
-        background-color: $orange;
+        display: inline-block;
+        height: 10px;
+        width: 1 / 7 * 100% - 6% / 7;
+        margin-right: 1%;
+        background-color: $green;
+        vertical-align: top;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+
+      &.streak {
+
+        .streak-item {
+          background-color: $orange;
+        }
       }
     }
   }
-}
-
-.habit {
 }

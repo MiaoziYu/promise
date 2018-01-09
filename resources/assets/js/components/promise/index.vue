@@ -14,43 +14,45 @@
         <div class="task-list">
 
             <!-- ========== habit list ========== -->
-            <div class="habit-list">
+            <div class="habit-list-wrapper">
                 <h2 class="task-title">Habits</h2>
-                <ul>
-                    <li v-for="habit in habits" class="o-card habit-item">
-                        <div class="habit-content">
-                            <div @click="getHabit(habit.id)" class="habit-text">
-                                <p class="o-card-title">{{ habit.name }}</p>
-                                <p v-if="habit.description" class="o-card-description">{{ habit.description }}</p>
-                                <p class="habit-credits-wrapper">
-                                    <span class="habit-credits"><i class="fa fa-diamond" aria-hidden="true"></i>{{ habit.credits }}</span>
-                                    <span v-if="hasStreak(habit)" class="habit-bonus">+ {{ habit.credits }}</span>
-                                    <span class="check-count">
+                <ul class="habit-list">
+                    <li v-for="habit in habits" class="habit-item">
+                        <div class="o-card">
+                            <div class="habit-content">
+                                <div @click="getHabit(habit.id)" class="habit-text">
+                                    <p class="o-card-title">{{ habit.name }}</p>
+                                    <p v-if="habit.description" class="o-card-description">{{ habit.description }}</p>
+                                    <p class="habit-credits-wrapper">
+                                        <span class="habit-credits"><i class="fa fa-diamond" aria-hidden="true"></i>{{ habit.credits }}</span>
+                                        <span v-if="hasStreak(habit)" class="habit-bonus">+ {{ habit.credits }}</span>
+                                        <span class="check-count">
                                         <i class="fa fa-check-circle" aria-hidden="true"></i>{{ habit.count }}
                                     </span>
-                                    <span class="streak-count">
+                                        <span class="streak-count">
                                         <i class="fa fa-bolt" aria-hidden="true"></i>{{ habit.streak }}
                                     </span>
-                                </p>
+                                    </p>
+                                </div>
+                                <div v-if="!hasCheckedToday(habit)" class="habit-btn" :class="{streak: hasStreak(habit)}">
+                                    <button @click="checkHabit(habit.id)">Check</button>
+                                </div>
+                                <div v-if="hasCheckedToday(habit)" class="habit-btn checked" :class="{streak: hasStreak(habit)}">
+                                    <button>Done</button>
+                                </div>
                             </div>
-                            <div v-if="!hasCheckedToday(habit)" class="habit-btn" :class="{streak: hasStreak(habit)}">
-                                <button @click="checkHabit(habit.id)">Check</button>
-                            </div>
-                            <div v-if="hasCheckedToday(habit)" class="habit-btn checked" :class="{streak: hasStreak(habit)}">
-                                <button>Done</button>
-                            </div>
+                            <ul @click="getHabit(habit.id)" class="habit-streak" :class="{ streak: habit.streak >= 7 }">
+                                <li v-for="(steak, index) in habit.streak" v-if="index < 7" class="streak-item"></li>
+                            </ul>
                         </div>
-                        <ul @click="getHabit(habit.id)" class="habit-streak" :class="{ streak: habit.streak >= 7 }">
-                            <li v-for="(steak, index) in habit.streak" v-if="index < 7" class="streak-item"></li>
-                        </ul>
                     </li>
                 </ul>
             </div>
 
             <!-- ========== promise list ========== -->
-            <div class="promise-list">
+            <div class="promise-list-wrapper">
                 <h2 class="task-title">Promise</h2>
-                <ul class="o-list-3">
+                <ul class="promise-list o-list-3">
                     <li v-for="promise in promises"
                         @click="getPromise(promise.id)"
                         class="o-list-item">

@@ -9,17 +9,22 @@
       margin-bottom: $space-small;
     }
 
-    .habit-list {
+    .habit-list-wrapper {
       width: 24%;
     }
 
-    .promise-list {
+    .promise-list-wrapper {
       width: 74%;
     }
 
     @media (max-width: $breakpoint-md) {
       align-items: stretch;
       flex-flow: column wrap;
+
+      .habit-list-wrapper,
+      .promise-list-wrapper {
+        width: 100%;
+      }
     }
   }
 }
