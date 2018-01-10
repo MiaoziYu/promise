@@ -57,6 +57,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Habit');
     }
 
+    public function weeklyChallenges()
+    {
+        return $this->hasMany('App\WeeklyChallenge');
+    }
+
     public function updateCredits($promiseId)
     {
         $promise = $this->promises()->findOrFail($promiseId);

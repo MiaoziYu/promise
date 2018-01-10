@@ -48,4 +48,11 @@ Route::group(
     Route::put('/habits/{id}', 'HabitsController@update');
     Route::put('/habits/{id}/check', 'HabitsController@check');
     Route::delete('/habits/{id}', 'HabitsController@destroy');
+
+    route::get('/weekly-challenges/{id}', 'WeeklyChallengesController@show');
+    route::get('/weekly-challenges/', 'WeeklyChallengesController@index');
+    route::put('/weekly-challenges/{id}', 'WeeklyChallengesController@update');
+    route::put('/weekly-challenges/{id}/check', 'WeeklyChallengesController@check');
+    route::post('/weekly-challenges/', 'WeeklyChallengesController@store');
+    route::delete('/weekly-challenges/{id}', 'WeeklyChallengesController@destroy');
 });
