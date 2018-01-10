@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('challenge:check')->weekly();
+        $schedule->command('challenge:check')->weeklyOn(1);
     }
 
     /**

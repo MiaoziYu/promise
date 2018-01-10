@@ -19,8 +19,6 @@ class WeeklyChallengesController extends Controller
     {
         $weeklyChallenges = auth()->user()->weeklyChallenges()->get();
 
-        $weeklyChallenges = $this->checkChallengeStatus($weeklyChallenges);
-
         return response()->json($weeklyChallenges, 200);
     }
 
@@ -77,7 +75,7 @@ class WeeklyChallengesController extends Controller
             'credits' => request('credits'),
             'goal' => request('goal'),
             'count' => 0,
-            'week_started_at' => Carbon::now()->startOfWeek()
+            'failed' => 0
         ]);
 
         return response()->json([], 201);
@@ -88,31 +86,5 @@ class WeeklyChallengesController extends Controller
         auth()->user()->weeklyChallenges()->findOrFail($id)->delete();
 
         return response()->json([], 200);
-    }
-
-    private function checkChallengeStatus($weeklyChallenges)
-    {
-        // TODO there must be a better way to figure out when a week starts
-        return collect($weeklyChallenges)->map(function($item) use ($weeklyChallenges) {
-            if ($item->count < $item->goal and Carbon::parse($item->week_started_at)->isLastWeek()) {
-                DB::transaction(function () use ($item) {
-                    $item->update([
-                        'failed' => true
-                    ]);
-
-                    $userProfile = auth()->user()->userProfile;
-                    $userProfile->update([
-                        'credits' => $userProfile->first()->credits - ($item->credits / 2)
-                    ]);
-                });
-            } else if (Carbon::parse($item->week_started_at)->isLastWeek()) {
-                $item->update([
-                    'count' => 0,
-                    'week_started_at' => Carbon::now()->startOfWeek()
-                ]);
-            }
-
-            return $item;
-        });
     }
 }

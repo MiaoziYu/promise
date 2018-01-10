@@ -10,6 +10,6 @@ $factory->define(App\WeeklyChallenge::class, function (Faker $faker) {
         'credits' => 10,
         'goal' => 2,
         'count' => 0,
-        'week_started_at' => Carbon::now()->startOfweek()
+        'failed' => 0
     ];
 });

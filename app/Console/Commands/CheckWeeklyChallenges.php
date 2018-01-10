@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\UserProfile;
 use App\WeeklyChallenge;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class CheckWeeklyChallenges extends Command
 {
@@ -38,12 +40,24 @@ class CheckWeeklyChallenges extends Command
      */
     public function handle()
     {
-        $weeklyChallenges = WeeklyChallenge::where('failed', '!=', true)->get();
+        $weeklyChallenges = WeeklyChallenge::where('failed', '!=', 1)->get();
 
         collect($weeklyChallenges)->each(function($challenge) {
             if ($challenge->goal > $challenge->count) {
+                DB::transaction(function() use ($challenge){
+                    $challenge->update([
+                        'count' => 0,
+                        'failed' => 1
+                    ]);
+
+                    $userProfile = UserProfile::where('user_id', $challenge->user_id)->first();
+                    $userProfile->update([
+                        'credits' => $userProfile->first()->credits - floor($challenge->credits / 2)
+                    ]);
+                });
+            } else {
                 $challenge->update([
-                    'failed' => true
+                    'count' => 0
                 ]);
             }
         });

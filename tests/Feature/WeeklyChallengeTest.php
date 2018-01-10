@@ -165,7 +165,6 @@ class WeeklyChallengeTest extends TestCase
             'credits' => 20,
             'goal' => 2,
             'count' => 1,
-            'week_started_at' => Carbon::now()->startOfWeek()->subWeek()
         ]);
 
         factory(UserProfile::class)->create([
@@ -174,7 +173,7 @@ class WeeklyChallengeTest extends TestCase
         ]);
 
         // Act
-        $response = $this->get('/api/weekly-challenges/?api_token=' . $this->user->api_token);
+        $this->artisan('challenge:check');
 
         // Assert
         $this->assertEquals(true, $this->user->weeklyChallenges()->first()->failed);
@@ -193,7 +192,6 @@ class WeeklyChallengeTest extends TestCase
             'credits' => 20,
             'goal' => 2,
             'count' => 0,
-            'week_started_at' => Carbon::now()->startOfWeek()
         ]);
 
         factory(UserProfile::class)->create([
@@ -223,7 +221,6 @@ class WeeklyChallengeTest extends TestCase
             'credits' => 20,
             'goal' => 2,
             'count' => 2,
-            'week_started_at' => Carbon::now()->startOfWeek()
         ]);
 
         factory(UserProfile::class)->create([
@@ -250,15 +247,15 @@ class WeeklyChallengeTest extends TestCase
             'user_id' => $this->user->id,
             'goal' => 2,
             'count' => 2,
-            'week_started_at' => Carbon::now()->subWeek()->startOfWeek()
         ]);
 
         // Act
-        $response = $this->get('/api/weekly-challenges/?api_token=' . $this->user->api_token);
+        $this->artisan('challenge:check');
 
         // Assert
         $challenge = $this->user->weeklyChallenges()->first();
+
         $this->assertEquals(0, $challenge->count);
-        $this->assertEquals(Carbon::now()->startOfWeek(), $challenge->week_started_at);
+        $this->assertEquals(0, $challenge->failed);
     }
 }
