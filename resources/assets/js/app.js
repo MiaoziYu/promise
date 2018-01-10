@@ -27,6 +27,8 @@ Vue.component("new-promise-form", require("./components/promise/_new_promise_for
 
 Vue.component("new-habit-form", require("./components/promise/_new_habit_form"));
 
+Vue.component("new-weekly-challenge-form", require("./components/promise/_new_weekly_challenge_form"));
+
 Vue.component("wishes", require("./components/wish/index.vue"));
 Vue.component("new-wish-form", require("./components/wish/_new_wish_form.vue"));
 

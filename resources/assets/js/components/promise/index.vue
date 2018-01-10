@@ -4,20 +4,23 @@
         <!-- ========== action buttons ========== -->
         <div class="action-btns">
             <button @click="toggleHabitForm" class="btn create-btn">
-                <i class="fa fa-plus" aria-hidden="true"></i> add habit
+                <i class="fa fa-plus" aria-hidden="true"></i> habit
+            </button>
+            <button @click="toggleChallengeForm" class="btn create-btn">
+                <i class="fa fa-plus" aria-hidden="true"></i> weekly challenge
             </button>
             <button @click="togglePromiseForm" class="btn create-btn">
-                <i class="fa fa-plus" aria-hidden="true"></i> add promise
+                <i class="fa fa-plus" aria-hidden="true"></i> promise
             </button>
         </div>
 
-        <div class="task-list">
+        <div class="task-wrapper">
 
             <!-- ========== habit list ========== -->
-            <div class="habit-list-wrapper">
+            <div class="task-block">
                 <h2 class="task-title">Habits</h2>
-                <ul class="habit-list">
-                    <li v-for="habit in habits" class="habit-item">
+                <ul class="habit-list task-list">
+                    <li v-for="habit in habits" class="habit-item task-item">
                         <div class="o-card">
                             <div class="habit-content">
                                 <div @click="getHabit(habit.id)" class="habit-text">
@@ -27,11 +30,11 @@
                                         <span class="habit-credits"><i class="fa fa-diamond" aria-hidden="true"></i>{{ habit.credits }}</span>
                                         <span v-if="hasStreak(habit)" class="habit-bonus">+ {{ habit.credits }}</span>
                                         <span class="check-count">
-                                        <i class="fa fa-check-circle" aria-hidden="true"></i>{{ habit.count }}
-                                    </span>
+                                            <i class="fa fa-check-circle" aria-hidden="true"></i>{{ habit.count }}
+                                        </span>
                                         <span class="streak-count">
-                                        <i class="fa fa-bolt" aria-hidden="true"></i>{{ habit.streak }}
-                                    </span>
+                                            <i class="fa fa-bolt" aria-hidden="true"></i>{{ habit.streak }}
+                                        </span>
                                     </p>
                                 </div>
                                 <div v-if="!hasCheckedToday(habit)" class="habit-btn" :class="{streak: hasStreak(habit)}">
@@ -42,7 +45,45 @@
                                 </div>
                             </div>
                             <ul @click="getHabit(habit.id)" class="habit-streak" :class="{ streak: habit.streak >= 7 }">
-                                <li v-for="(steak, index) in habit.streak" v-if="index < 7" class="streak-item"></li>
+                                <li v-for="n in 7" class="streak-item" :class="{ active: habit.streak >= n }"></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- ========== weekly challenge list ========== -->
+            <div class="task-block">
+                <h2 class="task-title">Weekly challenges</h2>
+                <ul class="habit-list task-list">
+                    <li v-for="challenge in challenges" class="habit-item task-item">
+                        <div class="o-card">
+                            <div class="habit-content">
+                                <div @click="getChallenge(challenge.id)" class="habit-text">
+                                    <p class="o-card-title">{{ challenge.name }}</p>
+                                    <p v-if="challenge.description" class="o-card-description">{{ challenge.description }}</p>
+                                    <p class="habit-credits-wrapper">
+                                        <span class="habit-credits">
+                                            <i class="fa fa-diamond" aria-hidden="true"></i>
+                                           {{ getCurrentObtainedChallengeCredit(challenge) }} / {{ challenge.credits }}
+                                        </span>
+                                        <span v-if="challenge.count > challenge.goal" class="habit-bonus">
+                                            + {{ getBonusChallengeCredit(challenge) }}
+                                        </span>
+                                        <span class="check-count">
+                                            <i class="fa fa-check-circle" aria-hidden="true"></i>{{ challenge.count }}
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="habit-btn" :class="{ streak: isSuccess(challenge)}">
+                                    <button @click="checkChallenge(challenge.id)">
+                                        <span v-if="!isSuccess(challenge)">Check</span>
+                                        <span v-if="isSuccess(challenge)">Bonus</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <ul @click="getChallenge(challenge.id)" class="habit-streak challenge-progress" :class="{ streak: isSuccess(challenge) }">
+                                <li v-for="(goal, index) in challenge.goal" class="streak-item" :class="{ active: index < challenge.count}"></li>
                             </ul>
                         </div>
                     </li>
@@ -50,13 +91,12 @@
             </div>
 
             <!-- ========== promise list ========== -->
-            <div class="promise-list-wrapper">
-                <h2 class="task-title">Promise</h2>
-                <ul class="promise-list o-list-3">
+            <div class="task-block">
+                <h2 class="task-title">Promises</h2>
+                <ul class="promise-list task-list">
                     <li v-for="promise in promises"
-                        @click="getPromise(promise.id)"
-                        class="o-list-item">
-                        <div class="o-card promise-item">
+                        @click="getPromise(promise.id)" class="promise-item task-item">
+                        <div class="o-card">
                             <p class="o-card-title">{{ promise.name }}</p>
                             <p v-if="promise.description" class="o-card-description">{{ promise.description }}</p>
                             <div v-if="promise.reward_type === 'points'" class="reward-points">
@@ -80,6 +120,9 @@
         <!-- ========== new habit form ========== -->
         <new-habit-form :habitForm="habitForm"></new-habit-form>
 
+        <!-- ========== new weekly challenge form ========== -->
+        <new-weekly-challenge-form :challengeForm="challengeForm"></new-weekly-challenge-form>
+
         <!-- ========== new promise form ========== -->
         <new-promise-form :promiseForm="promiseForm"></new-promise-form>
 
@@ -94,7 +137,7 @@
                                class="title"
                                name="name">
                     </div>
-                    <div @click="habit = null" class="close-btn">
+                    <div @click="resetHabit" class="close-btn">
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </div>
                 </div>
@@ -119,6 +162,53 @@
                     <!--buttons to finish or delete habit-->
                     <div class="form-btns">
                         <div @click="deleteHabit(habit.id)" class="delete-btn btn-secondary">delete habit</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== challenge detail ========== -->
+        <div v-if="challenge" class="habit o-overlay">
+            <div class="o-card o-overlay-content">
+                <div class="title-wrapper">
+                    <div class="title">
+                        <input v-model="challenge.name"
+                               @blur="challenge ? updateChallenge(challenge.id) : null"
+                               @keyup.enter="updateChallenge(challenge.id)"
+                               class="title"
+                               name="name">
+                    </div>
+                    <div @click="resetChallenge" class="close-btn">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="content form">
+                    <textarea v-model="challenge.description"
+                              @blur="challenge ? updateChallenge(challenge.id) : null"
+                              @keyup.enter="updateChallenge(challenge.id)"
+                              class="description"
+                              name="description"
+                              placeholder="add description">
+                    </textarea>
+                    <div class="form-group">
+                        <label for="">Change challenge goal</label>
+                        <input v-model="challenge.goal"
+                               @blur="challenge ? updateChallenge(challenge.id) : null"
+                               @keyup.enter="updateChallenge(challenge.id)"
+                               class="credits"
+                               name="goal">
+                    </div>                    <i class="fa fa-diamond" aria-hidden="true"></i>
+                    <input v-model="challenge.credits"
+                           @blur="challenge ? updateChallenge(challenge.id) : null"
+                           @keyup.enter="updateChallenge(challenge.id)"
+                           class="credits"
+                           name="credits">
+                    <!--habit created date-->
+                    <p class="date">created at {{ challenge.created_at }}</p>
+
+                    <!--buttons to finish or delete habit-->
+                    <div class="form-btns">
+                        <div @click="deleteChallenge(challenge.id)" class="delete-btn btn-secondary">delete challenge</div>
                     </div>
                 </div>
             </div>
@@ -209,6 +299,9 @@
                 habits: null,
                 habit: null,
                 habitForm: false,
+                challenge: null,
+                challenges: null,
+                challengeForm: false,
                 successMsg: null,
             }
         },
@@ -218,6 +311,7 @@
 
         beforeMount() {
             this.getHabits();
+            this.getChallenges();
             this.getPromises();
             EventBus.$emit("setPageName", "promises");
         },
@@ -226,6 +320,10 @@
             EventBus.$on("clearNewHabitForm", () => {
                 this.getHabits();
                 this.toggleHabitForm();
+            });
+            EventBus.$on("clearNewChallengeForm", () => {
+                this.getChallenges();
+                this.toggleChallengeForm();
             });
             EventBus.$on("clearNewPromiseForm", () => {
                 this.getPromises();
@@ -241,8 +339,9 @@
 
             $(document).keyup(even => {
                 if (even.keyCode === 27) {
-                    this.promise = null;
-                    this.habit = null;
+                    this.resetPromise();
+                    this.resetHabit();
+                    this.resetChallenge();
                     this.promiseForm = null;
                     this.habitForm = null;
                 }
@@ -275,12 +374,28 @@
                 })
             },
 
+            getChallenges() {
+                api.getChallenges().then(data => {
+                    this.challenges = data;
+                })
+            },
+
+            getChallenge(id) {
+                api.getChallenge(id).then(data => {
+                    this.challenge = data;
+                })
+            },
+
             hasTasks(promise) {
                 return this.currentList === 'ongoing' && (promise.checklists.length > 0 || promise.punch_card_total > 0);
             },
 
             hasStreak(habit) {
                 return habit.streak >= 7;
+            },
+
+            isSuccess(challenge) {
+                return challenge.goal <= challenge.count;
             },
 
             hasCheckedToday(habit) {
@@ -307,8 +422,20 @@
                 }
             },
 
+            getCurrentObtainedChallengeCredit(challenge) {
+                return challenge.count < challenge.goal ? Math.floor(challenge.credits / challenge.goal) * challenge.count : challenge.credits;
+            },
+
+            getBonusChallengeCredit(challenge) {
+                return Math.floor(challenge.credits / challenge.goal) * (challenge.count - challenge.goal) * 2;
+            },
+
             toggleHabitForm() {
                 this.habitForm = !this.habitForm;
+            },
+
+            toggleChallengeForm() {
+                this.challengeForm = !this.challengeForm;
             },
 
             togglePromiseForm() {
@@ -317,6 +444,14 @@
 
             resetPromise() {
                 this.promise = null;
+            },
+
+            resetHabit() {
+                this.habit = null;
+            },
+
+            resetChallenge() {
+                this.challenge = null;
             },
 
             updateHabit(id) {
@@ -333,6 +468,23 @@
                 api.checkHabit(id).then(response => {
                     this.getHabits();
                     EventBus.$emit("checkHabit");
+                });
+            },
+
+            updateChallenge(id) {
+                let data = {},
+                    eventTarget = $(event.target);
+                data[eventTarget.attr("name")] = $(event.target).val();
+                api.updateChallenge(id, data).then(response => {
+                    this.getChallenges();
+                    eventTarget.blur();
+                });
+            },
+
+            checkChallenge(id) {
+                api.checkChallenge(id).then(response => {
+                    this.getChallenges();
+                    EventBus.$emit("checkChallenge");
                 });
             },
 
@@ -366,8 +518,16 @@
             deleteHabit(id) {
                 api.deleteHabit(id).then(response => {
                     if (response.status == 200) {
+                        this.resetHabit();
                         this.getHabits();
                     }
+                })
+            },
+
+            deleteChallenge(id) {
+                api.deleteChallenge(id).then(response => {
+                    this.resetChallenge();
+                    this.getChallenges();
                 })
             },
 

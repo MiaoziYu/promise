@@ -58,6 +58,14 @@ export default {
         return get(`habits/${id}`);
     },
 
+    getChallenges() {
+        return get(`weekly-challenges/`);
+    },
+
+    getChallenge(id) {
+        return get(`weekly-challenges/${id}`);
+    },
+
     getWishes() {
         return get(`wishes/`);
     },
@@ -76,6 +84,10 @@ export default {
 
     updateHabit(id, data) {
         return put(`habits/${id}`, data);
+    },
+
+    updateChallenge(id, data) {
+        return put(`weekly-challenges/${id}`, data)
     },
 
     updatePromise(id, data) {
@@ -102,6 +114,10 @@ export default {
         return put(`habits/${id}/check`, [])
     },
 
+    checkChallenge(id) {
+        return put(`weekly-challenges/${id}/check`, [])
+    },
+
     claimWishTicket(id) {
         return put(`wish-tickets/${id}/claim`, [])
     },
@@ -112,6 +128,10 @@ export default {
 
     createHabit(data) {
         return post(`habits/`, data);
+    },
+
+    createChallenge(data) {
+        return post(`weekly-challenges/`, data);
     },
 
     createChecklist(promiseId, data) {
@@ -132,6 +152,10 @@ export default {
 
     deleteHabit(id) {
         return remove(`habits/${id}`);
+    },
+
+    deleteChallenge(id) {
+        return remove(`weekly-challenges/${id}`);
     },
 
     deleteWish(id) {

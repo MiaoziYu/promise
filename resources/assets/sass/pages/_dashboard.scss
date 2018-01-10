@@ -1,30 +1,44 @@
 .dashboard {
 
-  .task-list {
+  .task-wrapper {
     display: flex;
+    flex-flow: row wrap;
     justify-content: space-between;
-    width: 100%;
+
+    .task-block {
+      width: 32%;
+    }
 
     .task-title {
       margin-bottom: $space-small;
     }
 
-    .habit-list-wrapper {
-      width: 24%;
-    }
-
-    .promise-list-wrapper {
-      width: 74%;
+    .task-item {
+      width: 100%;
+      margin-bottom: $space-xsmall * 2;
     }
 
     @media (max-width: $breakpoint-md) {
-      align-items: stretch;
+      .task-block {
+        width: 49%;
+      }
+    }
+
+    @media (max-width: $breakpoint-xs) {
       flex-flow: column wrap;
 
-      .habit-list-wrapper,
-      .promise-list-wrapper {
+      .task-block {
         width: 100%;
       }
+    }
+  }
+
+  @media (max-width: $breakpoint-md) {
+    align-items: stretch;
+    flex-flow: column wrap;
+
+    .task-block {
+      width: 100%;
     }
   }
 }
