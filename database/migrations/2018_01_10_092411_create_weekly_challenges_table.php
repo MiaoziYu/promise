@@ -22,7 +22,6 @@ class CreateWeeklyChallengesTable extends Migration
             $table->integer('goal');
             $table->integer('count');
             $table->boolean('failed')->nullable();
-            $table->dateTime('week_started_at');
             $table->timestamps();
         });
     }
