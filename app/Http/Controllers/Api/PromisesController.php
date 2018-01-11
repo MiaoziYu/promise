@@ -12,11 +12,11 @@ class PromisesController extends Controller
     public function index()
     {
         if (request('finished') === 'true') {
-            $promises = auth()->user()->promises()->with('checklists')->finished()->unexpired()->orderBy('created_at', 'desc')->get();
+            $promises = auth()->user()->promises()->with('checklists')->finished()->unexpired()->orderBy('order')->get();
         } elseif (request('finished') === 'false') {
-            $promises = auth()->user()->promises()->with('checklists')->unfinished()->unexpired()->orderBy('created_at', 'desc')->get();
+            $promises = auth()->user()->promises()->with('checklists')->unfinished()->unexpired()->orderBy('order')->get();
         } else {
-            $promises = auth()->user()->promises()->with('checklists')->orderBy('created_at', 'desc')->get();
+            $promises = auth()->user()->promises()->with('checklists')->orderBy('order')->get();
         }
 
         $promises = $this->checkDueDate($promises);
@@ -111,6 +111,25 @@ class PromisesController extends Controller
                 ]);
             }
 
+        });
+
+        return response()->json([], 200);
+    }
+
+    public function reorder()
+    {
+        $arr = request()->input();
+
+        auth()->user()->promises()->get()->map(function($promise) use ($arr) {
+            foreach($arr as $item) {
+                if (is_array($item)) {
+                    if ($item['id'] == $promise->id) {
+                        $promise->update([
+                            'order' => $item['order']
+                        ]);
+                    }
+                }
+            }
         });
 
         return response()->json([], 200);

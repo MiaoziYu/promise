@@ -258,4 +258,46 @@ class WeeklyChallengeTest extends TestCase
         $this->assertEquals(0, $challenge->count);
         $this->assertEquals(0, $challenge->failed);
     }
+
+    /** @test */
+    public function can_reorder_weekly_challenges()
+    {
+        // Arrange
+        $challengeOne = factory(WeeklyChallenge::class)->create([
+            'user_id' => $this->user->id,
+            'order' => 1,
+        ]);
+        $challengeTwo = factory(WeeklyChallenge::class)->create([
+            'user_id' => $this->user->id,
+            'order' => 2
+        ]);
+        $challengeThree = factory(WeeklyChallenge::class)->create([
+            'user_id' => $this->user->id,
+            'order' => 3,
+        ]);
+
+        $data = [
+            [
+                'id' => $challengeOne->id,
+                'order' => 2
+            ],
+            [
+                'id' => $challengeTwo->id,
+                'order' => 3
+            ],
+            [
+                'id' => $challengeThree->id,
+                'order' => 1
+            ],
+        ];
+
+        // Act
+        $response = $this->post('/api/weekly-challenges/reorder?api_token=' . $this->user->api_token, $data);
+
+        // Assert
+        $response->assertStatus(200);
+        $this->assertEquals(2, $this->user->weeklyChallenges()->findOrFail($challengeOne->id)->order);
+        $this->assertEquals(3, $this->user->weeklyChallenges()->findOrFail($challengeTwo->id)->order);
+        $this->assertEquals(1, $this->user->weeklyChallenges()->findOrFail($challengeThree->id)->order);
+    }
 }

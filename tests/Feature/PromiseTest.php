@@ -356,4 +356,46 @@ class PromiseTest extends TestCase
 
         $this->assertEquals(50, $this->user->userProfile()->first()->credits);
     }
+
+    /** @test */
+    public function can_reorder_promises()
+    {
+        // Arrange
+        $promiseOne = factory(Promise::class)->create([
+            'user_id' => $this->user->id,
+            'order' => 1,
+        ]);
+        $promiseTwo = factory(Promise::class)->create([
+            'user_id' => $this->user->id,
+            'order' => 2
+        ]);
+        $promiseThree = factory(Promise::class)->create([
+            'user_id' => $this->user->id,
+            'order' => 3,
+        ]);
+
+        $data = [
+            [
+                'id' => $promiseOne->id,
+                'order' => 2
+            ],
+            [
+                'id' => $promiseTwo->id,
+                'order' => 3
+            ],
+            [
+                'id' => $promiseThree->id,
+                'order' => 1
+            ],
+        ];
+
+        // Act
+        $response = $this->post('/api/promises/reorder?api_token=' . $this->user->api_token, $data);
+
+        // Assert
+        $response->assertStatus(200);
+        $this->assertEquals(2, $this->user->promises()->findOrFail($promiseOne->id)->order);
+        $this->assertEquals(3, $this->user->promises()->findOrFail($promiseTwo->id)->order);
+        $this->assertEquals(1, $this->user->promises()->findOrFail($promiseThree->id)->order);
+    }
 }

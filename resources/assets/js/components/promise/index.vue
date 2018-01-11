@@ -574,11 +574,11 @@
                     },
                     {
                         id: 'challenge-list',
-                        path: ""
+                        path: "weekly-challenges/reorder"
                     },
                     {
                         id: 'promise-list',
-                        path: ""
+                        path: "promises/reorder"
                     },
                 ];
 
@@ -592,8 +592,6 @@
                                     order: index + 1
                                 });
                             });
-                            console.log(data);
-
                             api.updateOrder(value.path, data);
                         },
                     });

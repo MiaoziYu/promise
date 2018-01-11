@@ -18,7 +18,8 @@ class Promise extends Model
         'reward_image_link',
         'due_date',
         'expired',
-        'finished_at'
+        'finished_at',
+        'order'
     ];
 
     public function checklists()

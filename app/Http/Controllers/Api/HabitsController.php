@@ -6,6 +6,7 @@ use App\Habit;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class HabitsController extends Controller
 {
@@ -89,14 +90,6 @@ class HabitsController extends Controller
                 }
             }
         });
-
-//        foreach($arr as $item) {
-//            if (is_array($item)) {
-//                auth()->user()->habits()->findOrFail($item['id'])->update([
-//                    'order' => $item['order']
-//                ]);
-//            }
-//        }
 
         return response()->json([], 200);
     }

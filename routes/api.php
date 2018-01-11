@@ -19,6 +19,7 @@ Route::group(
     ], function () {
     Route::get('/promises/{id}', 'PromisesController@show');
     Route::get('/promises/', 'PromisesController@index');
+    Route::post('/promises/reorder', 'PromisesController@reorder');
     Route::put('/promises/{id}', 'PromisesController@update');
     Route::put('/promises/{id}/finish', 'PromisesController@finish');
     Route::post('/promises/', 'PromisesController@store');
@@ -52,6 +53,7 @@ Route::group(
 
     route::get('/weekly-challenges/{id}', 'WeeklyChallengesController@show');
     route::get('/weekly-challenges/', 'WeeklyChallengesController@index');
+    Route::post('/weekly-challenges/reorder', 'WeeklyChallengesController@reorder');
     route::put('/weekly-challenges/{id}', 'WeeklyChallengesController@update');
     route::put('/weekly-challenges/{id}/check', 'WeeklyChallengesController@check');
     route::post('/weekly-challenges/', 'WeeklyChallengesController@store');

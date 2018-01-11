@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class WeeklyChallengesController extends Controller
 {
@@ -16,7 +17,7 @@ class WeeklyChallengesController extends Controller
 
     public function index()
     {
-        $weeklyChallenges = auth()->user()->weeklyChallenges()->orderBy('created_at', 'desc')->get();
+        $weeklyChallenges = auth()->user()->weeklyChallenges()->orderBy('order')->get();
 
         return response()->json($weeklyChallenges, 200);
     }
@@ -66,6 +67,25 @@ class WeeklyChallengesController extends Controller
             ]);
         });
 
+
+        return response()->json([], 200);
+    }
+
+    public function reorder()
+    {
+        $arr = request()->input();
+
+        auth()->user()->WeeklyChallenges()->get()->map(function($challenge) use ($arr) {
+            foreach($arr as $item) {
+                if (is_array($item)) {
+                    if ($item['id'] == $challenge->id) {
+                        $challenge->update([
+                            'order' => $item['order']
+                        ]);
+                    }
+                }
+            }
+        });
 
         return response()->json([], 200);
     }

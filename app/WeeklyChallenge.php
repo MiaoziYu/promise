@@ -14,5 +14,6 @@ class WeeklyChallenge extends Model
         'goal',
         'count',
         'failed',
+        'order',
     ];
 }
