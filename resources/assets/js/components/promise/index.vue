@@ -55,10 +55,10 @@
             <!-- ========== weekly challenge list ========== -->
             <div class="task-block">
                 <h2 class="task-title">Weekly challenges</h2>
-                <ul class="habit-list task-list">
+                <ul class="challenge-list habit-list task-list">
                     <li v-for="challenge in challenges" class="habit-item task-item">
                         <div class="o-card">
-                            <div class="habit-content">
+                            <div v-if="!challenge.failed" class="habit-content">
                                 <div @click="getChallenge(challenge.id)" class="habit-text">
                                     <p class="o-card-title">{{ challenge.name }}</p>
                                     <p v-if="challenge.description" class="o-card-description">{{ challenge.description }}</p>
@@ -82,9 +82,19 @@
                                     </button>
                                 </div>
                             </div>
-                            <ul @click="getChallenge(challenge.id)" class="habit-streak challenge-progress" :class="{ streak: isSuccess(challenge) }">
+                            <ul v-if="!challenge.failed" @click="getChallenge(challenge.id)" class="habit-streak challenge-progress" :class="{ streak: isSuccess(challenge) }">
                                 <li v-for="(goal, index) in challenge.goal" class="streak-item" :class="{ active: index < challenge.count}"></li>
                             </ul>
+                            <div v-if="challenge.failed" class="challenge-failed-content habit-content">
+                                <div class="habit-text">
+                                    <p class="o-card-title">{{ challenge.name }}</p>
+                                    <div class="failed-msg">Challenge failed <i class="fa fa-frown-o" aria-hidden="true"></i></div>
+                                    <div class="failed-credits">- <i class="fa fa-diamond" aria-hidden="true"></i>{{ challenge.credits / 2 }}</div>
+                                </div>
+                                <div class="habit-btn failed-btn">
+                                    <button @click="restartChallenge(challenge.id)">Restart</button>
+                                </div>
+                            </div>
                         </div>
                     </li>
                 </ul>
@@ -485,6 +495,16 @@
                 api.checkChallenge(id).then(response => {
                     this.getChallenges();
                     EventBus.$emit("checkChallenge");
+                });
+            },
+
+            restartChallenge(id) {
+                let data = {
+                    failed: "false"
+                };
+
+                api.updateChallenge(id, data).then(response => {
+                    this.getChallenges();
                 });
             },
 

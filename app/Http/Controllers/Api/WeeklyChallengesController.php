@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class WeeklyChallengesController extends Controller
@@ -40,6 +39,10 @@ class WeeklyChallengesController extends Controller
 
         if (request('goal')) {
             $data['goal'] = request('goal');
+        }
+
+        if (request('failed') and request('failed') === 'false') {
+            $data['failed'] = 0;
         }
 
         auth()->user()->weeklyChallenges()->findOrFail($id)->update($data);

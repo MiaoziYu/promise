@@ -1,0 +1,34 @@
+.challenge-list {
+  .challenge-failed-content {
+
+    .failed-msg {
+      i {
+        margin-left: 4px;
+      }
+    }
+
+    .failed-credits {
+      display: inline-block;
+      margin: $space-small auto;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background-color: $red;
+      color: white;
+
+      i {
+        margin-right: 4px;
+      }
+    }
+
+    .failed-btn {
+      button {
+        background-color: $red;
+
+        &:hover {
+          background-color: darken($red, 10%);
+        }
+      }
+    }
+
+  }
+}
