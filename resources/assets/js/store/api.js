@@ -78,8 +78,8 @@ export default {
         return get(`profile`);
     },
 
-    getWishTickets() {
-        return get(`wish-tickets`);
+    getWishTickets(claimed) {
+        return get(`wish-tickets`, `claimed=${claimed}`);
     },
 
     updateHabit(id, data) {

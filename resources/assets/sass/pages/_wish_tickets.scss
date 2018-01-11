@@ -8,6 +8,11 @@
         margin: $space-small 0 0 0;
         font-size: 16px;
       }
+
+      .claimed-date {
+        margin-top: $space-small;
+        min-height: unset;
+      }
     }
   }
 }

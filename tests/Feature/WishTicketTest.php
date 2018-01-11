@@ -36,8 +36,34 @@ class WishTicketTest extends TestCase
         // Assertion
         $response->assertStatus(200);
         $response->assertSee('funny frisch');
-        $response->assertSee('example image link');
         $response->assertDontSee('nachos');
+    }
+
+    /** @test */
+    public function can_view_claimed_wish_tickets()
+    {
+        $this->disableExceptionHandling();
+
+        // Arrange
+        $user = factory(User::class)->create();
+        factory(WishTicket::class)->create([
+            'user_id' => $user->id,
+            'name' => 'funny frisch',
+            'image_link' => 'example image link'
+        ]);
+        factory(WishTicket::class)->create([
+            'user_id' => $user->id,
+            'name' => 'nachos',
+            'claimed_at' => Carbon::now()
+        ]);
+
+        // Act
+        $response = $this->get('/api/wish-tickets/?claimed=true&api_token=' . $user->api_token);
+
+        // Assertion
+        $response->assertStatus(200);
+        $response->assertDontSee('funny frisch');
+        $response->assertSee('nachos');
     }
 
     /** @test */
