@@ -18,7 +18,7 @@ class WishesController extends Controller
 
     public function index()
     {
-        $wishes = auth()->user()->wishes()->get();
+        $wishes = auth()->user()->wishes()->orderBy('created_at', 'desc')->get();
 
         return response()->json($wishes, 200);
     }

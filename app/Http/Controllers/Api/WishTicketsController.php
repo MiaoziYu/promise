@@ -10,7 +10,7 @@ class WishTicketsController extends Controller
 {
     public function index()
     {
-        $wishTickets = auth()->user()->wishTickets()->unclaimed()->get();
+        $wishTickets = auth()->user()->wishTickets()->unclaimed()->orderBy('created_at', 'desc')->get();
 
         return response()->json($wishTickets, 200);
     }

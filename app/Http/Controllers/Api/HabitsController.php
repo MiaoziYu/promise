@@ -10,7 +10,7 @@ class HabitsController extends Controller
 {
     public function index()
     {
-        $habits = auth()->user()->habits()->get();
+        $habits = auth()->user()->habits()->orderBy('created_at', 'desc')->get();
 
         return response()->json($habits, 200);
     }

@@ -16,7 +16,7 @@ class WeeklyChallengesController extends Controller
 
     public function index()
     {
-        $weeklyChallenges = auth()->user()->weeklyChallenges()->get();
+        $weeklyChallenges = auth()->user()->weeklyChallenges()->orderBy('created_at', 'desc')->get();
 
         return response()->json($weeklyChallenges, 200);
     }

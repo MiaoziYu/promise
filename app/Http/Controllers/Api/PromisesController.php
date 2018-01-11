@@ -12,11 +12,11 @@ class PromisesController extends Controller
     public function index()
     {
         if (request('finished') === 'true') {
-            $promises = auth()->user()->promises()->with('checklists')->finished()->unexpired()->get();
+            $promises = auth()->user()->promises()->with('checklists')->finished()->unexpired()->orderBy('created_at', 'desc')->get();
         } elseif (request('finished') === 'false') {
-            $promises = auth()->user()->promises()->with('checklists')->unfinished()->unexpired()->get();
+            $promises = auth()->user()->promises()->with('checklists')->unfinished()->unexpired()->orderBy('created_at', 'desc')->get();
         } else {
-            $promises = auth()->user()->promises()->with('checklists')->get();
+            $promises = auth()->user()->promises()->with('checklists')->orderBy('created_at', 'desc')->get();
         }
 
         $promises = $this->checkDueDate($promises);
