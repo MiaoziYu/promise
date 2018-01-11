@@ -106,6 +106,10 @@ export default {
         return put(`wishes/${id}`, data)
     },
 
+    updateOrder(path, data) {
+        return post(path, data);
+    },
+
     purchaseWish(id) {
         return put(`wishes/${id}/purchase`, [])
     },

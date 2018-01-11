@@ -19,8 +19,8 @@
             <!-- ========== habit list ========== -->
             <div class="task-block">
                 <h2 class="task-title">Habits</h2>
-                <ul class="habit-list task-list">
-                    <li v-for="habit in habits" class="habit-item task-item">
+                <ul id="habit-list" class="habit-list task-list">
+                    <li v-for="habit in habits" class="habit-item task-item" :data-id="habit.id">
                         <div class="o-card">
                             <div class="habit-content">
                                 <div @click="getHabit(habit.id)" class="habit-text">
@@ -55,8 +55,8 @@
             <!-- ========== weekly challenge list ========== -->
             <div class="task-block">
                 <h2 class="task-title">Weekly challenges</h2>
-                <ul class="challenge-list habit-list task-list">
-                    <li v-for="challenge in challenges" class="habit-item task-item">
+                <ul id="challenge-list" class="challenge-list habit-list task-list">
+                    <li v-for="challenge in challenges" class="habit-item task-item" :data-id="challenge.id">
                         <div class="o-card">
                             <div v-if="!challenge.failed" class="habit-content">
                                 <div @click="getChallenge(challenge.id)" class="habit-text">
@@ -103,9 +103,11 @@
             <!-- ========== promise list ========== -->
             <div class="task-block">
                 <h2 class="task-title">Promises</h2>
-                <ul class="promise-list task-list">
+                <ul id="promise-list" class="promise-list task-list">
                     <li v-for="promise in promises"
-                        @click="getPromise(promise.id)" class="promise-item task-item">
+                        @click="getPromise(promise.id)"
+                        class="promise-item task-item"
+                        :data-id="promise.id">
                         <div class="o-card">
                             <p class="o-card-title">{{ promise.name }}</p>
                             <p v-if="promise.description" class="o-card-description">{{ promise.description }}</p>
@@ -355,7 +357,11 @@
                     this.promiseForm = null;
                     this.habitForm = null;
                 }
-            })
+            });
+        },
+
+        mounted() {
+            this.setUpSortable();
         },
 
         methods: {
@@ -558,7 +564,41 @@
                         this.getPromises(this.currentList);
                     }
                 })
-            }
+            },
+
+            setUpSortable() {
+                let lists = [
+                    {
+                        id: 'habit-list',
+                        path: "habits/reorder"
+                    },
+                    {
+                        id: 'challenge-list',
+                        path: ""
+                    },
+                    {
+                        id: 'promise-list',
+                        path: ""
+                    },
+                ];
+
+                $(lists).each(function(index, value) {
+                    Sortable.create(document.getElementById(value.id), {
+                        onUpdate(event) {
+                            let data = [];
+                            $('.task-item', $(event.target)).each((index, value) => {
+                                data.push({
+                                    id: $(value).attr('data-id'),
+                                    order: index + 1
+                                });
+                            });
+                            console.log(data);
+
+                            api.updateOrder(value.path, data);
+                        },
+                    });
+                });
+            },
         }
     }
 </script>

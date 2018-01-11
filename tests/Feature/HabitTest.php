@@ -267,4 +267,46 @@ class HabitTest extends TestCase
         $response->assertStatus(200);
         $this->assertNull($this->user->habits()->find($habit->id));
     }
+
+    /** @test */
+    public function can_reorder_habits()
+    {
+        // Arrange
+        $habitOne = factory(Habit::class)->create([
+            'user_id' => $this->user->id,
+            'order' => 1,
+        ]);
+        $habitTwo = factory(Habit::class)->create([
+            'user_id' => $this->user->id,
+            'order' => 2
+        ]);
+        $habitThree = factory(Habit::class)->create([
+            'user_id' => $this->user->id,
+            'order' => 3,
+        ]);
+
+        $data = [
+            [
+                'id' => $habitOne->id,
+                'order' => 2
+            ],
+            [
+                'id' => $habitTwo->id,
+                'order' => 3
+            ],
+            [
+                'id' => $habitThree->id,
+                'order' => 1
+            ],
+        ];
+
+        // Act
+        $response = $this->post('/api/habits/reorder?api_token=' . $this->user->api_token, $data);
+
+        // Assert
+        $response->assertStatus(200);
+        $this->assertEquals(2, $this->user->habits()->findOrFail($habitOne->id)->order);
+        $this->assertEquals(3, $this->user->habits()->findOrFail($habitTwo->id)->order);
+        $this->assertEquals(1, $this->user->habits()->findOrFail($habitThree->id)->order);
+    }
 }

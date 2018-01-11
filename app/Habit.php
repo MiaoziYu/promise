@@ -13,6 +13,7 @@ class Habit extends Model
         'credits',
         'count',
         'streak',
-        'checked_at'
+        'checked_at',
+        'order'
     ];
 }

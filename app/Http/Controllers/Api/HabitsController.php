@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Habit;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,7 @@ class HabitsController extends Controller
 {
     public function index()
     {
-        $habits = auth()->user()->habits()->orderBy('created_at', 'desc')->get();
+        $habits = auth()->user()->habits()->orderBy('order')->get();
 
         return response()->json($habits, 200);
     }
@@ -69,6 +70,33 @@ class HabitsController extends Controller
             $this->updateHabit($habit);
             $this->updateUserProfile($user, $habit);
         });
+
+        return response()->json([], 200);
+    }
+
+    public function reorder()
+    {
+        $arr = request()->input();
+
+        auth()->user()->habits()->get()->map(function($habit) use ($arr) {
+            foreach($arr as $item) {
+                if (is_array($item)) {
+                    if ($item['id'] == $habit->id) {
+                        $habit->update([
+                            'order' => $item['order']
+                        ]);
+                    }
+                }
+            }
+        });
+
+//        foreach($arr as $item) {
+//            if (is_array($item)) {
+//                auth()->user()->habits()->findOrFail($item['id'])->update([
+//                    'order' => $item['order']
+//                ]);
+//            }
+//        }
 
         return response()->json([], 200);
     }

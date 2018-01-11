@@ -45,6 +45,7 @@ Route::group(
     Route::get('/habits/{id}', 'HabitsController@show');
     Route::get('/habits/', 'HabitsController@index');
     Route::post('/habits/', 'HabitsController@store');
+    Route::post('/habits/reorder', 'HabitsController@reorder');
     Route::put('/habits/{id}', 'HabitsController@update');
     Route::put('/habits/{id}/check', 'HabitsController@check');
     Route::delete('/habits/{id}', 'HabitsController@destroy');
