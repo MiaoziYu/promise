@@ -204,6 +204,24 @@ class HabitTest extends TestCase
     }
 
     /** @test */
+    public function can_fail_a_habit_streak_at_the_beginning_of_a_day()
+    {
+        // Arrange
+        factory(Habit::class)->create([
+            'user_id' => $this->user->id,
+            'streak' => 7,
+            'checked_at' => Carbon::yesterday()->subHours(1)
+        ]);
+
+        // Act
+        $this->artisan('habits:check');
+
+        // Assert
+        $this->assertEquals(0, $this->user->habits()->first()->streak);
+
+    }
+
+    /** @test */
     public function can_only_check_a_habit_once_per_day()
     {
         // Arrange

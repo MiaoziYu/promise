@@ -14,7 +14,7 @@ class CheckWeeklyChallenges extends Command
      *
      * @var string
      */
-    protected $signature = 'challenge:check';
+    protected $signature = 'challenges:check';
 
     /**
      * The console command description.
