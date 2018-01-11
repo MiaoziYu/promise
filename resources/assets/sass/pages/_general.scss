@@ -94,3 +94,28 @@
     transition: all .3s;
   }
 }
+
+.action-confirmation {
+  text-align: center;
+
+  .confirmation-msg {
+    margin: $space-small * 2 0 $space-small * 3 0;
+    line-height: 40px;
+    font-size: 20px;
+  }
+
+  .confirmation-btn,
+  .cancel-btn {
+    @include button($green);
+    margin-bottom: $space-small * 2;
+    font-size: 20px;
+
+    i {
+      margin-left: 4px;
+    }
+  }
+
+  .cancel-btn {
+    margin-left: 10px;
+  }
+}

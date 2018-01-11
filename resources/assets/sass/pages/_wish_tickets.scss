@@ -10,24 +10,4 @@
       }
     }
   }
-
-  .wish-ticket-confirm {
-    text-align: center;
-
-    .confirm-msg {
-      margin: $space-small * 2 0 $space-small * 3 0;
-      font-size: 20px;
-    }
-
-    .confirm-btn,
-    .cancel-btn {
-      @include button($green);
-      margin-bottom: $space-small * 2;
-      font-size: 20px;
-    }
-
-    .cancel-btn {
-      margin-left: 10px;
-    }
-  }
 }

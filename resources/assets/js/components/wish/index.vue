@@ -18,7 +18,7 @@
                         <img :src="wish.image_link" alt="">
                     </div>
                     <p @click="getWish(wish.id)" class="title o-card-title">{{ wish.name }}</p>
-                    <button @click="purchaseWish(wish)"
+                    <button @click="purchaseConfirmMessage = wish"
                             :class="{ active: hasEnoughCredits(wish) }"
                             class="wish-purchase-btn">
                         <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ wish.credits }}</span>
@@ -69,6 +69,24 @@
             </div>
         </div>
 
+        <!-- ========== purchase confirmation ========== -->
+        <div v-if="purchaseConfirmMessage" class="o-overlay">
+            <div v-if="hasEnoughCredits(purchaseConfirmMessage)" class="action-confirmation o-card o-overlay-content">
+                <div class="confirmation-msg">
+                    <p>Do you want to buy {{ purchaseConfirmMessage.name }} ?</p>
+                </div>
+                <div @click="purchaseWish(purchaseConfirmMessage)" class="confirmation-btn">definitely</div>
+                <div @click="hidePurchaseConfirmationMsg" class="cancel-btn">no thanks</div>
+            </div>
+            <div v-if="!hasEnoughCredits(purchaseConfirmMessage)" class="action-confirmation o-card o-overlay-content">
+                <div class="confirmation-msg">
+                    <p>Not enough credits</p>
+                    <p>Earn credits by finishing more tasks :D</p>
+                </div>
+                <div @click="hidePurchaseConfirmationMsg" class="cancel-btn">Good idea <i class="fa fa-smile-o" aria-hidden="true"></i></div>
+            </div>
+        </div>
+
         <new-wish-form :wishForm="wishForm"></new-wish-form>
     </div>
 </template>
@@ -83,6 +101,7 @@
                 wishes: [],
                 wish: null,
                 wishForm: false,
+                purchaseConfirmMessage: null,
                 currentList: "market",
             }
         },
@@ -141,6 +160,7 @@
                         EventBus.$emit("purchaseWish");
                         this.getWishes();
                         this.getUserInfo();
+                        this.hidePurchaseConfirmationMsg();
                     });
                 }
             },
@@ -153,6 +173,10 @@
                 if(this.user) {
                     return this.user.user_profile.credits >= wish.credits;
                 }
+            },
+
+            hidePurchaseConfirmationMsg() {
+                this.purchaseConfirmMessage = null;
             },
 
             deleteWish(id) {

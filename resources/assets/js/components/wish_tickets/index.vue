@@ -3,12 +3,12 @@
         <ul class="wish-ticket-list o-list-4">
             <li v-for="ticket in wishTickets"
                 class="wish-ticket-item o-list-item">
-                <div class="o-card wish-item">
+                <div class="o-card">
                     <div v-if="ticket.image_link !== null" class="o-card-img">
                         <img :src="ticket.image_link" alt="">
                     </div>
                     <p class="title o-card-title">{{ ticket.name }}</p>
-                    <button @click="claimConfirmMessage = ticket.id"
+                    <button @click="claimConfirmMessage = ticket"
                             class="claim-btn o-card-btn">
                         claim ticket
                     </button>
@@ -16,13 +16,13 @@
             </li>
         </ul>
 
-        <!-- ========== promise success message ========== -->
+        <!-- ========== claim confirmation ========== -->
         <div v-if="claimConfirmMessage !== null" class="o-overlay">
-            <div class="wish-ticket-confirm o-card o-overlay-content">
-                <div class="confirm-msg">
+            <div class="action-confirmation o-card o-overlay-content">
+                <div class="confirmation-msg">
                     <p>Do you want to claim this ticket?</p>
                 </div>
-                <div @click="claimWishTicket(claimConfirmMessage)" class="confirm-btn">I'm sure</div>
+                <div @click="claimWishTicket(claimConfirmMessage.id)" class="confirmation-btn">I'm sure</div>
                 <div @click="claimConfirmMessage = null" class="cancel-btn">maybe not</div>
             </div>
         </div>
