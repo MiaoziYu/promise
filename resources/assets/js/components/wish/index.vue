@@ -73,7 +73,7 @@
         <div v-if="purchaseConfirmMessage" class="o-overlay">
             <div v-if="hasEnoughCredits(purchaseConfirmMessage)" class="action-confirmation o-card o-overlay-content">
                 <div class="confirmation-msg">
-                    <p>Do you want to buy {{ purchaseConfirmMessage.name }} ?</p>
+                    <p>Do you want to buy {{ purchaseConfirmMessage.name }}?</p>
                 </div>
                 <div @click="purchaseWish(purchaseConfirmMessage)" class="confirmation-btn">definitely</div>
                 <div @click="hidePurchaseConfirmationMsg" class="cancel-btn">no thanks</div>
