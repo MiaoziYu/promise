@@ -64,9 +64,7 @@ class PromisesController extends Controller
             $data['name'] = request('name');
         }
 
-        if (request('description') !== null) {
-            $data['description'] = request('description');
-        }
+        $data['description'] = request('description');
 
         if (request('reward_credits') !== null) {
             $data['reward_credits'] = request('reward_credits');

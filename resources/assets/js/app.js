@@ -18,16 +18,16 @@ window.EventBus = new Vue();
  */
 import store from "./store"
 
-Vue.component("promise", require("./components/promise/index.vue"));
+Vue.component("promise", require("./components/dashboard/index.vue"));
 Vue.component("top-nav", require("./components/top_nav.vue"));
-Vue.component("punch-card", require("./components/promise/_punch_card.vue"));
-Vue.component("checklist", require("./components/promise/_checklist.vue"));
-Vue.component("task-form", require("./components/promise/_task_form.vue"));
-Vue.component("new-promise-form", require("./components/promise/_new_promise_form.vue"));
+Vue.component("punch-card", require("./components/dashboard/_punch_card.vue"));
+Vue.component("checklist", require("./components/dashboard/_checklist.vue"));
+Vue.component("task-form", require("./components/dashboard/_task_form.vue"));
+Vue.component("new-promise-form", require("./components/dashboard/_new_promise_form.vue"));
 
-Vue.component("new-habit-form", require("./components/promise/_new_habit_form"));
+Vue.component("new-habit-form", require("./components/dashboard/_new_habit_form"));
 
-Vue.component("new-weekly-challenge-form", require("./components/promise/_new_weekly_challenge_form"));
+Vue.component("new-weekly-challenge-form", require("./components/dashboard/_new_weekly_challenge_form"));
 
 Vue.component("wishes", require("./components/wish/index.vue"));
 Vue.component("new-wish-form", require("./components/wish/_new_wish_form.vue"));
