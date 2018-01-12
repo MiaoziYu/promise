@@ -230,7 +230,7 @@
 
                     <!--buttons to finish or delete habit-->
                     <div class="form-btns">
-                        <div @click="deleteChallenge" class="delete-btn btn-secondary">delete challenge</div>
+                        <div @click="deleteChallenge(challenge.id)" class="delete-btn btn-secondary">delete challenge</div>
                     </div>
                 </div>
             </div>
