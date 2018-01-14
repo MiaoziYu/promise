@@ -103,7 +103,9 @@ class PromisesController extends Controller
                 'finished_at' => Carbon::now()
             ]);
             if ($promise->reward_type === 'points') {
-                $user->updateCredits($promise->id);
+                $user->userProfile->update([
+                    'credits' => $user->userProfile->credits + $promise->reward_credits
+                ]);
             } else if ($promise->reward_type = 'gift') {
                 $user->wishTickets()->create([
                     'name' => $promise->reward_name,
@@ -157,9 +159,8 @@ class PromisesController extends Controller
                         'expired' => 'pending'
                     ]);
 
-                    $userProfile = auth()->user()->userProfile;
-                    $userProfile->update([
-                        'credits' => $userProfile->first()->credits - $item->reward_credits
+                    auth()->user()->userProfile->update([
+                        'credits' => auth()->user()->userProfile->credits - $item->reward_credits
                     ]);
                 });
             }

@@ -55,15 +55,14 @@ class WeeklyChallengesController extends Controller
     {
         $user = auth()->user();
         $challenge = $user->weeklyChallenges()->findOrFail($id);
-        $userProfile = $user->userProfile;
         $bonus = $challenge->goal > $challenge->count ? 1 : 2;
 
-        DB::transaction(function() use ($challenge, $userProfile, $bonus) {
+        DB::transaction(function() use ($user, $challenge, $bonus) {
             $challenge->update([
                 'count' => $challenge->count + 1
             ]);
-            $userProfile->update([
-                'credits' => $userProfile->first()->credits + (floor($challenge->credits / $challenge->goal) * $bonus)
+            $user->userProfile->update([
+                'credits' => $user->userProfile->credits + (floor($challenge->credits / $challenge->goal) * $bonus)
             ]);
         });
 

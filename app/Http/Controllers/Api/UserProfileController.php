@@ -12,7 +12,7 @@ class UserProfileController extends Controller
     {
         /* @var User $user */
         $user = auth()->user();
-        $userProfile = $user->userProfile()->first();
+        $userProfile = $user->userProfile;
 
         $user->user_profile = $userProfile;
 
@@ -38,7 +38,7 @@ class UserProfileController extends Controller
         }
 
         $user->update($userAuthInfo);
-        $user->userProfile()->update($userProfile);
+        $user->userProfile->update($userProfile);
 
         return response()->json([], 200);
     }

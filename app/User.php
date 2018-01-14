@@ -61,15 +61,4 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\WeeklyChallenge');
     }
-
-    public function updateCredits($promiseId)
-    {
-        $promise = $this->promises()->findOrFail($promiseId);
-        if ($promise->reward_type === 'points') {
-            $userProfile = $this->userProfile();
-            $userProfile->update([
-                'credits' => $userProfile->first()->credits + $promise->reward_credits
-            ]);
-        }
-    }
 }

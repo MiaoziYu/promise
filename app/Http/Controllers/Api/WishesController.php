@@ -79,21 +79,20 @@ class WishesController extends Controller
     public function purchase($id)
     {
         $user = auth()->user();
-        $userProfile = $user->userProfile();
         $wish = $user->wishes()->findOrFail($id);
 
-        if ($userProfile->first()->credits < $wish->credits) {
+        if ($user->userProfile->credits < $wish->credits) {
             return response()->json(['not enough credits'], 422);
         }
 
-        DB::transaction(function() use ($user, $userProfile, $wish){
+        DB::transaction(function() use ($user,$wish){
             $user->wishTickets()->create([
                 'name' => $wish->name,
                 'image_link' => $wish->image_link,
             ]);
 
-            $userProfile->update([
-                'credits' => $userProfile->first()->credits - $wish->credits
+            $user->userProfile->update([
+                'credits' => $user->userProfile->credits - $wish->credits
             ]);
         });
 

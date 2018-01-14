@@ -138,16 +138,14 @@ class HabitsController extends Controller
 
     private function updateUserProfile($user, $habit)
     {
-        $userProfile = $user->userProfile();
-
         if ($habit->streak > 6) {
             $credits = $habit->credits * 2;
         } else {
             $credits = $habit->credits;
         }
 
-        $userProfile->update([
-            'credits' => $userProfile->first()->credits + $credits
+        $user->userProfile->update([
+            'credits' => $user->userProfile->credits + $credits
         ]);
     }
 }
