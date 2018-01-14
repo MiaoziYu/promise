@@ -25,7 +25,7 @@
                             <div class="habit-content">
                                 <div @click="getHabit(habit.id)" class="habit-text">
                                     <p class="o-card-title">{{ habit.name }}</p>
-                                    <p v-if="habit.description" class="o-card-description">{{ habit.description }}</p>
+                                    <p class="o-card-description">{{ habit.description }}</p>
                                     <p class="habit-credits-wrapper">
                                         <span class="habit-credits"><i class="fa fa-diamond" aria-hidden="true"></i>{{ habit.credits }}</span>
                                         <span v-if="hasStreak(habit)" class="habit-bonus">+ {{ habit.credits }}</span>
@@ -61,7 +61,7 @@
                             <div v-if="!challenge.failed" class="habit-content">
                                 <div @click="getChallenge(challenge.id)" class="habit-text">
                                     <p class="o-card-title">{{ challenge.name }}</p>
-                                    <p v-if="challenge.description" class="o-card-description">{{ challenge.description }}</p>
+                                    <p class="o-card-description">{{ challenge.description }}</p>
                                     <p class="habit-credits-wrapper">
                                         <span class="habit-credits">
                                             <i class="fa fa-diamond" aria-hidden="true"></i>
@@ -110,7 +110,7 @@
                         :data-id="promise.id">
                         <div class="o-card">
                             <p class="o-card-title">{{ promise.name }}</p>
-                            <p v-if="promise.description" class="o-card-description">{{ promise.description }}</p>
+                            <p class="o-card-description">{{ promise.description }}</p>
                             <div v-if="promise.reward_type === 'points'" class="reward-points">
                                 <div class="reward-content">
                                     <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ promise.reward_credits }}</span>
@@ -144,29 +144,33 @@
                 <div class="title-wrapper">
                     <div class="title">
                         <input v-model="habit.name"
-                               @blur="habit ? updateHabit(habit.id) : null"
-                               @keyup.enter="updateHabit(habit.id)"
-                               class="title"
-                               name="name">
+                               @blur="habit ? updateHabit : null"
+                               @keyup.enter="updateHabit"
+                               class="title">
                     </div>
                     <div @click="resetHabit" class="close-btn">
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </div>
                 </div>
                 <div class="content form">
-                    <textarea v-model="habit.description"
-                              @blur="habit ? updateHabit(habit.id) : null"
-                              @keyup.enter="updateHabit(habit.id)"
-                              class="description"
-                              name="description"
-                              placeholder="add description">
-                    </textarea>
-                    <i class="fa fa-diamond" aria-hidden="true"></i>
-                    <input v-model="habit.credits"
-                           @blur="habit ? updateHabit(habit.id) : null"
-                           @keyup.enter="updateHabit(habit.id)"
-                           class="credits"
-                           name="credits">
+                    <p v-if="!descriptionEditor" @click="descriptionEditor = true" class="description">{{ habit.description }}</p>
+                    <p v-if="!habit.description && !descriptionEditor" @click="descriptionEditor = true" class="description description-placeholder">add description</p>
+                    <div v-if="descriptionEditor" class="description-editor form-group">
+                        <textarea v-model="habit.description"
+                                  placeholder="add description">
+                        </textarea>
+                        <div class="form-label">
+                            <span @click="updateHabit" class="label-item active">save</span>
+                            <span @click="descriptionEditor = false; getHabit(habit.id)" class="label-item">cancel</span>
+                        </div>
+                    </div>
+                    <div class="credits-wrapper">
+                        <i class="fa fa-diamond" aria-hidden="true"></i>
+                        <input v-model="habit.credits"
+                               @blur="habit ? updateHabit : null"
+                               @keyup.enter="updateHabit"
+                               class="credits">
+                    </div>
 
                     <!--habit created date-->
                     <p class="date">created at {{ habit.created_at }}</p>
@@ -185,8 +189,8 @@
                 <div class="title-wrapper">
                     <div class="title">
                         <input v-model="challenge.name"
-                               @blur="challenge ? updateChallenge(challenge.id) : null"
-                               @keyup.enter="updateChallenge(challenge.id)"
+                               @blur="challenge ? updateChallenge : null"
+                               @keyup.enter="updateChallenge"
                                class="title"
                                name="name">
                     </div>
@@ -195,26 +199,32 @@
                     </div>
                 </div>
                 <div class="content form">
-                    <textarea v-model="challenge.description"
-                              @blur="challenge ? updateChallenge(challenge.id) : null"
-                              @keyup.enter="updateChallenge(challenge.id)"
-                              class="description"
-                              name="description"
-                              placeholder="add description">
-                    </textarea>
+                    <p v-if="!descriptionEditor" @click="descriptionEditor = true" class="description">{{ challenge.description }}</p>
+                    <p v-if="!challenge.description && !descriptionEditor" @click="descriptionEditor = true" class="description description-placeholder">add description</p>
+                    <div v-if="descriptionEditor" class="description-editor form-group">
+                        <textarea v-model="challenge.description"
+                                  placeholder="add description">
+                        </textarea>
+                        <div class="form-label">
+                            <span @click="updateChallenge" class="label-item active">save</span>
+                            <span @click="descriptionEditor = false; getChallenge(challenge.id)" class="label-item">cancel</span>
+                        </div>
+                    </div>
+                    <div class="credits-wrapper">
+                        <i class="fa fa-diamond" aria-hidden="true"></i>
+                        <input v-model="challenge.credits"
+                               @blur="challenge ? updateChallenge : null"
+                               @keyup.enter="updateChallenge"
+                               class="credits">
+                    </div>
                     <div class="form-group">
                         <label for="">Change challenge goal</label>
                         <input v-model="challenge.goal"
-                               @blur="challenge ? updateChallenge(challenge.id) : null"
-                               @keyup.enter="updateChallenge(challenge.id)"
+                               @blur="challenge ? updateChallenge : null"
+                               @keyup.enter="updateChallenge"
                                class="credits"
                                name="goal">
-                    </div>                    <i class="fa fa-diamond" aria-hidden="true"></i>
-                    <input v-model="challenge.credits"
-                           @blur="challenge ? updateChallenge(challenge.id) : null"
-                           @keyup.enter="updateChallenge(challenge.id)"
-                           class="credits"
-                           name="credits">
+                    </div>
                     <!--habit created date-->
                     <p class="date">created at {{ challenge.created_at }}</p>
 
@@ -232,8 +242,8 @@
                 <div class="title-wrapper">
                     <div class="title">
                         <input v-model="promise.name"
-                               @blur="promise ? updatePromiseText(promise.id) : null"
-                               @keyup.enter="updatePromiseText(promise.id)"
+                               @blur="promise ? updatePromise : null"
+                               @keyup.enter="updatePromise"
                                class="title"
                                name="name">
                     </div>
@@ -242,20 +252,24 @@
                     </div>
                 </div>
                 <div class="content form">
-                    <textarea v-model="promise.description"
-                              @blur="promise ? updatePromiseText(promise.id) : null"
-                              @keyup.enter="updatePromiseText(promise.id)"
-                              class="description"
-                              name="description"
-                              placeholder="add description">
-                    </textarea>
-
-                    <i class="fa fa-diamond" aria-hidden="true"></i>
-                    <input v-model="promise.reward_credits"
-                           @blur="promise ? updatePromiseText(promise.id) : null"
-                           @keyup.enter="updatePromiseText(promise.id)"
-                           class="credits"
-                           name="reward_credits">
+                    <p v-if="!descriptionEditor" @click="descriptionEditor = true" class="description">{{ promise.description }}</p>
+                    <p v-if="!promise.description && !descriptionEditor" @click="descriptionEditor = true" class="description description-placeholder">add description</p>
+                    <div v-if="descriptionEditor" class="description-editor form-group">
+                        <textarea v-model="promise.description"
+                                  placeholder="add description">
+                        </textarea>
+                        <div class="form-label">
+                            <span @click="updatePromise" class="label-item active">save</span>
+                            <span @click="descriptionEditor = false; getPromise(promise.id)" class="label-item">cancel</span>
+                        </div>
+                    </div>
+                    <div class="credits-wrapper">
+                        <i class="fa fa-diamond" aria-hidden="true"></i>
+                        <input v-model="promise.reward_credits"
+                               @blur="promise ? updatePromise : null"
+                               @keyup.enter="updatePromise"
+                               class="credits">
+                    </div>
 
                     <!--component to show and update punch card-->
                     <punch-card :promise="promise"></punch-card>
@@ -314,6 +328,7 @@
                 challenge: null,
                 challenges: null,
                 challengeForm: false,
+                descriptionEditor: false,
                 successMsg: null,
             }
         },
@@ -460,23 +475,25 @@
 
             resetPromise() {
                 this.promise = null;
+                this.descriptionEditor = false;
             },
 
             resetHabit() {
                 this.habit = null;
+                this.descriptionEditor = false;
             },
 
             resetChallenge() {
                 this.challenge = null;
+                this.descriptionEditor = false;
             },
 
-            updateHabit(id) {
-                let data = {},
-                    eventTarget = $(event.target);
-                data[eventTarget.attr("name")] = $(event.target).val();
-                api.updateHabit(id, data).then(response => {
+            updateHabit() {
+                let eventTarget = $(event.target);
+                api.updateHabit(this.habit.id, this.habit).then(response => {
                     this.getHabits();
                     eventTarget.blur();
+                    this.descriptionEditor = false;
                 });
             },
 
@@ -487,13 +504,12 @@
                 });
             },
 
-            updateChallenge(id) {
-                let data = {},
-                    eventTarget = $(event.target);
-                data[eventTarget.attr("name")] = $(event.target).val();
-                api.updateChallenge(id, data).then(response => {
+            updateChallenge() {
+                let eventTarget = $(event.target);
+                api.updateChallenge(this.challenge.id, this.challenge).then(response => {
                     this.getChallenges();
                     eventTarget.blur();
+                    this.descriptionEditor = false;
                 });
             },
 
@@ -514,13 +530,12 @@
                 });
             },
 
-            updatePromiseText(id) {
-                let data = {},
-                    eventTarget = $(event.target);
-                data[eventTarget.attr("name")] = $(event.target).val();
-                api.updatePromise(id, data).then(response => {
+            updatePromise() {
+                let eventTarget = $(event.target);
+                api.updatePromise(this.promise.id, this.promise).then(response => {
                     this.getPromises();
                     eventTarget.blur();
+                    this.descriptionEditor = false;
                 });
             },
 

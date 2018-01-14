@@ -30,9 +30,7 @@ class WeeklyChallengesController extends Controller
             $data['name'] = request('name');
         }
 
-        if (request('description')) {
-            $data['description'] = request('description');
-        }
+        $data['description'] = request('description');
 
         if (request('credits')) {
             $data['credits'] = request('credits');

@@ -61,10 +61,9 @@
   }
 
   .description {
-    min-height: 40px;
     width: 100%;
-    margin-top: $space-xsmall;
-    resize: none;
+    margin: $space-xsmall * 2 0;
+    color: $text-color-secondary;
   }
 
   .date {
@@ -94,6 +93,20 @@
       margin-top: 0;
     }
   }
-}
 
+  .description-placeholder {
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      color: $text-color;
+    }
+  }
+
+  .description-editor {
+    textarea {
+      margin: $space-xsmall * 2 0 $space-xsmall 0;
+    }
+  }
+}
 
