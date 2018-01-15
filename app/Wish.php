@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Wish extends Model
 {
     protected $fillable = [
-        'user_id',
+        'owner',
         'name',
         'description',
         'credits',
         'image_link',
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany('App\User', 'user_wish');
+    }
 }

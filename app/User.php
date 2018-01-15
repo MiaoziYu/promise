@@ -44,7 +44,7 @@ class User extends Authenticatable
 
     public function wishes()
     {
-        return $this->hasMany('App\Wish');
+        return $this->belongsToMany('App\Wish', 'user_wish');
     }
 
     public function wishTickets()

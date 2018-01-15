@@ -3,9 +3,7 @@
 namespace Tests\Feature;
 
 use App\User;
-use App\UserProfile;
 use App\Wish;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -13,53 +11,70 @@ class WishTest extends TestCase
 {
     use DatabaseMigrations;
 
-    /** @test */
-    public function can_view_wish()
+    private $user;
+
+    protected function setUp()
     {
+        parent::setUp();
+
         $this->disableExceptionHandling();
 
+        $this->user = factory(User::class)->create();
+    }
+
+    private function createWish($data)
+    {
+        $wish = factory(Wish::class)->create($data);
+
+        $this->user->wishes()->attach($wish);
+
+        return $wish;
+    }
+
+    /** @test */
+    public function can_view_a_wish()
+    {
         // Arrange
-        $user = factory(User::class)->create();
-        $wish = factory(Wish::class)->create([
-            'user_id' => $user->id,
-            'name' => 'nachos',
-            'credits' => 500
+        $wish = $this->createWish([
+            'owner' => $this->user->id,
+            'name' => 'potato chip',
+            'description' => 'buy a package of potato chip',
+            'credits' => 500,
+            'image_link' =>'example_link'
         ]);
 
         // Act
-        $response = $this->get('/api/wishes/' . $wish->id . '?api_token=' . $user->api_token);
+        $response = $this->get('/api/wishes/' . $wish->id . '?api_token=' . $this->user->api_token);
 
         // Assertion
         $response->assertStatus(200);
-        $response->assertSee('nachos');
+        $response->assertSee('potato chip');
+        $response->assertSee('buy a package of potato chip');
         $response->assertSee('500');
+        $response->assertSee('example_link');
     }
 
     /** @test */
     public function can_view_all_wishes()
     {
-        $this->disableExceptionHandling();
-
         // Arrange
-        $user = factory(User::class)->create();
-        factory(Wish::class)->create([
-            'user_id' => $user->id,
+        $this->createWish([
+            'owner' => $this->user->id,
             'name' => 'nachos',
             'credits' => 500
         ]);
-
-        factory(Wish::class)->create([
-            'user_id' => $user->id,
+        $this->createWish([
+            'owner' => $this->user->id,
             'name' => 'potato chip',
             'credits' => 400
         ]);
 
         // Act
-        $response = $this->get('/api/wishes/' . '?api_token=' . $user->api_token);
+        $response = $this->get('/api/wishes/' . '?api_token=' . $this->user->api_token);
 
         // Assertion
-
         $response->assertStatus(200);
+
         $response->assertSee('nachos');
         $response->assertSee('potato chip');
         $response->assertSee('500');
@@ -69,13 +84,8 @@ class WishTest extends TestCase
     /** @test */
     public function can_create_a_wish()
     {
-        $this->disableExceptionHandling();
-
-        // Arrange
-        $user = factory(User::class)->create();
-
         // Act
-        $postResponse = $this->post('/api/wishes/' . '?api_token=' . $user->api_token, [
+        $response = $this->post('/api/wishes/' . '?api_token=' . $this->user->api_token, [
             'name' => 'potato chip',
             'description' => 'buy a package of potato chip',
             'credits' => 500,
@@ -83,71 +93,92 @@ class WishTest extends TestCase
         ]);
 
         // Assertion
-        $getResponse = $this->get('/api/wishes/?api_token=' . $user->api_token);
+        $response->assertStatus(201);
 
-        $postResponse->assertStatus(201);
-        $getResponse->assertSee('potato chip');
-        $getResponse->assertSee('buy a package of potato chip');
-        $getResponse->assertSee('500');
-        $getResponse->assertSee('example_link');
+        $wish = $this->user->wishes()->first();
+        $this->assertEquals('potato chip', $wish->name);
+        $this->assertEquals('buy a package of potato chip', $wish->description);
+        $this->assertEquals(500, $wish->credits);
+        $this->assertEquals('example_link', $wish->image_link);
+
+        $this->assertEquals($this->user->id, $this->user->wishes()->find($wish->id)->pivot->user_id);
     }
 
     /** @test */
     public function can_update_a_wish()
     {
-        $this->disableExceptionHandling();
-
         // Arrange
-        $user = factory(User::class)->create();
-        $wish = factory(Wish::class)->create([
-            'user_id' => $user->id,
+        $wish = $this->createWish([
+            'owner' => $this->user->id,
             'name' => 'potato chip',
             'description' => 'buy a package of potato chip',
             'image_link' =>'example_link'
         ]);
 
         // Act
-        $putResponse = $this->put('/api/wishes/' . $wish->id . '?api_token=' . $user->api_token, [
+        $response = $this->put('/api/wishes/' . $wish->id . '?api_token=' . $this->user->api_token, [
             'name' => 'nachos',
             'description' => 'buy a nachos',
             'image_link' =>'another_example_link'
         ]);
 
         // Assertion
-        $getResponse = $this->get('/api/wishes/?api_token=' . $wish->id . $user->api_token);
+        $response->assertStatus(200);
 
-        $putResponse->assertStatus(200);
-        $getResponse->assertSee('nachos');
-        $getResponse->assertSee('buy a nachos');
-        $getResponse->assertSee('another_example_link');
+        $updatedWish = $this->user->wishes()->findOrfail($wish->id);
+        $this->assertEquals('nachos', $updatedWish->name);
+        $this->assertEquals('buy a nachos', $updatedWish->description);
+        $this->assertEquals('another_example_link', $updatedWish->image_link);
+    }
+
+    /** @test */
+    public function can_share_a_wish()
+    {
+        // Arrange
+        $userTwo = factory(User::class)->create([
+            'email' => 'bearzk@example.com'
+        ]);
+
+        $wish = factory(Wish::class)->create([
+            'owner' => $this->user->id,
+            'name' => 'new PC',
+            'description' => 'fancy PC for gaming',
+        ]);
+
+        $this->user->wishes()->attach($wish);
+
+        // Act
+        $response = $this->put('/api/wishes/' . $wish->id . '/share?api_token=' . $this->user->api_token, [
+            'shared_user_email' => $userTwo->email
+        ]);
+
+        // Assert
+        $response->assertStatus(200);
+
+        $sharedWish = $userTwo->wishes()->find($wish->id);
+        $this->assertNotNull($sharedWish);
+        $this->assertEquals('new PC', $sharedWish->name);
+        $this->assertEquals('fancy PC for gaming', $sharedWish->description);
     }
 
     /** @test */
     public function can_delete_a_wish()
     {
-        $this->disableExceptionHandling();
-
         // Arrange
-        $user = factory(User::class)->create();
-        $wish = factory(Wish::class)->create([
-            'user_id' => $user->id,
-            'name' => 'potato chip',
-            'description' => 'buy a package of potato chip',
-            'image_link' =>'example_link'
+        $wish = $this->createWish([
+            'owner' => $this->user->id,
         ]);
 
+        $userTwo = factory(User::class)->create();
+        $userTwo->wishes()->attach($wish);
+
         // Act
-        $deleteResponse = $this->delete('/api/wishes/' . $wish->id . '?api_token=' . $user->api_token);
+        $response = $this->delete('/api/wishes/' . $wish->id . '?api_token=' . $this->user->api_token);
 
         // Assertion
-        $deleteResponse->assertStatus(200);
+        $response->assertStatus(200);
 
-        try {
-            $this->get('/api/promises/' . $wish->id . '?api_token=' . $user->api_token);
-        } catch (ModelNotFoundException $exception) {
-            return;
-        }
-
-        $this->fail();
+        $this->assertNull($this->user->wishes()->find($wish->id));
+        $this->assertNull($userTwo->wishes()->find($wish->id));
     }
 }

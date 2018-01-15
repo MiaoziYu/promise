@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\User;
+use App\Wish;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -25,23 +27,15 @@ class WishesController extends Controller
 
     public function store()
     {
-        $wish = [
-          'name' => request('name'),
-          'description' => request('description'),
-          'credits' => request('credits'),
-          'image_link' => request('image_link'),
-        ];
+        auth()->user()->wishes()->create([
+            'owner' => auth()->user()->id,
+            'name' => request('name'),
+            'description' => request('description'),
+            'credits' => request('credits'),
+            'image_link' => request('image_link'),
+        ]);
 
-        try {
-            auth()->user()->wishes()->create($wish);
-            $response = [];
-            $responseCode = 201;
-        } catch (Exception $e) {
-            $response = $e->getMessage();
-            $responseCode = 422;
-        }
-
-        return response()->json($response, $responseCode);
+        return response()->json([], 201);
     }
 
     public function update($id)
@@ -71,7 +65,12 @@ class WishesController extends Controller
 
     public function destroy($id)
     {
-        auth()->user()->wishes()->findOrFail($id)->delete();
+        $wish = auth()->user()->wishes()->findOrFail($id);
+
+        DB::transaction(function() use ($wish) {
+            $wish->users()->detach();
+            $wish->delete();
+        });
 
         return response()->json([], 200);
     }
@@ -95,6 +94,18 @@ class WishesController extends Controller
                 'credits' => $user->userProfile->credits - $wish->credits
             ]);
         });
+
+        return response()->json([], 200);
+    }
+
+    public function share($id)
+    {
+        $user = auth()->user();
+        $wish = $user->wishes()->findOrFail($id);
+
+        if (request('shared_user_email')) {
+            User::where('email', request('shared_user_email'))->first()->wishes()->attach($wish);
+        }
 
         return response()->json([], 200);
     }
