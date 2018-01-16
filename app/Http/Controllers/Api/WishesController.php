@@ -113,12 +113,14 @@ class WishesController extends Controller
     public function contribute($id)
     {
         $user = auth()->user();
+        $wish = $user->wishes()->findOrFail($id);
         $credits = request('credits');
 
         if ($user->userProfile->credits < $credits) {
             return response()->json(['not enough credits'], 422);
         }
 
+        // TODO: can not contribute when request credits are more that required credits
         DB::transaction(function() use ($user, $id, $credits) {
             $user->userProfile->update([
                 'credits' => $user->userProfile->credits - $credits
@@ -129,6 +131,27 @@ class WishesController extends Controller
             ]);
         });
 
+        if ($this->hasEnoughCredits($id, $user)) {
+            foreach ($wish->users()->get() as $user) {
+                $user->wishTickets()->create([
+                    'name' => $wish->name,
+                    'image_link' => $wish->image_link,
+                ]);
+            }
+        }
+
         return response()->json([], 200);
+    }
+
+    private function hasEnoughCredits($wishId, $user)
+    {
+        $wish = $user->wishes()->findOrFail($wishId);
+        $users = $wish->users()->get();
+        // TODO: ->sum('credits')
+        $credits = collect($users)->reduce(function ($carry, $item) use ($wishId) {
+            return $carry + $item->wishes()->findOrFail($wishId)->pivot->credits;
+        }, 0);
+
+        return $wish->credits == $credits;
     }
 }
