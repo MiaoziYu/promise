@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePromiseUserTable extends Migration
+class AddCreditsColumnToUserWishTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class CreatePromiseUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_wish', function (Blueprint $table) {
-            $table->integer('user_id');
-            $table->integer('wish_id');
-            $table->primary(['user_id', 'wish_id']);
+        Schema::table('user_wish', function (Blueprint $table) {
+            $table->integer('credits')->default(0);
         });
     }
 
@@ -27,6 +25,6 @@ class CreatePromiseUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('promise_user');
+        //
     }
 }

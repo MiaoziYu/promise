@@ -139,13 +139,11 @@ class WishTest extends TestCase
             'email' => 'bearzk@example.com'
         ]);
 
-        $wish = factory(Wish::class)->create([
+        $wish = $this->createWish([
             'owner' => $this->user->id,
             'name' => 'new PC',
             'description' => 'fancy PC for gaming',
         ]);
-
-        $this->user->wishes()->attach($wish);
 
         // Act
         $response = $this->put('/api/wishes/' . $wish->id . '/share?api_token=' . $this->user->api_token, [

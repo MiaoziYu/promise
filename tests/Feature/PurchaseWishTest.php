@@ -87,4 +87,60 @@ class PurchaseWishTest extends TestCase
 
         $this->assertEquals(0, count($this->user->wishTickets()->get()));
     }
+
+    /** @test */
+    public function can_contribute_credits_to_a_shared_wish()
+    {
+        // Arrange
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id,
+            'credits' => 100
+        ]);
+
+        $wish = $this->createWish([
+            'owner' => $this->user->id,
+            'name' => 'new PC',
+            'description' => 'fancy PC for gaming',
+        ]);
+
+        // Act
+        $response = $this->put('/api/wishes/' . $wish->id . '/contribute?api_token=' . $this->user->api_token, [
+            'credits' => 50
+        ]);
+
+        // Assertion
+        $response->assertStatus(200);
+
+        $this->assertEquals(50, $this->user->userProfile->credits);
+
+        $this->assertEquals(50, $this->user->wishes()->findOrFail($wish->id)->pivot->credits);
+    }
+
+    /** @test */
+    public function cannot_contribute_credits_when_user_credits_is_not_enough()
+    {
+        // Arrange
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id,
+            'credits' => 20
+        ]);
+
+        $wish = $this->createWish([
+            'owner' => $this->user->id,
+            'name' => 'new PC',
+            'description' => 'fancy PC for gaming',
+        ]);
+
+        // Act
+        $response = $this->put('/api/wishes/' . $wish->id . '/contribute?api_token=' . $this->user->api_token, [
+            'credits' => 50
+        ]);
+
+        // Assertion
+        $response->assertStatus(422);
+
+        $this->assertEquals(20, $this->user->userProfile->credits);
+
+        $this->assertEquals(0, $this->user->wishes()->findOrFail($wish->id)->pivot->credits);
+    }
 }

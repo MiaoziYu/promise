@@ -16,6 +16,6 @@ class Wish extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\User', 'user_wish');
+        return $this->belongsToMany('App\User', 'user_wish')->withPivot('credits');
     }
 }

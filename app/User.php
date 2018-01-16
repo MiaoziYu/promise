@@ -44,7 +44,7 @@ class User extends Authenticatable
 
     public function wishes()
     {
-        return $this->belongsToMany('App\Wish', 'user_wish');
+        return $this->belongsToMany('App\Wish', 'user_wish')->withPivot('credits');
     }
 
     public function wishTickets()

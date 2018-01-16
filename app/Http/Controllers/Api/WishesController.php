@@ -109,4 +109,26 @@ class WishesController extends Controller
 
         return response()->json([], 200);
     }
+
+    public function contribute($id)
+    {
+        $user = auth()->user();
+        $credits = request('credits');
+
+        if ($user->userProfile->credits < $credits) {
+            return response()->json(['not enough credits'], 422);
+        }
+
+        DB::transaction(function() use ($user, $id, $credits) {
+            $user->userProfile->update([
+                'credits' => $user->userProfile->credits - $credits
+            ]);
+
+            $user->wishes()->updateExistingPivot($id, [
+                'credits' => $user->wishes()->findOrFail($id)->pivot->credits + $credits
+            ]);
+        });
+
+        return response()->json([], 200);
+    }
 }
