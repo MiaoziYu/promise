@@ -33,8 +33,8 @@ class UserProfileController extends Controller
             $userAuthInfo['email'] = request('email');
         }
 
-        if (request('credit') !== null) {
-            $userProfile['credit'] = request('credit');
+        if (request('picture') !== null) {
+            $userProfile['picture'] = request('picture');
         }
 
         $user->update($userAuthInfo);

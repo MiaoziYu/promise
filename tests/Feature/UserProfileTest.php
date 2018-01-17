@@ -8,61 +8,60 @@ use App\UserProfile;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class UserProfileTest extends TestCase {
+class UserProfileTest extends TestCase
+{
     use DatabaseMigrations;
+
+    private $user;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->disableExceptionHandling();
+
+        $this->user = factory(User::class)->create();
+    }
 
     /** @test */
     public function can_get_user_profile()
     {
-        $this->disableExceptionHandling();
-
         // Arrange
-        $userOne = factory(User::class)->create([
-            'name' => 'mao mao',
-        ]);
-        $userTwo = factory(User::class)->create([
-            'name' => 'bearzk',
-        ]);
-        $userProfileOne = factory(UserProfile::class)->create([
-            'user_id' => $userOne->id,
-            'credits' => 650
-        ]);
-        $userProfileTwo = factory(UserProfile::class)->create([
-            'user_id' => $userTwo->id,
-            'credits' => 400
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id,
+            'credits' => 650,
+            'picture' => 'picture'
         ]);
 
         // Act
-        $responseOne = $this->actingAs($userOne)->get('/api/profile/' . '?api_token=' . $userOne->api_token);
-        $responseTwo = $this->actingAs($userTwo)->get('/api/profile/' . '?api_token=' . $userOne->api_token);
+        $response = $this->get('/api/profile/' . '?api_token=' . $this->user->api_token);
 
         // Assertion
-        $responseOne->assertSee($userOne->name);
-        $responseOne->assertSee('650');
+        $response->assertStatus(200);
 
-        $responseTwo->assertSee($userTwo->name);
-        $responseTwo->assertSee('400');
+        $response->assertSee('650');
+        $response->assertSee('picture');
     }
 
     /** @test */
     public function can_update_user_profile()
     {
-        $this->disableExceptionHandling();
-
         // Arrange
-        $user = factory(User::class)->create();
-        $userProfile = factory(UserProfile::class)->create([
-            'user_id' => $user->id
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id,
+            'picture' => 'picture'
         ]);
 
         // Act
-        $putResponse = $this->put('/api/profile/' . '?api_token=' . $user->api_token, [
-            'name' => 'miaozi'
+        $response = $this->put('/api/profile/' . '?api_token=' . $this->user->api_token, [
+            'name' => 'miaozi',
+            'picture' => 'another_picture'
         ]);
-        $getResponse = $this->get('/api/profile/' . '?api_token=' . $user->api_token);
 
         // Assertion
-        $putResponse->assertStatus(200);
-        $getResponse->assertSee('miaozi');
+        $response->assertStatus(200);
+
+        $this->assertEquals('miaozi', User::findOrFail($this->user->id)->name);
+        $this->assertEquals('another_picture', $this->user->userProfile->picture);
     }
 }
