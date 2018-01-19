@@ -167,7 +167,7 @@ class PurchaseWishTest extends TestCase
     }
 
     /** @test */
-    public function can_get_a_shared_wish_when_credits_are_enough()
+    public function can_resolve_a_shared_wish_when_credits_are_enough()
     {
         // Arrange
         factory(UserProfile::class)->create([
@@ -196,6 +196,8 @@ class PurchaseWishTest extends TestCase
 
         // Assertion
         $response->assertStatus(200);
+
+        $this->assertNotNull($this->user->wishes()->findOrFail($wish->id)->resolved_at);
 
         $userOneWishTicket = $this->user->wishTickets()->first();
         $this->assertEquals('new PC', $userOneWishTicket->name);

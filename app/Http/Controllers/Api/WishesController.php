@@ -135,19 +135,25 @@ class WishesController extends Controller
             ]);
         });
 
-        if ($this->hasEnoughCredits($wish)) {
-            foreach ($wish->users()->get() as $user) {
-                $user->wishTickets()->create([
-                    'name' => $wish->name,
-                    'image_link' => $wish->image_link,
+        if ($this->hasResolved($wish)) {
+            DB::transaction(function() use ($wish){
+                foreach ($wish->users()->get() as $user) {
+                    $user->wishTickets()->create([
+                        'name' => $wish->name,
+                        'image_link' => $wish->image_link,
+                    ]);
+                }
+
+                $wish->update([
+                    'resolved_at' => Carbon::now()
                 ]);
-            }
+            });
         }
 
         return response()->json([], 200);
     }
 
-    private function hasEnoughCredits($wish)
+    private function hasResolved($wish)
     {
         $credits = $wish->users()->sum('credits');
 
