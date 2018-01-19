@@ -7,17 +7,47 @@
       font-size: 16px;
     }
 
-    .wish-purchase-btn {
-      @include button($dark-gray);
+    .wish-purchase-btn,
+    .wish-contribute-btn {
       width: 100%;
       font-size: 18px;
+
+      i {
+        margin-right: 4px;
+      }
+    }
+
+    .wish-purchase-btn {
+      @include button($dark-gray);
 
       &.active {
         @include button($green);
       }
+    }
 
-      i {
-        margin-right: 4px;
+    .wish-contribute-btn {
+      @include button($green);
+
+      .text {
+        display: none;
+      }
+
+      &.hover {
+        .credits {
+          display: none;
+        }
+
+        .text {
+          display: inline;
+        }
+      }
+    }
+  }
+
+  .wish {
+    .wish-share {
+      .toggle-btn {
+        @include button($green);
       }
     }
   }

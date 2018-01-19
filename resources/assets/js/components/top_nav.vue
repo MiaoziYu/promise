@@ -49,7 +49,7 @@
         },
 
         created() {
-            EventBus.$on(["finishPromise", "purchaseWish", "checkHabit", "checkChallenge"], this.getUserInfo);
+            EventBus.$on(["finishPromise", "purchaseWish", "contributeWish","checkHabit", "checkChallenge"], this.getUserInfo);
             EventBus.$on("setPageName", name => {
                 this.pageName = name;
             })

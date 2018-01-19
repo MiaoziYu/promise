@@ -18,10 +18,18 @@
                         <img :src="wish.image_link" alt="">
                     </div>
                     <p @click="getWish(wish.id)" class="title o-card-title">{{ wish.name }}</p>
-                    <button @click="purchaseConfirmMessage = wish"
-                            :class="{ active: hasEnoughCredits(wish) }"
+                    <button v-if="!isShared(wish)"
+                            @click="purchaseConfirmMessage = wish"
+                            :class="{ active: hasEnoughCredits(wish)}"
                             class="wish-purchase-btn">
                         <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ wish.credits }}</span>
+                    </button>
+                    <button v-if="isShared(wish)"
+                            @mouseover="toggleContributeBtnText"
+                            @click="contributeMessage = wish"
+                            class="wish-contribute-btn">
+                        <span class="credits"><i class="fa fa-diamond" aria-hidden="true"></i>{{ wish.credits }}</span>
+                        <span class="text">contribute</span>
                     </button>
                 </div>
             </li>
@@ -58,6 +66,15 @@
                            class="credits"
                            name="credits">
 
+                    <div class="wish-share form-group">
+                        <input v-if="sharedUserForm" v-model="sharedUserEmail" class="u-margin-b-1" placeholder="email of the user you want to share to">
+                        <button v-if="!sharedUserForm" @click="sharedUserForm = true" class="toggle-btn">Share wish</button>
+                        <div v-if="sharedUserForm" class="form-label">
+                            <span @click="shareWish(wish.id)" class="label-item active">share</span>
+                            <span @click="sharedUserForm = false" class="label-item">cancel</span>
+                        </div>
+                    </div>
+
                     <!--wish created date-->
                     <p class="date">created at {{ wish.created_at }}</p>
 
@@ -87,6 +104,18 @@
             </div>
         </div>
 
+        <!-- ========== contribute message ========== -->
+        <div v-if="contributeMessage" class="o-overlay">
+            <div class="action-confirmation o-card o-overlay-content">
+                <div class="confirmation-msg">
+                    <p>How much do you want to contribute?</p>
+                    <input v-model="contributeAmount" class="confirmation-input">
+                </div>
+                <div @click="contributeWish(contributeMessage)" class="confirmation-btn">Confirm</div>
+                <div @click="contributeMessage = null" class="cancel-btn">Cancel</div>
+            </div>
+        </div>
+
         <new-wish-form :wishForm="wishForm"></new-wish-form>
     </div>
 </template>
@@ -100,8 +129,12 @@
                 user: null,
                 wishes: [],
                 wish: null,
+                sharedUserForm: false,
+                sharedUserEmail: null,
                 wishForm: false,
                 purchaseConfirmMessage: null,
+                contributeMessage: null,
+                contributeAmount: 0,
                 currentList: "market",
             }
         },
@@ -135,6 +168,7 @@
             getWish(id) {
                 api.getWish(id).then(data => {
                     this.wish = data;
+                    console.log(this.wish)
                 });
             },
 
@@ -154,6 +188,14 @@
                 });
             },
 
+            shareWish(id) {
+                api.shareWish(id, {
+                    shared_user_email: this.sharedUserEmail
+                }).then(response => {
+                    this.sharedUserEmail = null;
+                });
+            },
+
             purchaseWish(wish) {
                 if(this.hasEnoughCredits(wish)) {
                     api.purchaseWish(wish.id).then(response => {
@@ -165,6 +207,19 @@
                 }
             },
 
+            contributeWish(wish) {
+                let data = {
+                    credits: this.contributeAmount
+                };
+
+                api.contributeWish(wish.id, data).then(response => {
+                    this.contributeMessage = null;
+                    this.contributeAmount = 0;
+                    this.getWishes();
+                    EventBus.$emit("contributeWish");
+                });
+            },
+
             toggleWishForm() {
                 this.wishForm = !this.wishForm;
             },
@@ -173,6 +228,14 @@
                 if(this.user) {
                     return this.user.user_profile.credits >= wish.credits;
                 }
+            },
+
+            isShared(wish) {
+                return wish.owners.length > 1;
+            },
+
+            toggleContributeBtnText(event) {
+                $(event.target).toggleClass("hover");
             },
 
             hidePurchaseConfirmationMsg() {
