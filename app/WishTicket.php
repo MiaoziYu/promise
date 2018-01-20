@@ -8,15 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class WishTicket extends Model
 {
     protected $fillable = [
-        'user_id',
         'name',
         'image_link',
         'claimed_at'
     ];
 
     protected $appends = [
-        'formatted_claimed_date'
+        'formatted_claimed_date',
+        'owners'
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany('App\User', 'user_wish_ticket', 'user_id', 'wish_ticket_id');
+    }
 
     public function scopeUnclaimed($query)
     {
@@ -35,5 +40,10 @@ class WishTicket extends Model
         }
 
         return Carbon::parse($this->claimed_at)->format('F j, Y');
+    }
+
+    public function getOwnersAttribute()
+    {
+        return $this->users()->with('userProfile')->get();
     }
 }

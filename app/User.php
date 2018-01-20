@@ -49,7 +49,7 @@ class User extends Authenticatable
 
     public function wishTickets()
     {
-        return $this->hasMany('App\WishTicket');
+        return $this->belongsToMany('App\WishTicket', 'user_wish_ticket', 'user_id', 'wish_ticket_id');
     }
 
     public function habits()

@@ -115,12 +115,16 @@ class WishesController extends Controller
         $user = auth()->user();
         $wish = $user->wishes()->findOrFail($id);
         $credits = request('credits');
+        $requiredCredits = $wish->credits - $wish->users()->sum('credits');
 
         if ($user->userProfile->credits < $credits) {
             return response()->json(['not enough credits'], 422);
         }
 
-        // TODO: can not contribute when request credits are more that required credits
+        if ($credits > $requiredCredits) {
+            $credits = $requiredCredits;
+        }
+
         DB::transaction(function() use ($user, $id, $credits) {
             $user->userProfile->update([
                 'credits' => $user->userProfile->credits - $credits
@@ -131,26 +135,27 @@ class WishesController extends Controller
             ]);
         });
 
-        if ($this->hasEnoughCredits($id, $user)) {
-            foreach ($wish->users()->get() as $user) {
-                $user->wishTickets()->create([
-                    'name' => $wish->name,
-                    'image_link' => $wish->image_link,
+        if ($this->hasResolved($wish)) {
+            DB::transaction(function() use ($wish){
+                foreach ($wish->users()->get() as $user) {
+                    $user->wishTickets()->create([
+                        'name' => $wish->name,
+                        'image_link' => $wish->image_link,
+                    ]);
+                }
+
+                $wish->update([
+                    'resolved_at' => Carbon::now()
                 ]);
-            }
+            });
         }
 
         return response()->json([], 200);
     }
 
-    private function hasEnoughCredits($wishId, $user)
+    private function hasResolved($wish)
     {
-        $wish = $user->wishes()->findOrFail($wishId);
-        $users = $wish->users()->get();
-        // TODO: ->sum('credits')
-        $credits = collect($users)->reduce(function ($carry, $item) use ($wishId) {
-            return $carry + $item->wishes()->findOrFail($wishId)->pivot->credits;
-        }, 0);
+        $credits = $wish->users()->sum('credits');
 
         return $wish->credits == $credits;
     }

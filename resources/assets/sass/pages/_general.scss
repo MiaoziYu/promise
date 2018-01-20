@@ -99,9 +99,16 @@
   text-align: center;
 
   .confirmation-msg {
-    margin: $space-small * 2 0 $space-small * 3 0;
+    margin: $space-small * 2 0 $space-small * 2 0;
     line-height: 40px;
     font-size: 20px;
+
+    .confirmation-input {
+      width: 80%;
+      font-size: 16px;
+      border: 1px solid $border-color;
+      padding: 6px $space-xsmall;
+    }
   }
 
   .confirmation-btn,

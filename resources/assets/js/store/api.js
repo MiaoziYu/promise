@@ -110,8 +110,16 @@ export default {
         return post(path, data);
     },
 
+    shareWish(id, data) {
+        return put(`wishes/${id}/share`, data)
+    },
+
     purchaseWish(id) {
         return put(`wishes/${id}/purchase`, [])
+    },
+
+    contributeWish(id, data) {
+        return put(`wishes/${id}/contribute`, data)
     },
 
     checkHabit(id) {

@@ -28,7 +28,6 @@ class WishTicketTest extends TestCase
     {
         // Arrange
         $wishTicket = factory(WishTicket::class)->create([
-            'user_id' => $this->user->id,
             'name' => 'funny frisch',
             'image_link' => 'example image link',
             'claimed_at' => Carbon::parse('2018-12-01 8:00pm'),

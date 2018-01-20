@@ -27,6 +27,7 @@ $factory->define(App\User::class, function (Faker $faker) {
 
 $factory->define(App\UserProfile::class, function (Faker $faker) {
     return [
-        'credits' => 500
+        'credits' => 500,
+        'picture' => 'example_picture'
     ];
 });
