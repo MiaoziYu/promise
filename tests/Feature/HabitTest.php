@@ -179,31 +179,6 @@ class HabitTest extends TestCase
     }
 
     /** @test */
-    public function can_fail_a_habit_streak()
-    {
-        // Arrange
-        factory(UserProfile::class)->create([
-            'user_id' => $this->user->id,
-            'credits' => 0
-        ]);
-        $habit = factory(Habit::class)->create([
-            'user_id' => $this->user->id,
-            'streak' => 7,
-            'checked_at' => Carbon::yesterday()->subHours(1)
-        ]);
-
-        // Act
-        $response = $this->put('/api/habits/' . $habit->id . '/check?api_token=' . $this->user->api_token);
-
-        // Assertion
-        $response->assertStatus(200);
-
-        $this->assertEquals(0, $this->user->habits()->findOrfail($habit->id)->streak);
-
-        $this->assertEquals(5, $this->user->userProfile()->first()->credits);
-    }
-
-    /** @test */
     public function can_fail_a_habit_streak_at_the_beginning_of_a_day()
     {
         // Arrange

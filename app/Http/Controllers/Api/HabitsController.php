@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Habit;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class HabitsController extends Controller
 {
@@ -66,7 +64,11 @@ class HabitsController extends Controller
         }
 
         DB::transaction(function () use ($user, $habit) {
-            $this->updateHabit($habit);
+            $habit->update([
+                'count' => $habit->count + 1,
+                'streak' => $habit->streak + 1,
+                'checked_at' => Carbon::now()
+            ]);
             $this->updateUserProfile($user, $habit);
         });
 
@@ -99,15 +101,6 @@ class HabitsController extends Controller
         return response()->json([], 200);
     }
 
-    private function hasStreak($habit)
-    {
-        if ($habit->checked_at === null) {
-            return true;
-        }
-
-        return Carbon::parse($habit->checked_at)->isYesterday();
-    }
-
     private function hasCheckedToday($habit)
     {
         if ($habit->checked_at === null) {
@@ -115,23 +108,6 @@ class HabitsController extends Controller
         }
 
         return Carbon::parse($habit->checked_at)->isToday();
-    }
-
-    private function updateHabit($habit)
-    {
-        $data = [
-            'count' => $habit->count + 1,
-        ];
-
-        if ($this->hasStreak($habit)) {
-            $data['streak'] = $habit->streak + 1;
-        } else {
-            $data['streak'] = 0;
-        }
-
-        $data['checked_at'] = Carbon::now();
-
-        $habit->update($data);
     }
 
     private function updateUserProfile($user, $habit)
