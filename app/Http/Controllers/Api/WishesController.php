@@ -20,7 +20,11 @@ class WishesController extends Controller
 
     public function index()
     {
-        $wishes = auth()->user()->wishes()->orderBy('created_at', 'desc')->get();
+        if (request('resolved') === 'true') {
+            $wishes = auth()->user()->wishes()->resolved()->orderBy('created_at', 'desc')->get();
+        } else {
+            $wishes = auth()->user()->wishes()->unresolved()->orderBy('created_at', 'desc')->get();
+        }
 
         return response()->json($wishes, 200);
     }
