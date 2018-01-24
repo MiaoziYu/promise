@@ -95,6 +95,10 @@ class WishTicketTest extends TestCase
             'image_link' => 'example image link'
         ]);
 
+        $userTwo = factory(User::class)->create();
+
+        $userTwo->wishTickets()->attach($wishTicket);
+
         // Act
         $response = $this->put('/api/wish-tickets/' . $wishTicket->id . '/claim?api_token=' . $this->user->api_token, []);
 
@@ -102,6 +106,7 @@ class WishTicketTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertNotNull($this->user->wishTickets()->find($wishTicket->id)->claimed_at);
+        $this->assertNotNull($userTwo->wishTickets()->find($wishTicket->id)->claimed_at);
     }
 
     /** @test */

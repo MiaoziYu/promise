@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Wish;
+use App\WishTicket;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +21,11 @@ class WishesController extends Controller
 
     public function index()
     {
-        $wishes = auth()->user()->wishes()->orderBy('created_at', 'desc')->get();
+        if (request('resolved') === 'true') {
+            $wishes = auth()->user()->wishes()->resolved()->orderBy('created_at', 'desc')->get();
+        } else {
+            $wishes = auth()->user()->wishes()->unresolved()->orderBy('created_at', 'desc')->get();
+        }
 
         return response()->json($wishes, 200);
     }
@@ -137,11 +142,12 @@ class WishesController extends Controller
 
         if ($this->hasResolved($wish)) {
             DB::transaction(function() use ($wish){
+                $wishTicket = WishTicket::create([
+                    'name' => $wish->name,
+                    'image_link' => $wish->image_link,
+                ]);
                 foreach ($wish->users()->get() as $user) {
-                    $user->wishTickets()->create([
-                        'name' => $wish->name,
-                        'image_link' => $wish->image_link,
-                    ]);
+                    $user->wishtickets()->attach($wishTicket);
                 }
 
                 $wish->update([

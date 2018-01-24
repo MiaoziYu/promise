@@ -1,10 +1,34 @@
 .wishes-page {
 
+  .user,
+  .share {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+
   .wish-list {
 
     .title {
       margin: $space-small 0;
       font-size: 16px;
+    }
+
+    .wish-img {
+      position: relative;
+
+      .user-list {
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
+
+        .user {
+          margin-left: 4px;
+          border: 2px solid #fff;
+        }
+      }
     }
 
     .wish-purchase-btn,
@@ -48,6 +72,20 @@
     .wish-share {
       .toggle-btn {
         @include button($green);
+      }
+    }
+
+    .wish-users {
+
+      .user {
+        margin-right: 6px;
+      }
+
+      .share {
+        @include button($dark-gray);
+        margin-left: -2px;
+        padding: 6px;
+        border-radius: 50%;
       }
     }
   }
