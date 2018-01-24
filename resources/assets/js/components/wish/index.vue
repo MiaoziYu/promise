@@ -14,8 +14,13 @@
                 <div class="o-card wish-item">
                     <div v-if="wish.image_link !== null"
                          @click="getWish(wish.id)"
-                         class="o-card-img">
+                         class="wish-img o-card-img">
                         <img :src="wish.image_link" alt="">
+                        <div class="user-list">
+                            <div v-for="owner in wish.owners" class="user">
+                                <img :src="owner.user_profile.picture" :title="owner.name">
+                            </div>
+                        </div>
                     </div>
                     <p @click="getWish(wish.id)" class="title o-card-title">{{ wish.name }}</p>
                     <button v-if="!isShared(wish)"
@@ -66,9 +71,19 @@
                            class="credits"
                            name="credits">
 
+                    <div class="wish-users form-group">
+                        <div class="u-margin-b-1">owned by:</div>
+                        <div v-for="owner in wish.owners" class="user">
+                            <img :src="owner.user_profile.picture" :title="owner.name">
+                        </div>
+                        <div @click="sharedUserForm = true"  class="share">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
+                    </div>
+
                     <div class="wish-share form-group">
                         <input v-if="sharedUserForm" v-model="sharedUserEmail" class="u-margin-b-1" placeholder="email of the user you want to share to">
-                        <button v-if="!sharedUserForm" @click="sharedUserForm = true" class="toggle-btn">Share wish</button>
+                        <button v-if="!sharedUserForm && wish.owners.length < 2" @click="sharedUserForm = true" class="toggle-btn">Share wish</button>
                         <div v-if="sharedUserForm" class="form-label">
                             <span @click="shareWish(wish.id)" class="label-item active">share</span>
                             <span @click="sharedUserForm = false" class="label-item">cancel</span>
@@ -193,6 +208,7 @@
                     shared_user_email: this.sharedUserEmail
                 }).then(response => {
                     this.sharedUserEmail = null;
+                    this.sharedUserForm = false;
                 });
             },
 
