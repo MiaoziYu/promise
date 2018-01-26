@@ -50,21 +50,37 @@
     }
 
     .wish-contribute-btn {
-      @include button($green);
+      @include button($dark-gray);
+      position: relative;
+      height: 36px;
+      padding: 0;
 
-      .text {
-        display: none;
-      }
-
-      &.hover {
-        .credits {
-          display: none;
+      &:hover {
+        .background {
+          background-color: darken($green, 10%);
         }
 
-        .text {
-          display: inline;
-        }
       }
+
+      .background {
+        @include button($green);
+        display: block;
+        height: 100%;
+        width: 0;
+        padding: 0;
+        border-radius: 3px 0 0 3px;
+      }
+
+      .content {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        padding: 8px 12px;
+        background-color: transparent;
+      }
+
     }
   }
 
@@ -86,6 +102,44 @@
         margin-left: -2px;
         padding: 6px;
         border-radius: 50%;
+      }
+    }
+  }
+
+  .wish-contribution {
+    .contributor-list {
+      margin-top: $space-xsmall * 2;
+
+      .contributor-wrapper {
+        display: inline-block;
+        padding: 0 20px;
+
+        .contributor {
+          margin-bottom: $space-small;
+
+          .name {
+            margin-top: 4px;
+          }
+        }
+
+        .credits {
+          .credits-item {
+            margin-right: 6px;
+            padding: 4px 8px;
+            background-color: $green;
+            color: $white;
+            border-radius: 6px;
+            vertical-align: middle;
+
+            &:last-child {
+              margin-right: 0;
+            }
+          }
+        }
+
+        i {
+          margin-right: 4px;
+        }
       }
     }
   }

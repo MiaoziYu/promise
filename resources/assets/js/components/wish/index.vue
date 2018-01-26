@@ -30,11 +30,10 @@
                         <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ wish.credits }}</span>
                     </button>
                     <button v-if="isShared(wish)"
-                            @mouseover="toggleContributeBtnText"
                             @click="contributeMessage = wish"
                             class="wish-contribute-btn">
-                        <span class="credits"><i class="fa fa-diamond" aria-hidden="true"></i>{{ wish.credits }}</span>
-                        <span class="text">contribute</span>
+                        <div :style="calculateProgressBarWidth(wish)" class="background"></div>
+                        <div class="content"><i class="fa fa-diamond" aria-hidden="true"></i>{{ wish.credits }}</div>
                     </button>
                 </div>
             </li>
@@ -119,8 +118,17 @@
         </div>
 
         <!-- ========== contribute message ========== -->
-        <div v-if="contributeMessage" class="o-overlay">
+        <div v-if="contributeMessage" class="wish-contribution o-overlay">
             <div class="action-confirmation o-card o-overlay-content">
+                <div class="contributor-list">
+                    <div v-for="owner in contributeMessage.owners" class="contributor-wrapper">
+                        <div class="contributor">
+                            <img :src="owner.user_profile.picture" :title="contributeMessage.name" class="user">
+                            <div class="name">{{ owner.name }}</div>
+                        </div>
+                        <div class="credits"><span class="credits-item"><i class="fa fa-diamond" aria-hidden="true"></i>{{ owner.credits_contributed }}</span><span  class="credits-item">{{ (owner.credits_contributed / contributeMessage.credits * 100).toFixed(2) }}%</span></div>
+                    </div>
+                </div>
                 <div class="confirmation-msg">
                     <p>How much do you want to contribute?</p>
                     <input v-model="contributeAmount" class="confirmation-input">
@@ -249,10 +257,6 @@
                 return wish.owners.length > 1;
             },
 
-            toggleContributeBtnText(event) {
-                $(event.target).toggleClass("hover");
-            },
-
             hidePurchaseConfirmationMsg() {
                 this.purchaseConfirmMessage = null;
             },
@@ -262,7 +266,19 @@
                     this.wish = null;
                     this.getWishes();
                 });
-            }
+            },
+
+            calculateProgressBarWidth(wish) {
+                let credits_collected = 0;
+
+                wish.owners.forEach(owner => {
+                    credits_collected += owner.credits_contributed;
+                });
+
+                return {
+                    width: (credits_collected / wish.credits) * 100 + "%"
+                };
+            },
         }
     }
 </script>

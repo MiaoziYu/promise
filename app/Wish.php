@@ -16,7 +16,7 @@ class Wish extends Model
     ];
 
     protected $appends = [
-        'owners'
+        'owners',
     ];
 
     public function users()
@@ -36,6 +36,12 @@ class Wish extends Model
 
     public function getOwnersAttribute()
     {
-        return $this->users()->with('userProfile')->get();
+        $users = $this->users()->with('userProfile')->get();
+
+        collect($users)->map(function($user) {
+            return $user->credits_contributed = $user->pivot->credits;
+        });
+
+        return $users;
     }
 }
