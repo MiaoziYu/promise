@@ -4,15 +4,17 @@
   .nav-wrapper {
     display: flex;
     justify-content: space-between;
-    height: 60px;
-    line-height: 60px;
+    height: 70px;
+    line-height: 70px;
     color: #FFF;
 
     .menu-item {
       display: inline-block;
+      height: 70px;
       margin-left: 10px;
       font-size: 18px;
       vertical-align: top;
+      overflow: hidden;
 
       &:first-child {
         margin-left: 0;
@@ -31,6 +33,20 @@
     .menu-link {
       color: #FFF;
       text-decoration: none;
+    }
+
+    .menu-user {
+      .avatar {
+        width: 40px;
+        border: 3px solid #FFF;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin-right: 4px;
+      }
+
+      .name {
+        font-size: 16px;
+      }
     }
 
     .nav-menu-left {

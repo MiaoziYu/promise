@@ -20,7 +20,10 @@
                 </div>
             </div>
             <div v-if="user" class="nav-menu-right">
-                <div class="menu-item">{{ user.name }}</div>
+                <div class="menu-item menu-user">
+                    <img class="avatar" :src="user.user_profile.picture" alt="">
+                    <span class="name">{{ user.name }}</span>
+                </div>
                 <div class="menu-item">
                     <i class="fa fa-diamond" aria-hidden="true"></i>
                     {{ user.user_profile.credits }}
