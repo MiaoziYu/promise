@@ -16,7 +16,7 @@
                          @click="getWish(wish.id)"
                          class="wish-img o-card-img">
                         <img :src="wish.image_link" alt="">
-                        <div class="user-list">
+                        <div v-if="wish.owners.length > 1" class="user-list">
                             <div v-for="owner in wish.owners" class="user">
                                 <img :src="owner.user_profile.picture" :title="owner.name">
                             </div>
@@ -83,7 +83,6 @@
 
                     <div class="wish-share form-group">
                         <input v-if="sharedUserForm" v-model="sharedUserEmail" class="u-margin-b-1" placeholder="email of the user you want to share to">
-                        <button v-if="!sharedUserForm && wish.owners.length < 2" @click="sharedUserForm = true" class="toggle-btn">Share wish</button>
                         <div v-if="sharedUserForm" class="form-label">
                             <span @click="shareWish(wish.id)" class="label-item active">share</span>
                             <span @click="sharedUserForm = false" class="label-item">cancel</span>
