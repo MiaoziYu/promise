@@ -16,7 +16,7 @@
     </script>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
 
     <!-- Scripts -->
     {{--<script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>--}}
@@ -35,7 +35,7 @@
 
 <!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.6.0/Sortable.min.js"></script>
-<script type="text/javascript" src="/js/app.js"></script>
+<script type="text/javascript" src="{{ mix('/js/app.js') }}"></script>
 
 </body>
 </html>
