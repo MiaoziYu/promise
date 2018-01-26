@@ -9,6 +9,39 @@
     border-radius: 50%;
   }
 
+  .wish-list-wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+
+    .wish-list-self,
+    .wish-list-shared {
+      margin-bottom: 20px;
+    }
+
+    .wish-list-self {
+      width: 77%;
+    }
+
+    .wish-list-shared {
+      width: 19%;
+
+      .o-list-item {
+        padding: 0 15px 15px 0;
+      }
+    }
+
+    @media (max-width: $breakpoint-md) {
+      align-items: stretch;
+      flex-flow: column wrap;
+
+      .wish-list-self,
+      .wish-list-shared {
+        width: 100%;
+      }
+    }
+  }
+
   .wish-list {
 
     .title {

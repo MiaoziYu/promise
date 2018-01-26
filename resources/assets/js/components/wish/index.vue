@@ -8,36 +8,60 @@
         </div>
 
         <!-- ========== wish list ========== -->
-        <ul class="wish-list o-list-4">
-            <li v-for="wish in wishes"
-                class="o-list-item">
-                <div class="o-card wish-item">
-                    <div v-if="wish.image_link !== null"
-                         @click="getWish(wish.id)"
-                         class="wish-img o-card-img">
-                        <img :src="wish.image_link" alt="">
-                        <div v-if="wish.owners.length > 1" class="user-list">
-                            <div v-for="owner in wish.owners" class="user">
-                                <img :src="owner.user_profile.picture" :title="owner.name">
+        <div class="wish-list-wrapper">
+            <div class="wish-list-self">
+                <ul class="wish-list o-list-4">
+                    <li v-for="wish in wishes"
+                        v-if="!isShared(wish)"
+                        class="o-list-item">
+                        <div class="o-card wish-item">
+                            <div v-if="wish.image_link !== null"
+                                 @click="getWish(wish.id)"
+                                 class="wish-img o-card-img">
+                                <img :src="wish.image_link" alt="">
+                                <div v-if="wish.owners.length > 1" class="user-list">
+                                    <div v-for="owner in wish.owners" class="user">
+                                        <img :src="owner.user_profile.picture" :title="owner.name">
+                                    </div>
+                                </div>
                             </div>
+                            <p @click="getWish(wish.id)" class="title o-card-title">{{ wish.name }}</p>
+                            <button @click="purchaseConfirmMessage = wish"
+                                    :class="{ active: hasEnoughCredits(wish)}"
+                                    class="wish-purchase-btn">
+                                <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ wish.credits }}</span>
+                            </button>
                         </div>
-                    </div>
-                    <p @click="getWish(wish.id)" class="title o-card-title">{{ wish.name }}</p>
-                    <button v-if="!isShared(wish)"
-                            @click="purchaseConfirmMessage = wish"
-                            :class="{ active: hasEnoughCredits(wish)}"
-                            class="wish-purchase-btn">
-                        <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ wish.credits }}</span>
-                    </button>
-                    <button v-if="isShared(wish)"
-                            @click="contributeMessage = wish"
-                            class="wish-contribute-btn">
-                        <div :style="calculateProgressBarWidth(wish)" class="background"></div>
-                        <div class="content"><i class="fa fa-diamond" aria-hidden="true"></i>{{ wish.credits }}</div>
-                    </button>
-                </div>
-            </li>
-        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="wish-list-shared">
+                <ul class="wish-list">
+                    <li v-for="wish in wishes"
+                        v-if="isShared(wish)"
+                        class="o-list-item">
+                        <div class="o-card wish-item">
+                            <div v-if="wish.image_link !== null"
+                                 @click="getWish(wish.id)"
+                                 class="wish-img o-card-img">
+                                <img :src="wish.image_link" alt="">
+                                <div v-if="wish.owners.length > 1" class="user-list">
+                                    <div v-for="owner in wish.owners" class="user">
+                                        <img :src="owner.user_profile.picture" :title="owner.name">
+                                    </div>
+                                </div>
+                            </div>
+                            <p @click="getWish(wish.id)" class="title o-card-title">{{ wish.name }}</p>
+                            <button @click="contributeMessage = wish"
+                                    class="wish-contribute-btn">
+                                <div :style="calculateProgressBarWidth(wish)" class="background"></div>
+                                <div class="content"><i class="fa fa-diamond" aria-hidden="true"></i>{{ wish.credits }}</div>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <!-- ========== wish detail ========== -->
         <div v-if="wish" class="wish o-overlay">
