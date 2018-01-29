@@ -13,6 +13,11 @@
                 <div class="o-card">
                     <div v-if="ticket.image_link !== null" class="o-card-img">
                         <img :src="ticket.image_link" alt="">
+                        <div v-if="ticket.owners.length > 1" class="user-list">
+                            <div v-for="owner in ticket.owners" class="user">
+                                <img :src="owner.user_profile.picture" :title="owner.name">
+                            </div>
+                        </div>
                     </div>
                     <p class="title o-card-title">{{ ticket.name }}</p>
                     <button v-if="currentList === 'unclaimed'" @click="claimConfirmMessage = ticket"
@@ -59,6 +64,7 @@
                 api.getWishTickets(claimed).then(data => {
                     this.wishTickets = data;
                     this.currentList = claimed ? "claimed" : "unclaimed";
+                    console.log(data)
                 });
             },
 
