@@ -20,7 +20,7 @@ class WishTicket extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\User', 'user_wish_ticket', 'user_id', 'wish_ticket_id');
+        return $this->belongsToMany('App\User', 'user_wish_ticket', 'wish_ticket_id', 'user_id');
     }
 
     public function scopeUnclaimed($query)
