@@ -175,8 +175,10 @@ class PurchaseWishTest extends TestCase
             'credits' => 200
         ]);
 
-        $userTwo = factory(User::class)->create([
-            'email' => 'bearzk@example.com'
+        $userTwo = factory(User::class)->create();
+        factory(UserProfile::class)->create([
+            'user_id' => $userTwo->id,
+            'credits' => 100
         ]);
 
         $wish = $this->createWish([
@@ -184,27 +186,33 @@ class PurchaseWishTest extends TestCase
             'name' => 'new PC',
             'description' => 'fancy PC for gaming',
             'image_link' => 'example image link',
-            'credits' => 50
+            'credits' => 100
         ]);
 
         $userTwo->wishes()->attach($wish);
 
         // Act
-        $response = $this->put('/api/wishes/' . $wish->id . '/contribute?api_token=' . $this->user->api_token, [
+        $responseOne = $this->actingAs($this->user)->put('/api/wishes/' . $wish->id . '/contribute?api_token=' . $this->user->api_token, [
+            'credits' => 50
+        ]);
+        $responseTwo = $this->actingAs($userTwo)->put('/api/wishes/' . $wish->id . '/contribute?api_token=' . $userTwo->api_token, [
             'credits' => 50
         ]);
 
         // Assertion
-        $response->assertStatus(200);
-
-        $this->assertNotNull($this->user->wishes()->findOrFail($wish->id)->resolved_at);
+        $responseOne->assertStatus(200);
+        $responseTwo->assertStatus(200);
 
         $userOneWishTicket = $this->user->wishTickets()->first();
         $this->assertEquals('new PC', $userOneWishTicket->name);
         $this->assertEquals('example image link', $userOneWishTicket->image_link);
+        $this->assertEquals(0, $this->user->wishes()->findOrFail($wish->id)->pivot->credits);
 
         $userTwoWishTicket = $userTwo->wishTickets()->first();
         $this->assertEquals('new PC', $userTwoWishTicket->name);
         $this->assertEquals('example image link', $userTwoWishTicket->image_link);
+        $this->assertEquals(0, $userTwo->wishes()->findOrFail($wish->id)->pivot->credits);
+
+        $this->assertEquals(0, $wish->users()->sum('credits'));
     }
 }

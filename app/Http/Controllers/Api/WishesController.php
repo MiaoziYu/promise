@@ -21,11 +21,7 @@ class WishesController extends Controller
 
     public function index()
     {
-        if (request('resolved') === 'true') {
-            $wishes = auth()->user()->wishes()->resolved()->orderBy('created_at', 'desc')->get();
-        } else {
-            $wishes = auth()->user()->wishes()->unresolved()->orderBy('created_at', 'desc')->get();
-        }
+        $wishes = auth()->user()->wishes()->orderBy('created_at', 'desc')->get();
 
         return response()->json($wishes, 200);
     }
@@ -148,11 +144,10 @@ class WishesController extends Controller
                 ]);
                 foreach ($wish->users()->get() as $user) {
                     $user->wishtickets()->attach($wishTicket);
+                    $user->wishes()->updateExistingPivot($wish->id, [
+                        'credits' => 0
+                    ]);
                 }
-
-                $wish->update([
-                    'resolved_at' => Carbon::now()
-                ]);
             });
         }
 

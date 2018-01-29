@@ -56,7 +56,7 @@ class WishTest extends TestCase
     }
 
     /** @test */
-    public function can_view_unresolved_wishes()
+    public function can_view_wishes()
     {
         // Arrange
         $this->createWish([
@@ -68,45 +68,16 @@ class WishTest extends TestCase
             'owner' => $this->user->id,
             'name' => 'potato chip',
             'credits' => 400,
-            'resolved_at' => Carbon::now()
         ]);
 
         // Act
-        $response = $this->get('/api/wishes/' . '?resolved=false&api_token=' . $this->user->api_token);
+        $response = $this->get('/api/wishes/?api_token=' . $this->user->api_token);
 
         // Assertion
         $response->assertStatus(200);
 
         $response->assertSee('nachos');
         $response->assertSee('500');
-        $response->assertDontSee('potato chip');
-        $response->assertDontSee('400');
-    }
-
-    /** @test */
-    public function can_view_resolved_wishes()
-    {
-        // Arrange
-        $this->createWish([
-            'owner' => $this->user->id,
-            'name' => 'nachos',
-            'credits' => 500
-        ]);
-        $this->createWish([
-            'owner' => $this->user->id,
-            'name' => 'potato chip',
-            'credits' => 400,
-            'resolved_at' => Carbon::now()
-        ]);
-
-        // Act
-        $response = $this->get('/api/wishes/' . '?resolved=true&api_token=' . $this->user->api_token);
-
-        // Assertion
-        $response->assertStatus(200);
-
-        $response->assertDontSee('nachos');
-        $response->assertDontSee('500');
         $response->assertSee('potato chip');
         $response->assertSee('400');
     }
