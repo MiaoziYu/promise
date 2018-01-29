@@ -153,6 +153,16 @@
                         <div class="credits"><span class="credits-item"><i class="fa fa-diamond" aria-hidden="true"></i>{{ owner.credits_contributed }}</span><span  class="credits-item">{{ (owner.credits_contributed / contributeMessage.credits * 100).toFixed(2) }}%</span></div>
                     </div>
                 </div>
+                <div class="progress-bar">
+                    <div class="progress-bar-current" :style="calculateProgressBarWidth(contributeMessage)">
+                        <i class="fa fa-diamond" aria-hidden="true"></i>
+                        <span>{{ calculateCollectedCredits(contributeMessage) }}</span>
+                    </div>
+                    <div class="progress-bar-remaining">
+                        <i class="fa fa-diamond" aria-hidden="true"></i>
+                        <span>{{ contributeMessage.credits - calculateCollectedCredits(contributeMessage) }}</span>
+                    </div>
+                </div>
                 <div class="confirmation-msg">
                     <p>How much do you want to contribute?</p>
                     <input v-model="contributeAmount" class="confirmation-input">
@@ -292,15 +302,20 @@
                 });
             },
 
-            calculateProgressBarWidth(wish) {
-                let credits_collected = 0;
+
+            calculateCollectedCredits(wish) {
+                let collectedCredits = 0;
 
                 wish.owners.forEach(owner => {
-                    credits_collected += owner.credits_contributed;
+                    collectedCredits += owner.credits_contributed;
                 });
 
+                return collectedCredits;
+            },
+
+            calculateProgressBarWidth(wish) {
                 return {
-                    width: (credits_collected / wish.credits) * 100 + "%"
+                    width: (this.calculateCollectedCredits(wish) / wish.credits) * 100 + "%"
                 };
             },
         }
