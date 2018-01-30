@@ -10,11 +10,12 @@
         <!-- ========== wish list ========== -->
         <div class="wish-list-wrapper">
             <div class="wish-list-self">
-                <ul class="wish-list o-list-4">
+                <ul id="wish-list" class="wish-list o-list-4">
                     <li v-for="wish in wishes"
                         v-if="!isShared(wish)"
-                        class="o-list-item">
-                        <div class="o-card wish-item">
+                        :data-id="wish.id"
+                        class="js-wish-item wish-item o-list-item">
+                        <div class="o-card">
                             <div v-if="wish.image_link !== null"
                                  @click="getWish(wish.id)"
                                  class="wish-img o-card-img">
@@ -36,11 +37,12 @@
                 </ul>
             </div>
             <div class="wish-list-shared">
-                <ul class="wish-list">
+                <ul id="wish-list-shared" class="wish-list js-wish-list-shared">
                     <li v-for="wish in wishes"
                         v-if="isShared(wish)"
-                        class="o-list-item">
-                        <div class="o-card wish-item">
+                        :data-id="wish.id"
+                        class="js-wish-item wish-item o-list-item">
+                        <div class="o-card">
                             <div v-if="wish.image_link !== null"
                                  @click="getWish(wish.id)"
                                  class="wish-img o-card-img">
@@ -201,6 +203,10 @@
             EventBus.$emit("setPageName", "wishes");
         },
 
+        mounted() {
+            this.setUpSortable();
+        },
+
         created() {
             EventBus.$on("clearNewWishForm", () => {
                 this.toggleWishForm();
@@ -317,6 +323,25 @@
                 return {
                     width: (this.calculateCollectedCredits(wish) / wish.credits) * 100 + "%"
                 };
+            },
+
+            setUpSortable() {
+                let lists = ['#wish-list', '#wish-list-shared'];
+
+                $(lists).each(function(index, value) {
+                    Sortable.create($(value)[0], {
+                        onUpdate(event) {
+                            let data = [];
+                            $('.js-wish-item', $(event.target)).each((index, value) => {
+                                data.push({
+                                    id: $(value).attr('data-id'),
+                                    order: index + 1
+                                });
+                            });
+                            api.updateOrder("wishes/reorder", data);
+                        },
+                    });
+                });
             },
         }
     }

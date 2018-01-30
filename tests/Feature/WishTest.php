@@ -161,6 +161,39 @@ class WishTest extends TestCase
     }
 
     /** @test */
+    public function can_reorder_wishes()
+    {
+        // Arrange
+        $wishOne = $this->createWish([
+            'owner' => $this->user->id,
+            'order' =>'1'
+        ]);
+        $wishTwo = $this->createWish([
+            'owner' => $this->user->id,
+            'order' =>'2'
+        ]);
+
+        $data = [
+            [
+                'id' => $wishOne->id,
+                'order' => 2
+            ],
+            [
+                'id' => $wishTwo->id,
+                'order' => 1
+            ]
+        ];
+
+        // Act
+        $response = $this->put('/api/wishes/reorder?api_token=' . $this->user->api_token, $data);
+
+        // Assert
+        $response->assertStatus(200);
+        $this->assertEquals(2, $this->user->wishes()->findOrFail($wishOne->id)->order);
+        $this->assertEquals(1, $this->user->wishes()->findOrFail($wishTwo->id)->order);
+    }
+
+    /** @test */
     public function can_delete_a_wish()
     {
         // Arrange

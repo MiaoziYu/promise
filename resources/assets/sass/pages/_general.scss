@@ -90,8 +90,10 @@
   cursor: pointer;
 
   &:hover {
-    background-color: darken(white, 5%);
-    transition: all .3s;
+    .o-card {
+      background-color: darken(white, 5%);
+      transition: all .3s;
+    }
   }
 }
 

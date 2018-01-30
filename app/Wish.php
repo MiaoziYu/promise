@@ -12,7 +12,7 @@ class Wish extends Model
         'description',
         'credits',
         'image_link',
-        'resolved_at'
+        'order'
     ];
 
     protected $appends = [

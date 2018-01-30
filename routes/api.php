@@ -19,7 +19,7 @@ Route::group(
     ], function () {
     Route::get('/promises/{id}', 'PromisesController@show');
     Route::get('/promises/', 'PromisesController@index');
-    Route::post('/promises/reorder', 'PromisesController@reorder');
+    Route::put('/promises/reorder', 'PromisesController@reorder');
     Route::put('/promises/{id}', 'PromisesController@update');
     Route::put('/promises/{id}/finish', 'PromisesController@finish');
     Route::post('/promises/', 'PromisesController@store');
@@ -35,11 +35,12 @@ Route::group(
     Route::get('/wishes/{id}', 'WishesController@show');
     Route::get('/wishes/', 'WishesController@index');
     Route::post('/wishes/', 'WishesController@store');
+    Route::put('/wishes/reorder', 'WishesController@reorder');
     Route::put('/wishes/{id}', 'WishesController@update');
-    Route::delete('/wishes/{id}', 'WishesController@destroy');
     Route::put('/wishes/{id}/purchase', 'WishesController@purchase');
     Route::put('/wishes/{id}/share', 'WishesController@share');
     Route::put('/wishes/{id}/contribute', 'WishesController@contribute');
+    Route::delete('/wishes/{id}', 'WishesController@destroy');
 
     Route::get('/wish-tickets/', 'WishTicketsController@index');
     Route::put('/wish-tickets/{id}/claim', 'WishTicketsController@claim');
@@ -48,14 +49,14 @@ Route::group(
     Route::get('/habits/{id}', 'HabitsController@show');
     Route::get('/habits/', 'HabitsController@index');
     Route::post('/habits/', 'HabitsController@store');
-    Route::post('/habits/reorder', 'HabitsController@reorder');
+    Route::put('/habits/reorder', 'HabitsController@reorder');
     Route::put('/habits/{id}', 'HabitsController@update');
     Route::put('/habits/{id}/check', 'HabitsController@check');
     Route::delete('/habits/{id}', 'HabitsController@destroy');
 
     route::get('/weekly-challenges/{id}', 'WeeklyChallengesController@show');
     route::get('/weekly-challenges/', 'WeeklyChallengesController@index');
-    Route::post('/weekly-challenges/reorder', 'WeeklyChallengesController@reorder');
+    Route::put('/weekly-challenges/reorder', 'WeeklyChallengesController@reorder');
     route::put('/weekly-challenges/{id}', 'WeeklyChallengesController@update');
     route::put('/weekly-challenges/{id}/check', 'WeeklyChallengesController@check');
     route::post('/weekly-challenges/', 'WeeklyChallengesController@store');

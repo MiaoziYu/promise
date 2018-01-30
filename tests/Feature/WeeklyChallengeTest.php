@@ -292,7 +292,7 @@ class WeeklyChallengeTest extends TestCase
         ];
 
         // Act
-        $response = $this->post('/api/weekly-challenges/reorder?api_token=' . $this->user->api_token, $data);
+        $response = $this->put('/api/weekly-challenges/reorder?api_token=' . $this->user->api_token, $data);
 
         // Assert
         $response->assertStatus(200);

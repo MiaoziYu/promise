@@ -107,7 +107,7 @@ export default {
     },
 
     updateOrder(path, data) {
-        return post(path, data);
+        return put(path, data);
     },
 
     shareWish(id, data) {

@@ -584,21 +584,21 @@
             setUpSortable() {
                 let lists = [
                     {
-                        id: 'habit-list',
+                        id: '#habit-list',
                         path: "habits/reorder"
                     },
                     {
-                        id: 'challenge-list',
+                        id: '#challenge-list',
                         path: "weekly-challenges/reorder"
                     },
                     {
-                        id: 'promise-list',
+                        id: '#promise-list',
                         path: "promises/reorder"
                     },
                 ];
 
                 $(lists).each(function(index, value) {
-                    Sortable.create(document.getElementById(value.id), {
+                    Sortable.create($(value.id)[0], {
                         onUpdate(event) {
                             let data = [];
                             $('.task-item', $(event.target)).each((index, value) => {

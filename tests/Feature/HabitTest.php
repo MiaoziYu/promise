@@ -276,7 +276,7 @@ class HabitTest extends TestCase
         ];
 
         // Act
-        $response = $this->post('/api/habits/reorder?api_token=' . $this->user->api_token, $data);
+        $response = $this->put('/api/habits/reorder?api_token=' . $this->user->api_token, $data);
 
         // Assert
         $response->assertStatus(200);

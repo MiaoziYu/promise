@@ -163,7 +163,7 @@ class PurchaseWishTest extends TestCase
 
         $this->assertEquals(100, $this->user->userProfile->credits);
 
-        $this->assertEquals(100, $this->user->wishes()->findOrFail($wish->id)->pivot->credits);
+        $this->assertEquals(0, $this->user->wishes()->findOrFail($wish->id)->pivot->credits);
     }
 
     /** @test */

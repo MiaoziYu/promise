@@ -390,7 +390,7 @@ class PromiseTest extends TestCase
         ];
 
         // Act
-        $response = $this->post('/api/promises/reorder?api_token=' . $this->user->api_token, $data);
+        $response = $this->put('/api/promises/reorder?api_token=' . $this->user->api_token, $data);
 
         // Assert
         $response->assertStatus(200);

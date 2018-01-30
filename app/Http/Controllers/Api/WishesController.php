@@ -21,7 +21,7 @@ class WishesController extends Controller
 
     public function index()
     {
-        $wishes = auth()->user()->wishes()->orderBy('created_at', 'desc')->get();
+        $wishes = auth()->user()->wishes()->orderBy('order')->get();
 
         return response()->json($wishes, 200);
     }
@@ -150,6 +150,25 @@ class WishesController extends Controller
                 }
             });
         }
+
+        return response()->json([], 200);
+    }
+
+    public function reorder()
+    {
+        $arr = request()->input();
+
+        auth()->user()->wishes()->get()->map(function($wish) use ($arr) {
+            foreach($arr as $item) {
+                if (is_array($item)) {
+                    if ($item['id'] == $wish->id) {
+                        $wish->update([
+                            'order' => $item['order']
+                        ]);
+                    }
+                }
+            }
+        });
 
         return response()->json([], 200);
     }
