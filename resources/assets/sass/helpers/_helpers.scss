@@ -92,16 +92,25 @@
 .o-list-4 {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
+  align-items: flex-start;
 
   .o-list-item {
     flex: 0 1 23%;
-    padding-bottom: $space-small;
+    margin: 0 (2% * 4 / 3) $space-small 0;
+
+    &:nth-child(4n) {
+      margin-right: 0;
+    }
   }
 
   @media (max-width: $breakpoint-md) {
     .o-list-item {
       flex: 0 1 49%;
+      margin-right: 2%;
+
+      &:nth-child(2n) {
+        margin-right: 0;
+      }
     }
   }
 
@@ -110,57 +119,7 @@
 
     .o-list-item {
       flex: 1;
-    }
-  }
-}
-
-.o-list-3 {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: flex-start;
-
-  .o-list-item {
-    flex: 33%;
-    padding-bottom: $space-small;
-  }
-
-  @media (max-width: $breakpoint-md) {
-    .o-list-item {
-      flex: 0 1 49%;
-    }
-  }
-
-  @media (max-width: $breakpoint-xs) {
-    align-items: stretch;
-    flex-flow: column wrap;
-
-    .o-list-item {
-      flex: 1;
-    }
-  }
-}
-
-.o-list-2 {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: flex-start;
-
-  .o-list-item {
-    flex: 0 1 50%;
-    padding: 0 $space-small $space-small 0;
-
-    &:nth-child(2n) {
-      padding-right: 0;
-    }
-  }
-
-  @media (max-width: $breakpoint-md) {
-    align-items: stretch;
-    flex-flow: column wrap;
-
-    .o-list-item {
-      flex: 1;
-      padding-right: 0;
+      margin-right: 0;
     }
   }
 }
