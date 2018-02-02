@@ -284,4 +284,29 @@ class HabitTest extends TestCase
         $this->assertEquals(3, $this->user->habits()->findOrFail($habitTwo->id)->order);
         $this->assertEquals(1, $this->user->habits()->findOrFail($habitThree->id)->order);
     }
+
+
+    /** @test */
+    public function can_update_user_max_streak()
+    {
+        // Arrange
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id
+        ]);
+
+        $habit = factory(Habit::class)->create([
+            'user_id' => $this->user->id,
+            'name' => 'workout',
+            'credits' => 5,
+            'count' => 10,
+            'streak' => 10
+        ]);
+
+        // Act
+        $response = $this->put('/api/habits/' . $habit->id . '/check?api_token=' . $this->user->api_token);
+
+        // Assertion
+        $this->assertEquals(11, $this->user->userProfile->max_streak);
+        $this->assertEquals('workout', $this->user->userProfile->max_streak_name);
+    }
 }

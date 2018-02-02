@@ -10,5 +10,10 @@ class UserProfile extends Model
         'user_id',
         'credits',
         'picture',
+        'max_streak',
+        'max_streak_name',
+        'weekly_challenges_finished',
+        'weekly_challenges_failed',
+        'promises_finished',
     ];
 }
