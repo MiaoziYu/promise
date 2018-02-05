@@ -243,6 +243,10 @@ class WeeklyChallengeTest extends TestCase
     public function can_refresh_weekly_challenges_when_new_week_starts()
     {
         // Arrange
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
         factory(WeeklyChallenge::class)->create([
             'user_id' => $this->user->id,
             'goal' => 2,
@@ -299,5 +303,47 @@ class WeeklyChallengeTest extends TestCase
         $this->assertEquals(2, $this->user->weeklyChallenges()->findOrFail($challengeOne->id)->order);
         $this->assertEquals(3, $this->user->weeklyChallenges()->findOrFail($challengeTwo->id)->order);
         $this->assertEquals(1, $this->user->weeklyChallenges()->findOrFail($challengeThree->id)->order);
+    }
+
+    /** @test */
+    public function can_update_weekly_challenges_finished_statistic()
+    {
+        // Arrange
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        factory(WeeklyChallenge::class)->create([
+            'user_id' => $this->user->id,
+            'goal' => 2,
+            'count' => 2,
+        ]);
+
+        // Act
+        $this->artisan('challenge:check');
+
+        // Assert
+        $this->assertEquals(1, $this->user->userProfile->weekly_challenges_finished);
+    }
+
+    /** @test */
+    public function can_update_weekly_challenges_failed_statistic()
+    {
+        // Arrange
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        factory(WeeklyChallenge::class)->create([
+            'user_id' => $this->user->id,
+            'goal' => 2,
+            'count' => 1,
+        ]);
+
+        // Act
+        $this->artisan('challenge:check');
+
+        // Assert
+        $this->assertEquals(1, $this->user->userProfile->weekly_challenges_failed);
     }
 }

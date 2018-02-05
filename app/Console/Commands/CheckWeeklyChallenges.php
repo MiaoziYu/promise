@@ -44,7 +44,7 @@ class CheckWeeklyChallenges extends Command
 
         collect($weeklyChallenges)->each(function($challenge) {
             if ($challenge->goal > $challenge->count) {
-                DB::transaction(function() use ($challenge){
+                DB::transaction(function() use ($challenge) {
                     $challenge->update([
                         'count' => 0,
                         'failed' => 1
@@ -52,13 +52,20 @@ class CheckWeeklyChallenges extends Command
 
                     $userProfile = UserProfile::where('user_id', $challenge->user_id)->first();
                     $userProfile->update([
-                        'credits' => $userProfile->first()->credits - floor($challenge->credits / 2)
+                        'credits' => $userProfile->first()->credits - floor($challenge->credits / 2),
+                        'weekly_challenges_failed' => $userProfile->weekly_challenges_finished + 1
                     ]);
                 });
             } else {
-                $challenge->update([
-                    'count' => 0
-                ]);
+                DB::transaction(function() use ($challenge) {
+                    $challenge->update([
+                        'count' => 0
+                    ]);
+                    $userProfile = UserProfile::where('user_id', $challenge->user_id)->first();
+                    $userProfile->update([
+                        'weekly_challenges_finished' => $userProfile->weekly_challenges_failed + 1
+                    ]);
+                });
             }
         });
     }

@@ -14,14 +14,14 @@ class AddStatisticColumnsToUserProfileTable extends Migration
     public function up()
     {
         Schema::table('user_profiles', function (Blueprint $table) {
-            $table->integer('credits_earned')->nullable();
-            $table->integer('credits_contributed')->nullable();
-            $table->integer('max_streak')->nullable();
-            $table->integer('max_streak_name')->nullable();
-            $table->integer('promises_finished')->nullable();
-            $table->integer('weekly_challenges_finished')->nullable();
-            $table->integer('weekly_challenges_failed')->nullable();
-            $table->integer('wish_tickets_amount')->nullable();
+            $table->integer('credits_earned')->default(0);
+            $table->integer('credits_contributed')->default(0);
+            $table->integer('max_streak')->default(0);
+            $table->integer('max_streak_name')->default(0);
+            $table->integer('promises_finished')->default(0);
+            $table->integer('weekly_challenges_finished')->default(0);
+            $table->integer('weekly_challenges_failed')->default(0);
+            $table->integer('wish_tickets_amount')->default(0);
         });
     }
 
