@@ -227,6 +227,7 @@ class PurchaseWishTest extends TestCase
 
         $wish = $this->createWish([
             'owner' => $this->user->id,
+            'credits' => 100
         ]);
 
         // Act
@@ -237,7 +238,7 @@ class PurchaseWishTest extends TestCase
         // Assertion
         $response->assertStatus(200);
 
-        $this->assertEquals(1, $this->user->userProfile->credits_contributed);
+        $this->assertEquals(50, $this->user->userProfile->credits_contributed);
     }
 
     /** @test */

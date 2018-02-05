@@ -8,12 +8,15 @@ class UserProfile extends Model
 {
     protected $fillable = [
         'user_id',
-        'credits',
         'picture',
+        'credits',
+        'credits_earned',
+        'credits_contributed',
         'max_streak',
         'max_streak_name',
+        'promises_finished',
         'weekly_challenges_finished',
         'weekly_challenges_failed',
-        'promises_finished',
+        'wish_tickets_amount',
     ];
 }

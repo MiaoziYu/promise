@@ -8,7 +8,7 @@ $factory->define(App\Wish::class, function (Faker $faker) {
     return [
         'name' => 'example name',
         'description' => 'example description',
-        'credits' => 0,
+        'credits' => 50,
         'image_link' => 'example_link'
     ];
 });
