@@ -150,7 +150,7 @@ class HabitTest extends TestCase
         $this->assertEquals(1, $updatedHabit->streak);
         $this->assertNotNull($updatedHabit->checked_at);
 
-        $this->assertEquals(5, $this->user->userProfile()->first()->credits);
+        $this->assertEquals(5, $this->user->userProfile->credits);
     }
 
     /** @test */
@@ -175,7 +175,7 @@ class HabitTest extends TestCase
 
         $this->assertEquals(7, $this->user->habits()->findOrfail($habit->id)->streak);
 
-        $this->assertEquals(10, $this->user->userProfile()->first()->credits);
+        $this->assertEquals(10, $this->user->userProfile->credits);
     }
 
     /** @test */
@@ -221,7 +221,7 @@ class HabitTest extends TestCase
         $this->assertEquals(3, $updatedHabit->streak);
         $this->assertEquals(3, $updatedHabit->count);
 
-        $this->assertEquals(5, $this->user->userProfile()->first()->credits);
+        $this->assertEquals(5, $this->user->userProfile->credits);
     }
 
     /** @test */
@@ -308,5 +308,26 @@ class HabitTest extends TestCase
         // Assertion
         $this->assertEquals(11, $this->user->userProfile->max_streak);
         $this->assertEquals('workout', $this->user->userProfile->max_streak_name);
+    }
+
+    /** @test */
+    public function can_update_credits_earned_after_checking_a_habit()
+    {
+        // Arrange
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+        $habit = factory(Habit::class)->create([
+            'user_id' => $this->user->id,
+            'credits' => 5,
+        ]);
+
+        // Act
+        $response = $this->put('/api/habits/' . $habit->id . '/check?api_token=' . $this->user->api_token);
+
+        // Assertion
+        $response->assertStatus(200);
+
+        $this->assertEquals(5, $this->user->userProfile->credits_earned);
     }
 }

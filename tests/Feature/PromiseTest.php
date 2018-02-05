@@ -259,7 +259,6 @@ class PromiseTest extends TestCase
     /** @test */
     public function can_finish_a_promise_with_credits_reward()
     {
-
         // Arrange
         factory(UserProfile::class)->create([
             'user_id' => $this->user->id,
@@ -279,7 +278,7 @@ class PromiseTest extends TestCase
 
         $this->assertNotNull($this->user->promises()->find($promise->id)->finished_at);
 
-        $userProfile = $this->user->userProfile()->first();
+        $userProfile = $this->user->userProfile;
         $this->assertEquals(600, $userProfile->credits);
     }
 
@@ -358,7 +357,7 @@ class PromiseTest extends TestCase
 
         $this->assertEquals('pending', $this->user->promises()->findOrFail($promise->id)->expired);
 
-        $this->assertEquals(50, $this->user->userProfile()->first()->credits);
+        $this->assertEquals(50, $this->user->userProfile->credits);
     }
 
     /** @test */
@@ -421,5 +420,27 @@ class PromiseTest extends TestCase
 
         // Assertion
         $this->assertEquals(11, $this->user->userProfile->promises_finished);
+    }
+
+    /** @test */
+    public function can_update_credits_earned_after_finishing_a_wish()
+    {
+        // Arrange
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+        $promise = factory(Promise::class)->create([
+            'user_id' => $this->user->id,
+            'reward_type' => 'points',
+            'reward_credits' => 500,
+        ]);
+
+        // Act
+        $response = $this->put('/api/promises/' . $promise->id . '/finish?api_token=' . $this->user->api_token, []);
+
+        // Assertion
+        $response->assertStatus(200);
+
+        $this->assertEquals(500, $this->user->userProfile->credits_earned);
     }
 }

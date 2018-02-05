@@ -59,11 +59,13 @@ class WeeklyChallengesController extends Controller
             $challenge->update([
                 'count' => $challenge->count + 1
             ]);
+
+            $creditsEarned = (floor($challenge->credits / $challenge->goal) * $bonus);
             $user->userProfile->update([
-                'credits' => $user->userProfile->credits + (floor($challenge->credits / $challenge->goal) * $bonus)
+                'credits' => $user->userProfile->credits + $creditsEarned,
+                'credits_earned' => $user->userProfile->credits_earned + $creditsEarned,
             ]);
         });
-
 
         return response()->json([], 200);
     }

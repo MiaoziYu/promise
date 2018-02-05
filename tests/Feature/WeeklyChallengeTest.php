@@ -178,7 +178,7 @@ class WeeklyChallengeTest extends TestCase
         // Assert
         $this->assertEquals(true, $this->user->weeklyChallenges()->first()->failed);
 
-        $this->assertEquals(90, $this->user->userProfile->first()->credits);
+        $this->assertEquals(90, $this->user->userProfile->credits);
     }
 
     /** @test */
@@ -207,7 +207,7 @@ class WeeklyChallengeTest extends TestCase
 
         $this->assertEquals(1, $this->user->weeklyChallenges()->findOrfail($challenge->id)->count);
 
-        $this->assertEquals(110, $this->user->userProfile->first()->credits);
+        $this->assertEquals(110, $this->user->userProfile->credits);
     }
 
     /** @test */
@@ -236,7 +236,7 @@ class WeeklyChallengeTest extends TestCase
 
         $this->assertEquals(3, $this->user->weeklyChallenges()->findOrfail($challenge->id)->count);
 
-        $this->assertEquals(120, $this->user->userProfile->first()->credits);
+        $this->assertEquals(120, $this->user->userProfile->credits);
     }
 
     /** @test */
@@ -345,5 +345,29 @@ class WeeklyChallengeTest extends TestCase
 
         // Assert
         $this->assertEquals(1, $this->user->userProfile->weekly_challenges_failed);
+    }
+
+    /** @test */
+    public function can_update_credits_earned_after_checking_a_weekly_challenge()
+    {
+        // Arrange
+        $challenge = factory(WeeklyChallenge::class)->create([
+            'user_id' => $this->user->id,
+            'credits' => 20,
+            'goal' => 2,
+            'count' => 2,
+        ]);
+
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        // Act
+        $response = $this->put('/api/weekly-challenges/' . $challenge->id . '/check?api_token=' . $this->user->api_token, []);
+
+        // Assert
+        $response->assertStatus(200);
+
+        $this->assertEquals(20, $this->user->userProfile->credits_earned);
     }
 }

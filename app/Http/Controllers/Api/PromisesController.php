@@ -103,6 +103,7 @@ class PromisesController extends Controller
             if ($promise->reward_type === 'points') {
                 $user->userProfile->update([
                     'credits' => $user->userProfile->credits + $promise->reward_credits,
+                    'credits_earned' => $user->userProfile->credits_earned + $promise->reward_credits,
                     'promises_finished' => $user->userProfile->promises_finished + 1
                 ]);
             } else if ($promise->reward_type = 'gift') {

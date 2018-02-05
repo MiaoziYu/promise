@@ -128,6 +128,7 @@ class HabitsController extends Controller
 
         $user->userProfile->update([
             'credits' => $user->userProfile->credits + $credits,
+            'credits_earned' => $user->userProfile->credits_earned + $credits,
             'max_streak' => $maxStreak,
             'max_streak_name' => $maxStreakName,
         ]);
