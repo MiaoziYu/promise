@@ -92,8 +92,7 @@ class WishesController extends Controller
             ]);
 
             $user->userProfile->update([
-                'credits' => $user->userProfile->credits - $wish->credits,
-                'wish_tickets_amount' => $user->userProfile->wish_tickets_amount + 1
+                'credits' => $user->userProfile->credits - $wish->credits
             ]);
         });
 
@@ -129,8 +128,7 @@ class WishesController extends Controller
 
         DB::transaction(function() use ($user, $id, $credits) {
             $user->userProfile->update([
-                'credits' => $user->userProfile->credits - $credits,
-                'credits_contributed' => $user->userProfile->credits_contributed + $credits
+                'credits' => $user->userProfile->credits - $credits
             ]);
 
             $user->wishes()->updateExistingPivot($id, [
@@ -148,9 +146,6 @@ class WishesController extends Controller
                     $user->wishtickets()->attach($wishTicket);
                     $user->wishes()->updateExistingPivot($wish->id, [
                         'credits' => 0
-                    ]);
-                    $user->userProfile->update([
-                        'wish_tickets_amount' => $user->userProfile->wish_tickets_amount + 1
                     ]);
                 }
             });
