@@ -4,10 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\User;
-use App\Wish;
 use App\WishTicket;
-use Carbon\Carbon;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class WishesController extends Controller
@@ -66,12 +63,7 @@ class WishesController extends Controller
 
     public function destroy($id)
     {
-        $wish = auth()->user()->wishes()->findOrFail($id);
-
-        DB::transaction(function() use ($wish) {
-            $wish->users()->detach();
-            $wish->delete();
-        });
+        auth()->user()->wishes()->findOrFail($id)->delete();
 
         return response()->json([], 200);
     }
