@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Wish extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'owner',
         'name',
@@ -13,6 +16,10 @@ class Wish extends Model
         'credits',
         'image_link',
         'order'
+    ];
+
+    protected $dates = [
+        'deleted_at'
     ];
 
     protected $appends = [

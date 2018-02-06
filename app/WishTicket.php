@@ -4,13 +4,20 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WishTicket extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
         'image_link',
         'claimed_at'
+    ];
+
+    protected $dates = [
+        'deleted_at'
     ];
 
     protected $appends = [

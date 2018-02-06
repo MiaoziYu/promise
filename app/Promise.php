@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Promise extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'user_id',
         'name',
@@ -20,6 +23,10 @@ class Promise extends Model
         'expired',
         'finished_at',
         'order'
+    ];
+
+    protected $dates = [
+        'deleted_at'
     ];
 
     public function checklists()

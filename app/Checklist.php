@@ -3,8 +3,18 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Checklist extends Model
 {
-    protected $fillable = ['text', 'status'];
+    use SoftDeletes;
+
+    protected $fillable = [
+        'text',
+        'status'
+    ];
+
+    protected $dates = [
+        'deleted_at'
+    ];
 }
