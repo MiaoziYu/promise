@@ -130,6 +130,40 @@ class WishTicketTest extends TestCase
     }
 
     /** @test */
+    public function can_view_wish_tickets_when_related_wish_got_deleted()
+    {
+        // Arrange
+        factory(UserProfile::class)->create([
+            'user_id' => $this->user->id,
+            'credits' => 800,
+            'picture' => 'example_picture'
+        ]);
+
+        $wish = $this->createWish([
+            'owner' => $this->user->id,
+            'name' => 'potato chip',
+            'description' => 'buy a package of potato chip',
+            'credits' => 500,
+            'image_link' =>'example_link'
+        ]);
+
+        $this->createWishTicket($wish);
+
+        // Act
+        $wish->delete();
+
+        $response = $this->get('/api/wish-tickets/?api_token=' . $this->user->api_token);
+
+        // Assertion
+        $response->assertStatus(200);
+
+        $response->assertSee('potato chip');
+        $response->assertSee('buy a package of potato chip');
+        $response->assertSee('500');
+        $response->assertSee('example_picture');
+    }
+
+    /** @test */
     public function can_claim_a_wish_ticket()
     {
         // Arrange
