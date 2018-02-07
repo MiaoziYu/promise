@@ -111,13 +111,10 @@
                         <div class="o-card">
                             <p class="o-card-title">{{ promise.name }}</p>
                             <p class="o-card-description">{{ promise.description }}</p>
-                            <div v-if="promise.reward_type === 'points'" class="reward-points">
+                            <div class="reward-points">
                                 <div class="reward-content">
-                                    <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ promise.reward_credits }}</span>
+                                    <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ promise.credits }}</span>
                                 </div>
-                            </div>
-                            <div v-if="promise.reward_type === 'gift'" class="o-card-img">
-                                <img :src="promise.reward_image_link" alt="">
                             </div>
                             <div class="progress-bar" v-if="hasTasks(promise)">
                                 <div class="progress-bar-current" :style="calculateProgressBarWidth(promise)"></div>
@@ -265,7 +262,7 @@
                     </div>
                     <div class="credits-wrapper">
                         <i class="fa fa-diamond" aria-hidden="true"></i>
-                        <input v-model="promise.reward_credits"
+                        <input v-model="promise.credits"
                                @blur="promise ? updatePromise : null"
                                @keyup.enter="updatePromise"
                                class="credits">
@@ -299,13 +296,9 @@
                     <p>Congrats! you've finished a promise!!</p>
                     <p>and you got</p>
                 </div>
-                <div v-if="successMsg.reward_type === 'points'" class="success-points">
-                    <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ successMsg.reward_credits }}</span>
+                <div class="success-points">
+                    <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ successMsg.credits }}</span>
                 </div>
-                <div v-if="successMsg.reward_type === 'gift'" class="success-img o-card-img">
-                    <img :src="successMsg.reward_image_link" alt="">
-                </div>
-                <div class="success-name" v-if="successMsg.reward_type === 'gift'">{{ successMsg.reward_name }}</div>
                 <div @click="successMsg = null" class="success-btn"><i class="fa fa-smile-o" aria-hidden="true"></i> YAY!</div>
             </div>
         </div>
@@ -546,12 +539,7 @@
                 api.finishPromise(promise.id).then(response => {
                     this.resetPromise();
                     this.getPromises();
-                    this.successMsg = {
-                        reward_type: promise.reward_type,
-                        reward_name: promise.reward_name,
-                        reward_credits: promise.reward_credits,
-                        reward_image_link: promise.reward_image_link,
-                    };
+                    this.successMsg = promise;
                     EventBus.$emit("finishPromise");
                 });
             },

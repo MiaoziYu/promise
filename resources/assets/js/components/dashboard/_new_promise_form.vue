@@ -15,30 +15,9 @@
                 <label for="new-promise-description">Description</label>
                 <textarea v-model="promiseFormData.description" id="new-promise-description"></textarea>
             </div>
-            <div class="form-group form-label form-reward">
-                <label>Select a reward</label>
-                <div @click="promiseFormData.reward_type = 'gift'"
-                     :class="{ active: promiseFormData.reward_type == 'gift' }"
-                     class="label-item">
-                    <i class="fa fa-gift" aria-hidden="true"></i><span>Gift</span>
-                </div>
-                <div @click="promiseFormData.reward_type = 'points'"
-                     :class="{ active: promiseFormData.reward_type == 'points' }"
-                     class="label-item">
-                    <i class="fa fa-diamond" aria-hidden="true"></i><span>Points</span>
-                </div>
-            </div>
-            <div v-if="promiseFormData.reward_type != null" class="form-group">
-                <input v-if="promiseFormData.reward_type == 'gift'"
-                       v-model="promiseFormData.reward_name"
-                       class="u-margin-b-1"
-                       placeholder="reward name">
-                <input v-if="promiseFormData.reward_type == 'gift'"
-                       v-model="promiseFormData.reward_image_link"
-                       placeholder="a image link for your gift">
-                <input v-if="promiseFormData.reward_type == 'points'"
-                       v-model="promiseFormData.reward_credits"
-                       placeholder="how much points does it worth?">
+            <div class="form-group">
+                <label for="new-promise-credits">Credits</label>
+                <input v-model="promiseFormData.credits" id="new-promise-credits">
             </div>
             <button @click="createPromise" class="form-submit">Finish and create</button>
         </div>
@@ -79,10 +58,7 @@
                 this.promiseFormData = {
                     name: "",
                     description: "",
-                    reward_type: null,
-                    reward_name: "",
-                    reward_credits: "",
-                    reward_image_link: ""
+                    credits: "",
                 };
             },
         }

@@ -36,12 +36,7 @@ class PromisesController extends Controller
         $promise = [
             'name' => request('name'),
             'description' => request('description'),
-            'punch_card_total' => request('punch_card_total'),
-            'punch_card_finished' => request('punch_card_finished'),
-            'reward_type' => request('reward_type'),
-            'reward_name' => request('reward_name'),
-            'reward_credits' => request('reward_credits'),
-            'reward_image_link' => request('reward_image_link')
+            'credits' => request('credits'),
         ];
 
         try {
@@ -66,8 +61,8 @@ class PromisesController extends Controller
 
         $data['description'] = request('description');
 
-        if (request('reward_credits') !== null) {
-            $data['reward_credits'] = request('reward_credits');
+        if (request('credits') !== null) {
+            $data['credits'] = request('credits');
         }
 
         if (request('punch_card_total') !== null) {
@@ -100,21 +95,12 @@ class PromisesController extends Controller
             $promise->update([
                 'finished_at' => Carbon::now()
             ]);
-            if ($promise->reward_type === 'points') {
-                $user->userProfile->update([
-                    'credits' => $user->userProfile->credits + $promise->reward_credits,
-                    'credits_earned' => $user->userProfile->credits_earned + $promise->reward_credits,
-                    'promises_finished' => $user->userProfile->promises_finished + 1
-                ]);
-            } else if ($promise->reward_type = 'gift') {
-                $user->wishTickets()->create([
-                    'name' => $promise->reward_name,
-                    'image_link' => $promise->reward_image_link,
-                ]);
-                $user->userProfile->update([
-                    'promises_finished' => $user->userProfile->promises_finished + 1
-                ]);
-            }
+
+            $user->userProfile->update([
+                'credits' => $user->userProfile->credits + $promise->credits,
+                'credits_earned' => $user->userProfile->credits_earned + $promise->credits,
+                'promises_finished' => $user->userProfile->promises_finished + 1
+            ]);
         });
 
         return response()->json([], 200);
@@ -162,7 +148,7 @@ class PromisesController extends Controller
                     ]);
 
                     auth()->user()->userProfile->update([
-                        'credits' => auth()->user()->userProfile->credits - $item->reward_credits
+                        'credits' => auth()->user()->userProfile->credits - $item->credits
                     ]);
                 });
             }

@@ -183,7 +183,7 @@ class PromiseTest extends TestCase
     }
 
     /** @test */
-    public function can_create_promise_with_points_reward()
+    public function can_create_a_promise()
     {
         // Act
         $postResponse = $this->post('/api/promises?api_token=' . $this->user->api_token, [
@@ -191,8 +191,7 @@ class PromiseTest extends TestCase
             'description' => '18 kfc hot wings',
             'punch_card_total' => '10',
             'punch_card_finished' => '5',
-            'reward_type' => 'points',
-            'reward_credits' => '500'
+            'credits' => '500'
         ]);
 
         $getResponse = $this->get('/api/promises/?api_token=' . $this->user->api_token);
@@ -201,33 +200,7 @@ class PromiseTest extends TestCase
         $postResponse->assertStatus(201);
         $getResponse->assertSee('KFC hot wings');
         $getResponse->assertSee('18 kfc hot wings');
-        $getResponse->assertSee('points');
         $getResponse->assertSee('500');
-    }
-
-    /** @test */
-    public function can_create_promise_with_gift_reward()
-    {
-        // Act
-        $response = $this->post('/api/promises?api_token=' . $this->user->api_token, [
-            'name' => 'KFC hot wings',
-            'description' => '18 kfc hot wings',
-            'punch_card_total' => '10',
-            'punch_card_finished' => '5',
-            'reward_type' => 'gift',
-            'reward_name' => 'kfc',
-            'reward_image_link' => 'example_link'
-        ]);
-
-        // Assertion
-        $response->assertStatus(201);
-
-        $promise = $this->user->promises()->first();
-        $this->assertEquals('KFC hot wings', $promise->name);
-        $this->assertEquals('18 kfc hot wings', $promise->description);
-        $this->assertEquals('gift', $promise->reward_type);
-        $this->assertEquals('kfc', $promise->reward_name);
-        $this->assertEquals('example_link', $promise->reward_image_link);
     }
 
     /** @test */
@@ -257,7 +230,7 @@ class PromiseTest extends TestCase
     }
 
     /** @test */
-    public function can_finish_a_promise_with_credits_reward()
+    public function can_finish_a_promise()
     {
         // Arrange
         factory(UserProfile::class)->create([
@@ -266,8 +239,7 @@ class PromiseTest extends TestCase
         ]);
         $promise = factory(Promise::class)->create([
             'user_id' => $this->user->id,
-            'reward_type' => 'points',
-            'reward_credits' => 500,
+            'credits' => 500,
         ]);
 
         // Act
@@ -280,35 +252,6 @@ class PromiseTest extends TestCase
 
         $userProfile = $this->user->userProfile;
         $this->assertEquals(600, $userProfile->credits);
-    }
-
-    /** @test */
-    public function can_finish_a_promise_with_gift_reward()
-    {
-        // Arrange
-        factory(UserProfile::class)->create([
-            'user_id' => $this->user->id,
-        ]);
-
-        $promise = factory(Promise::class)->create([
-            'user_id' => $this->user->id,
-            'reward_type' => 'gift',
-            'reward_name' => 'kfc hot wings',
-            'reward_image_link' => 'example_link',
-        ]);
-
-        // Act
-        $response = $this->put('/api/promises/' . $promise->id . '/finish?api_token=' . $this->user->api_token, []);
-
-        // Assertion
-        $response->assertStatus(200);
-
-        $this->assertNotNull($this->user->promises()->find($promise->id)->finished_at);
-
-        $wishTicket = $this->user->wishTickets()->first();
-        $this->assertNotNull($wishTicket);
-        $this->assertEquals('kfc hot wings', $wishTicket->name);
-        $this->assertEquals('example_link', $wishTicket->image_link);
     }
 
     /** @test */
@@ -340,7 +283,7 @@ class PromiseTest extends TestCase
         // Arrange
         $promise = factory(Promise::class)->create([
             'user_id' => $this->user->id,
-            'reward_credits' => 50,
+            'credits' => 50,
             'due_date' => Carbon::yesterday(),
         ]);
 
@@ -431,8 +374,7 @@ class PromiseTest extends TestCase
         ]);
         $promise = factory(Promise::class)->create([
             'user_id' => $this->user->id,
-            'reward_type' => 'points',
-            'reward_credits' => 500,
+            'credits' => 500,
         ]);
 
         // Act
