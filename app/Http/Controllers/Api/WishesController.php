@@ -78,10 +78,7 @@ class WishesController extends Controller
         }
 
         DB::transaction(function() use ($user,$wish){
-            $user->wishTickets()->create([
-                'name' => $wish->name,
-                'image_link' => $wish->image_link,
-            ]);
+            $wish->wishTickets()->create();
 
             $user->userProfile->update([
                 'credits' => $user->userProfile->credits - $wish->credits
@@ -130,10 +127,8 @@ class WishesController extends Controller
 
         if ($this->hasResolved($wish)) {
             DB::transaction(function() use ($wish){
-                $wishTicket = WishTicket::create([
-                    'name' => $wish->name,
-                    'image_link' => $wish->image_link,
-                ]);
+                $wishTicket = $wish->wishTickets()->create();
+
                 foreach ($wish->users()->get() as $user) {
                     $user->wishtickets()->attach($wishTicket);
                     $user->wishes()->updateExistingPivot($wish->id, [

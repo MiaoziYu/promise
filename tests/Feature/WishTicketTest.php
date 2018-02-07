@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\UserProfile;
-use App\WishTicket;
+use App\Wish;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -12,6 +12,7 @@ use Tests\TestCase;
 class WishTicketTest extends TestCase
 {
     use DatabaseMigrations;
+
 
     private $user;
 
@@ -24,9 +25,20 @@ class WishTicketTest extends TestCase
         $this->user = factory(User::class)->create();
     }
 
-    private function createWishTicket($data)
+    private function createWish($data)
     {
-        $wishTicket = factory(WishTicket::class)->create($data);
+        $wish = factory(Wish::class)->create($data);
+
+        $this->user->wishes()->attach($wish);
+
+        return $wish;
+    }
+
+    private function createWishTicket($wish, $claimedAt = null)
+    {
+        $wishTicket = $wish->wishTickets()->create([
+            'claimed_at' => $claimedAt
+        ]);
 
         $this->user->wishTickets()->attach($wishTicket);
 
@@ -43,57 +55,89 @@ class WishTicketTest extends TestCase
             'picture' => 'example_picture'
         ]);
 
-        $this->createWishTicket([
-            'name' => 'funny frisch',
-            'image_link' => 'example image link'
+        $wishOne = $this->createWish([
+            'owner' => $this->user->id,
+            'name' => 'potato chip',
+            'description' => 'buy a package of potato chip',
+            'credits' => 500,
+            'image_link' =>'example_link'
         ]);
 
-        $this->createWishTicket([
+        $wishTwo = $this->createWish([
+            'owner' => $this->user->id,
             'name' => 'nachos',
-            'claimed_at' => Carbon::now()
+            'description' => 'buy nachos',
+            'credits' => 200,
+            'image_link' =>'another_example_link'
         ]);
+
+        $this->createWishTicket($wishOne);
+        $this->createWishTicket($wishTwo, Carbon::now());
 
         // Act
         $response = $this->get('/api/wish-tickets/?api_token=' . $this->user->api_token);
 
         // Assertion
         $response->assertStatus(200);
-        $response->assertSee('funny frisch');
+
+        $response->assertSee('potato chip');
+        $response->assertSee('buy a package of potato chip');
+        $response->assertSee('500');
         $response->assertSee('example_picture');
         $response->assertDontSee('nachos');
+        $response->assertDontSee('buy nachos');
+        $response->assertDontSee('200');
+        $response->assertDontSee('another_example_link');
     }
 
     /** @test */
     public function can_view_claimed_wish_tickets()
     {
         // Arrange
-        $this->createWishTicket([
-            'name' => 'funny frisch',
-            'image_link' => 'example image link'
+        $wishOne = $this->createWish([
+            'owner' => $this->user->id,
+            'name' => 'potato chip',
+            'description' => 'buy a package of potato chip',
+            'credits' => 500,
+            'image_link' =>'example_link'
         ]);
 
-        $this->createWishTicket([
+        $wishTwo = $this->createWish([
+            'owner' => $this->user->id,
             'name' => 'nachos',
-            'claimed_at' => Carbon::now()
+            'description' => 'buy nachos',
+            'credits' => 200,
+            'image_link' =>'another_example_link'
         ]);
+
+        $this->createWishTicket($wishOne);
+        $this->createWishTicket($wishTwo, Carbon::now());
 
         // Act
         $response = $this->get('/api/wish-tickets/?claimed=true&api_token=' . $this->user->api_token);
 
         // Assertion
         $response->assertStatus(200);
-        $response->assertDontSee('funny frisch');
+
+        $response->assertDontSee('potato chip');
+        $response->assertDontSee('buy a package of potato chip');
+        $response->assertDontSee('500');
+        $response->assertDontSee('example_picture');
         $response->assertSee('nachos');
+        $response->assertSee('buy nachos');
+        $response->assertSee('200');
+        $response->assertSee('another_example_link');
     }
 
     /** @test */
     public function can_claim_a_wish_ticket()
     {
         // Arrange
-        $wishTicket = $this->createWishTicket([
-            'name' => 'funny frisch',
-            'image_link' => 'example image link'
+        $wish = $this->createWish([
+            'owner' => $this->user->id,
         ]);
+
+        $wishTicket = $this->createWishTicket($wish);
 
         $userTwo = factory(User::class)->create();
 
@@ -113,10 +157,11 @@ class WishTicketTest extends TestCase
     public function can_delete_a_wish_ticket()
     {
         // Arrange
-        $wishTicket = $this->createWishTicket([
-            'name' => 'funny frisch',
-            'image_link' => 'example image link'
+        $wish = $this->createWish([
+            'owner' => $this->user->id,
         ]);
+
+        $wishTicket = $this->createWishTicket($wish);
 
         // Act
         $response = $this->delete('/api/wish-tickets/' . $wishTicket->id . '?api_token=' . $this->user->api_token);

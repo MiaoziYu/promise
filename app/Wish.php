@@ -31,6 +31,11 @@ class Wish extends Model
         return $this->belongsToMany('App\User', 'user_wish')->withPivot('credits');
     }
 
+    public function wishTickets()
+    {
+        return $this->hasMany('App\WishTicket');
+    }
+
     public function getOwnersAttribute()
     {
         $users = $this->users()->with('userProfile')->get();

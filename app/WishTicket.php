@@ -11,8 +11,7 @@ class WishTicket extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name',
-        'image_link',
+        'wish_id',
         'claimed_at'
     ];
 
@@ -21,6 +20,7 @@ class WishTicket extends Model
     ];
 
     protected $appends = [
+        'wish',
         'formatted_claimed_date',
         'owners'
     ];
@@ -28,6 +28,11 @@ class WishTicket extends Model
     public function users()
     {
         return $this->belongsToMany('App\User', 'user_wish_ticket', 'wish_ticket_id', 'user_id');
+    }
+
+    public function wish()
+    {
+        return $this->belongsTo('App\Wish');
     }
 
     public function scopeUnclaimed($query)
@@ -38,6 +43,11 @@ class WishTicket extends Model
     public function scopeClaimed($query)
     {
         return $query->where('claimed_at', '!=', null);
+    }
+
+    public function getWishAttribute()
+    {
+        return $this->wish()->get();
     }
 
     public function getFormattedClaimedDateAttribute()
