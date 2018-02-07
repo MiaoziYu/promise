@@ -69,6 +69,7 @@ class HabitsController extends Controller
             $habit->update([
                 'count' => $habit->count + 1,
                 'streak' => $habit->streak + 1,
+                'max_streak' => $habit->streak >= 7 ? $habit->max_streak + 1 : $habit->max_streak,
                 'checked_at' => Carbon::now()
             ]);
             $this->updateUserProfile($user, $habit);

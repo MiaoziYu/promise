@@ -164,6 +164,7 @@ class HabitTest extends TestCase
         $habit = factory(Habit::class)->create([
             'user_id' => $this->user->id,
             'streak' => 6,
+            'max_streak' => 6,
             'checked_at' => Carbon::today()->subHours(8)
         ]);
 
@@ -173,6 +174,7 @@ class HabitTest extends TestCase
         // Assertion
         $response->assertStatus(200);
 
+        $this->assertEquals(7, $this->user->habits()->findOrfail($habit->id)->streak);
         $this->assertEquals(7, $this->user->habits()->findOrfail($habit->id)->streak);
 
         $this->assertEquals(10, $this->user->userProfile->credits);

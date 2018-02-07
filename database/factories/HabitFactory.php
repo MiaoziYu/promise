@@ -12,6 +12,7 @@ $factory->define(Habit::class, function (Faker $faker) {
         'credits' => 5,
         'count' => 0,
         'streak' => 0,
+        'max_streak' => 0,
         'checked_at' => null
     ];
 });
