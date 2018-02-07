@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\UserActed;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Wish;
 use App\WishTicket;
 use Illuminate\Support\Facades\DB;
 
@@ -125,6 +127,14 @@ class WishesController extends Controller
             $user->wishes()->updateExistingPivot($id, [
                 'credits' => $user->wishes()->findOrFail($id)->pivot->credits + $credits
             ]);
+
+            event(new UserActed([
+                'user_id' => $user->id,
+                'subject_id' => $id,
+                'subject_type' => Wish::class,
+                'name' => 'credits_contributed',
+                'value' => $credits
+            ]));
         });
 
         if ($this->hasResolved($wish)) {

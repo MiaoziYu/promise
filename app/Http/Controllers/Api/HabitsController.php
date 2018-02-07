@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\UserActed;
+use App\Habit;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -132,5 +134,13 @@ class HabitsController extends Controller
             'max_streak' => $maxStreak,
             'max_streak_name' => $maxStreakName,
         ]);
+
+        event(new UserActed([
+            'user_id' => $user->id,
+            'subject_id' => $habit->id,
+            'subject_type' => Habit::class,
+            'name' => 'habit_checked',
+            'value' => $credits,
+        ]));
     }
 }

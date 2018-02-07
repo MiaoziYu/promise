@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Events\UserActed;
 use App\UserProfile;
 use App\WeeklyChallenge;
 use Illuminate\Console\Command;
@@ -55,6 +56,14 @@ class CheckWeeklyChallenges extends Command
                         'credits' => $userProfile->first()->credits - floor($challenge->credits / 2),
                         'weekly_challenges_failed' => $userProfile->weekly_challenges_finished + 1
                     ]);
+
+                    event(new UserActed([
+                        'user_id' => $challenge->user_id,
+                        'subject_id' => $challenge->id,
+                        'subject_type' => WeeklyChallenge::class,
+                        'name' => 'weekly_challenge_failed',
+                        'value' => floor($challenge->credits / 2)
+                    ]));
                 });
             } else {
                 DB::transaction(function() use ($challenge) {
@@ -65,6 +74,13 @@ class CheckWeeklyChallenges extends Command
                     $userProfile->update([
                         'weekly_challenges_finished' => $userProfile->weekly_challenges_failed + 1
                     ]);
+
+                    event(new UserActed([
+                        'user_id' => $challenge->user_id,
+                        'subject_id' => $challenge->id,
+                        'subject_type' => WeeklyChallenge::class,
+                        'name' => 'weekly_challenge_finished',
+                    ]));
                 });
             }
         });

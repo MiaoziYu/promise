@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\UserActed;
 use App\Http\Controllers\Controller;
+use App\Promise;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -101,6 +103,14 @@ class PromisesController extends Controller
                 'credits_earned' => $user->userProfile->credits_earned + $promise->credits,
                 'promises_finished' => $user->userProfile->promises_finished + 1
             ]);
+
+            event(new UserActed([
+                'user_id' => $user->id,
+                'subject_id' => $promise->id,
+                'subject_type' => Promise::class,
+                'name' => 'promise_finished',
+                'value' => $promise->credits,
+            ]));
         });
 
         return response()->json([], 200);

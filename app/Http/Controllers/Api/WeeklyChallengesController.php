@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\UserActed;
 use App\Http\Controllers\Controller;
+use App\WeeklyChallenge;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -65,6 +67,14 @@ class WeeklyChallengesController extends Controller
                 'credits' => $user->userProfile->credits + $creditsEarned,
                 'credits_earned' => $user->userProfile->credits_earned + $creditsEarned,
             ]);
+
+            event(new UserActed([
+                'user_id' => $user->id,
+                'subject_id' => $challenge->id,
+                'subject_type' => WeeklyChallenge::class,
+                'name' => 'weekly_challenge_checked',
+                'value' => $creditsEarned,
+            ]));
         });
 
         return response()->json([], 200);

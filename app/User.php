@@ -61,4 +61,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\WeeklyChallenge');
     }
+
+    public function userActivities()
+    {
+        return $this->hasMany('App\UserActivity');
+    }
 }
