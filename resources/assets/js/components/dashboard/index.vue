@@ -28,7 +28,7 @@
                                     <p class="o-card-description">{{ habit.description }}</p>
                                     <p class="habit-credits-wrapper">
                                         <span class="habit-credits"><i class="fa fa-diamond" aria-hidden="true"></i>{{ habit.credits }}</span>
-                                        <span v-if="hasStreak(habit)" class="habit-bonus">+ {{ habit.credits }}</span>
+                                        <span v-if="hasStreak(habit)" class="habit-bonus o-card-label">+ {{ habit.credits }}</span>
                                         <span class="check-count">
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>{{ habit.count }}
                                         </span>
@@ -67,7 +67,7 @@
                                             <i class="fa fa-diamond" aria-hidden="true"></i>
                                            {{ getCurrentObtainedChallengeCredit(challenge) }} / {{ challenge.credits }}
                                         </span>
-                                        <span v-if="challenge.count > challenge.goal" class="habit-bonus">
+                                        <span v-if="challenge.count > challenge.goal" class="habit-bonus o-card-label">
                                             + {{ getBonusChallengeCredit(challenge) }}
                                         </span>
                                         <span class="check-count">
@@ -262,7 +262,7 @@
                     </div>
                     <div class="credits-wrapper">
                         <i class="fa fa-diamond" aria-hidden="true"></i>
-                        <input v-model="promise.credits"
+                        <input v-model="promise.reward_credits"
                                @blur="promise ? updatePromise : null"
                                @keyup.enter="updatePromise"
                                class="credits">

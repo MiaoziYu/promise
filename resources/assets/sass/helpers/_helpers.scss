@@ -20,12 +20,22 @@
     margin-bottom: $space-small;
     font-size: 16px;
     font-weight: 500;
+    line-height: 24px;
   }
 
   .o-card-description {
     min-height: 30px;
     margin-bottom: $space-small;
     color: $text-color-secondary;
+  }
+
+  .o-card-label {
+    margin-left: 4px;
+    padding: 2px 8px;
+    background-color: $green;
+    color: $white;
+    border-radius: 6px;
+    font-size: 12px;
   }
 
   .o-card-delete-btn {

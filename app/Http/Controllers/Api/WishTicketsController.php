@@ -16,7 +16,13 @@ class WishTicketsController extends Controller
             $wishTickets = auth()->user()->wishTickets()->unclaimed()->orderBy('created_at', 'desc')->get();
         }
 
-        return response()->json($wishTickets, 200);
+        $wishTicketsGroup = [];
+
+        foreach ($wishTickets as $ticket) {
+            $wishTicketsGroup[$ticket->wish_id][] = $ticket;
+        }
+
+        return response()->json($wishTicketsGroup, 200);
     }
 
     public function claim($id)

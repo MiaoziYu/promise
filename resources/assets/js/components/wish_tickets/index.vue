@@ -8,23 +8,23 @@
         </div>
 
         <ul class="wish-ticket-list o-list-4">
-            <li v-for="ticket in wishTickets"
+            <li v-for="ticketGroup in wishTickets"
                 class="wish-ticket-item o-list-item">
                 <div class="o-card">
-                    <div v-if="ticket.wish.image_link !== null" class="o-card-img">
-                        <img :src="ticket.wish.image_link" alt="">
-                        <div v-if="ticket.owners.length > 1" class="user-list">
-                            <div v-for="owner in ticket.owners" class="user">
+                    <div v-if="ticketGroup[0].wish.image_link !== null" class="o-card-img">
+                        <img :src="ticketGroup[0].wish.image_link" alt="">
+                        <div v-if="ticketGroup[0].owners.length > 1" class="user-list">
+                            <div v-for="owner in ticketGroup[0].owners" class="user">
                                 <img :src="owner.user_profile.picture" :title="owner.name">
                             </div>
                         </div>
                     </div>
-                    <p class="title o-card-title">{{ ticket.wish.name }}</p>
-                    <button v-if="currentList === 'unclaimed'" @click="claimConfirmMessage = ticket"
+                    <p class="title o-card-title"><span>{{ ticketGroup[0].wish.name }}</span> <span class="o-card-label">x {{ ticketGroup.length }}</span></p>
+                    <button v-if="currentList === 'unclaimed'" @click="claimConfirmMessage = ticketGroup[0]"
                             class="claim-btn o-card-btn">
                         claim ticket
                     </button>
-                    <p v-if="currentList === 'claimed'" class="claimed-date o-card-description">claimed at {{ ticket.formatted_claimed_date }}</p>
+                    <p v-if="currentList === 'claimed'" class="claimed-date o-card-description">claimed at {{ ticketGroup[0].formatted_claimed_date }}</p>
                 </div>
             </li>
         </ul>
@@ -64,7 +64,6 @@
                 api.getWishTickets(claimed).then(data => {
                     this.wishTickets = data;
                     this.currentList = claimed ? "claimed" : "unclaimed";
-                    console.log(data)
                 });
             },
 
