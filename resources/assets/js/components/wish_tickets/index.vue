@@ -11,15 +11,15 @@
             <li v-for="ticket in wishTickets"
                 class="wish-ticket-item o-list-item">
                 <div class="o-card">
-                    <div v-if="ticket.image_link !== null" class="o-card-img">
-                        <img :src="ticket.image_link" alt="">
+                    <div v-if="ticket.wish.image_link !== null" class="o-card-img">
+                        <img :src="ticket.wish.image_link" alt="">
                         <div v-if="ticket.owners.length > 1" class="user-list">
                             <div v-for="owner in ticket.owners" class="user">
                                 <img :src="owner.user_profile.picture" :title="owner.name">
                             </div>
                         </div>
                     </div>
-                    <p class="title o-card-title">{{ ticket.name }}</p>
+                    <p class="title o-card-title">{{ ticket.wish.name }}</p>
                     <button v-if="currentList === 'unclaimed'" @click="claimConfirmMessage = ticket"
                             class="claim-btn o-card-btn">
                         claim ticket
