@@ -32,17 +32,6 @@ class PurchaseWishTest extends TestCase
         return $wish;
     }
 
-    private function createWishTicket($wish, $claimedAt = null)
-    {
-        $wishTicket = $wish->wishTickets()->create([
-            'claimed_at' => $claimedAt
-        ]);
-
-        $this->user->wishTickets()->attach($wishTicket);
-
-        return $wishTicket;
-    }
-
     /** @test */
     public function can_purchase_a_wish()
     {
@@ -68,11 +57,11 @@ class PurchaseWishTest extends TestCase
 
         $this->assertEquals(300, $this->user->userProfile->credits);
 
-        $wishTicket = $wish->wishTickets()->first();
-        $this->assertEquals('potato chip', $wishTicket->wish->first()->name);
-        $this->assertEquals('buy a package of potato chip', $wishTicket->wish->first()->description);
-        $this->assertEquals(500, $wishTicket->wish->first()->credits);
-        $this->assertEquals('example_link', $wishTicket->wish->first()->image_link);
+        $wishTicket = $this->user->wishTickets()->first();
+        $this->assertEquals('potato chip', $wishTicket->wish->name);
+        $this->assertEquals('buy a package of potato chip', $wishTicket->wish->description);
+        $this->assertEquals(500, $wishTicket->wish->credits);
+        $this->assertEquals('example_link', $wishTicket->wish->image_link);
     }
 
     /** @test */
@@ -218,13 +207,13 @@ class PurchaseWishTest extends TestCase
         $responseTwo->assertStatus(200);
 
         $userOneWishTicket = $this->user->wishTickets()->first();
-        $this->assertEquals('new PC', $userOneWishTicket->wish->first()->name);
-        $this->assertEquals('example image link', $userOneWishTicket->wish->first()->image_link);
+        $this->assertEquals('new PC', $userOneWishTicket->wish->name);
+        $this->assertEquals('example image link', $userOneWishTicket->wish->image_link);
         $this->assertEquals(0, $this->user->wishes()->findOrFail($wish->id)->pivot->credits);
 
         $userTwoWishTicket = $userTwo->wishTickets()->first();
-        $this->assertEquals('new PC', $userTwoWishTicket->wish->first()->name);
-        $this->assertEquals('example image link', $userTwoWishTicket->wish->first()->image_link);
+        $this->assertEquals('new PC', $userTwoWishTicket->wish->name);
+        $this->assertEquals('example image link', $userTwoWishTicket->wish->image_link);
         $this->assertEquals(0, $userTwo->wishes()->findOrFail($wish->id)->pivot->credits);
 
         $this->assertEquals(0, $wish->users()->sum('credits'));

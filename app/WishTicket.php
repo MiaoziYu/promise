@@ -47,7 +47,7 @@ class WishTicket extends Model
 
     public function getWishAttribute()
     {
-        return $this->wish()->get();
+        return $this->wish()->first();
     }
 
     public function getFormattedClaimedDateAttribute()

@@ -77,8 +77,10 @@ class WishesController extends Controller
             return response()->json(['not enough credits'], 422);
         }
 
-        DB::transaction(function() use ($user,$wish){
-            $wish->wishTickets()->create();
+        DB::transaction(function() use ($user,$wish) {
+            $wishTicket = $wish->wishTickets()->create();
+
+            $user->wishtickets()->attach($wishTicket);
 
             $user->userProfile->update([
                 'credits' => $user->userProfile->credits - $wish->credits
