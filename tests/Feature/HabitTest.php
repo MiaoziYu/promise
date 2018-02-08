@@ -175,7 +175,7 @@ class HabitTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertEquals(7, $this->user->habits()->findOrfail($habit->id)->streak);
-        $this->assertEquals(7, $this->user->habits()->findOrfail($habit->id)->streak);
+        $this->assertEquals(7, $this->user->habits()->findOrfail($habit->id)->max_streak);
 
         $this->assertEquals(10, $this->user->userProfile->credits);
     }

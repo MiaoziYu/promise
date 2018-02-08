@@ -16,6 +16,7 @@ class Habit extends Model
         'credits',
         'count',
         'streak',
+        'max_streak',
         'checked_at',
         'order'
     ];
