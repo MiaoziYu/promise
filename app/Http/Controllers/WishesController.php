@@ -9,6 +9,6 @@ class WishesController extends Controller
     public function index()
     {
         $user = auth()->user();
-        return view('wishes', compact('user'));
+        return view('pages.wishes', compact('user'));
     }
 }
