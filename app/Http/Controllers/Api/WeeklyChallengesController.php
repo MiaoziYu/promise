@@ -65,7 +65,6 @@ class WeeklyChallengesController extends Controller
             $creditsEarned = (floor($challenge->credits / $challenge->goal) * $bonus);
             $user->userProfile->update([
                 'credits' => $user->userProfile->credits + $creditsEarned,
-                'credits_earned' => $user->userProfile->credits_earned + $creditsEarned,
             ]);
 
             event(new UserActed([

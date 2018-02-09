@@ -53,8 +53,7 @@ class CheckWeeklyChallenges extends Command
 
                     $userProfile = UserProfile::where('user_id', $challenge->user_id)->first();
                     $userProfile->update([
-                        'credits' => $userProfile->first()->credits - floor($challenge->credits / 2),
-                        'weekly_challenges_failed' => $userProfile->weekly_challenges_finished + 1
+                        'credits' => $userProfile->first()->credits - floor($challenge->credits / 2)
                     ]);
 
                     event(new UserActed([
@@ -66,22 +65,16 @@ class CheckWeeklyChallenges extends Command
                     ]));
                 });
             } else {
-                DB::transaction(function() use ($challenge) {
-                    $challenge->update([
-                        'count' => 0
-                    ]);
-                    $userProfile = UserProfile::where('user_id', $challenge->user_id)->first();
-                    $userProfile->update([
-                        'weekly_challenges_finished' => $userProfile->weekly_challenges_failed + 1
-                    ]);
+                $challenge->update([
+                    'count' => 0
+                ]);
 
-                    event(new UserActed([
-                        'user_id' => $challenge->user_id,
-                        'subject_id' => $challenge->id,
-                        'subject_type' => WeeklyChallenge::class,
-                        'name' => 'weekly_challenge_finished',
-                    ]));
-                });
+                event(new UserActed([
+                    'user_id' => $challenge->user_id,
+                    'subject_id' => $challenge->id,
+                    'subject_type' => WeeklyChallenge::class,
+                    'name' => 'weekly_challenge_finished',
+                ]));
             }
         });
     }

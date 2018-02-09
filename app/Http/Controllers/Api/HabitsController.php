@@ -121,19 +121,8 @@ class HabitsController extends Controller
             $credits = $habit->credits;
         }
 
-        if ($user->userProfile->max_streak < $habit->streak) {
-            $maxStreak = $habit->streak;
-            $maxStreakName = $habit->name;
-        } else {
-            $maxStreak = $user->userProfile->max_streak;
-            $maxStreakName = $user->userProfile->max_streak_name;
-        }
-
         $user->userProfile->update([
-            'credits' => $user->userProfile->credits + $credits,
-            'credits_earned' => $user->userProfile->credits_earned + $credits,
-            'max_streak' => $maxStreak,
-            'max_streak_name' => $maxStreakName,
+            'credits' => $user->userProfile->credits + $credits
         ]);
 
         event(new UserActed([

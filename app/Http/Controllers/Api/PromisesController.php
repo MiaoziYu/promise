@@ -99,9 +99,7 @@ class PromisesController extends Controller
             ]);
 
             $user->userProfile->update([
-                'credits' => $user->userProfile->credits + $promise->credits,
-                'credits_earned' => $user->userProfile->credits_earned + $promise->credits,
-                'promises_finished' => $user->userProfile->promises_finished + 1
+                'credits' => $user->userProfile->credits + $promise->credits
             ]);
 
             event(new UserActed([

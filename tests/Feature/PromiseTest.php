@@ -344,45 +344,4 @@ class PromiseTest extends TestCase
         $this->assertEquals(3, $this->user->promises()->findOrFail($promiseTwo->id)->order);
         $this->assertEquals(1, $this->user->promises()->findOrFail($promiseThree->id)->order);
     }
-
-    /** @test */
-    public function can_update_user_promises_finished()
-    {
-        // Arrange
-        factory(UserProfile::class)->create([
-            'user_id' => $this->user->id,
-            'promises_finished' => 10
-        ]);
-
-        $promise = factory(Promise::class)->create([
-            'user_id' => $this->user->id,
-        ]);
-
-        // Act
-        $response = $this->put('/api/promises/' . $promise->id . '/finish?api_token=' . $this->user->api_token, []);
-
-        // Assertion
-        $this->assertEquals(11, $this->user->userProfile->promises_finished);
-    }
-
-    /** @test */
-    public function can_update_credits_earned_after_finishing_a_wish()
-    {
-        // Arrange
-        factory(UserProfile::class)->create([
-            'user_id' => $this->user->id,
-        ]);
-        $promise = factory(Promise::class)->create([
-            'user_id' => $this->user->id,
-            'credits' => 500,
-        ]);
-
-        // Act
-        $response = $this->put('/api/promises/' . $promise->id . '/finish?api_token=' . $this->user->api_token, []);
-
-        // Assertion
-        $response->assertStatus(200);
-
-        $this->assertEquals(500, $this->user->userProfile->credits_earned);
-    }
 }
