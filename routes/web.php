@@ -3,6 +3,7 @@ Route::group(['middleware' => ['auth'],], function() {
     Route::get('/', 'IndexController@index');
     Route::get('/wishes/', 'WishesController@index');
     Route::get('/wish-tickets/', 'WishTicketsController@index');
+    Route::get('/statistic/', 'StatisticController@index');
 });
 
 Route::group(['namespace' => 'Auth'], function () {

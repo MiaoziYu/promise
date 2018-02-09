@@ -34,6 +34,8 @@ Vue.component("new-wish-form", require("./components/wish/_new_wish_form.vue"));
 
 Vue.component("wish-tickets", require("./components/wish_tickets/index.vue"));
 
+Vue.component("statistic", require("./components/statistic/index.vue"));
+
 const app = new Vue({
     el: "#app",
     store

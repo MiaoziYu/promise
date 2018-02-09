@@ -61,4 +61,6 @@ Route::group(
     route::put('/weekly-challenges/{id}/check', 'WeeklyChallengesController@check');
     route::post('/weekly-challenges/', 'WeeklyChallengesController@store');
     route::delete('/weekly-challenges/{id}', 'WeeklyChallengesController@destroy');
+
+    route::get('/statistic/', 'StatisticController@index');
 });
