@@ -18,6 +18,10 @@
                      :class="{ active:pageName === 'wishTickets' }">
                     <a class="menu-link" href="/wish-tickets/">wish tickets</a>
                 </div>
+                <div v-if="user" class="menu-item"
+                     :class="{ active:pageName === 'statistic' }">
+                    <a class="menu-link" href="/statistic/">statistic</a>
+                </div>
             </div>
             <div v-if="user" class="nav-menu-right">
                 <div class="menu-item menu-user">
