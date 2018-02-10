@@ -82,6 +82,10 @@ export default {
         return get(`wish-tickets`, `claimed=${claimed}`);
     },
 
+    getStatistic() {
+        return get(`statistic`);
+    },
+
     updateHabit(id, data) {
         return put(`habits/${id}`, data);
     },
