@@ -145,7 +145,7 @@ class UserStatisticTest extends TestCase
         $response->assertJson([
             'credits_earned' => $creditsEarned,
             'credits_contributed' => 100,
-            'habits_checked' => 1,
+            'habits_checked' => 8,
             'max_streak' => 20,
             'weekly_challenges_checked' => 1,
             'weekly_challenges_finished' => 1,

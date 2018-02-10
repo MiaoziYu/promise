@@ -41,9 +41,7 @@ class StatisticController extends Controller
 
     private function getHabitsChecked()
     {
-        return auth()->user()->userActivities()
-            ->where('name', 'habit_checked')
-            ->count();
+        return auth()->user()->habits()->sum('count');
     }
 
     private function getMaxStreak()
