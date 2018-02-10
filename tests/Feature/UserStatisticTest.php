@@ -60,7 +60,8 @@ class UserStatisticTest extends TestCase
             'user_id' => $this->user->id,
             'credits' => 5,
             'count' => 8,
-            'streak' => 8
+            'streak' => 8,
+            'max_streak' => 20
         ]);
 
         factory(UserActivity::class)->create([
@@ -73,11 +74,7 @@ class UserStatisticTest extends TestCase
 
         $challenge = factory(WeeklyChallenge::class)->create([
             'user_id' => $this->user->id,
-            'name' => 'workout at gym',
-            'description' => 'at least 2 time',
             'credits' => 20,
-            'goal' => 2,
-            'count' => 2,
         ]);
 
         factory(UserActivity::class)->create([
@@ -86,6 +83,20 @@ class UserStatisticTest extends TestCase
             'subject_type' => WeeklyChallenge::class,
             'name' => 'weekly_challenge_checked',
             'value' => $challenge->credits
+        ]);
+
+        factory(UserActivity::class)->create([
+            'user_id' => $this->user->id,
+            'subject_id' => $challenge->id,
+            'subject_type' => WeeklyChallenge::class,
+            'name' => 'weekly_challenge_finished',
+        ]);
+
+        factory(UserActivity::class)->create([
+            'user_id' => $this->user->id,
+            'subject_id' => $challenge->id,
+            'subject_type' => WeeklyChallenge::class,
+            'name' => 'weekly_challenge_failed',
         ]);
 
         $promise = factory(Promise::class)->create([
@@ -103,10 +114,7 @@ class UserStatisticTest extends TestCase
 
         $wish = $this->createWish([
             'owner' => $this->user->id,
-            'name' => 'potato chip',
-            'description' => 'buy a package of potato chip',
             'credits' => 500,
-            'image_link' =>'example_link'
         ]);
 
         factory(UserActivity::class)->create([
@@ -115,6 +123,14 @@ class UserStatisticTest extends TestCase
             'subject_type' => Wish::class,
             'name' => 'wish_purchased',
             'value' => $wish->credits
+        ]);
+
+        factory(UserActivity::class)->create([
+            'user_id' => $this->user->id,
+            'subject_id' => $wish->id,
+            'subject_type' => Wish::class,
+            'name' => 'credits_contributed',
+            'value' => 100
         ]);
 
         $wishTicket = $this->createWishTicket($wish);
@@ -127,7 +143,15 @@ class UserStatisticTest extends TestCase
 
         $creditsEarned = $habit->credits + $challenge->credits + $promise->credits;
         $response->assertJson([
-            'credits_earned' => $creditsEarned
+            'credits_earned' => $creditsEarned,
+            'credits_contributed' => 100,
+            'habit_checked' => 1,
+            'max_streak' => 20,
+            'weekly_challenge_checked' => 1,
+            'weekly_challenge_finished' => 1,
+            'weekly_challenge_failed' => 1,
+            'promise_finished' => 1,
+            'wish_purchased' => 1,
         ]);
     }
 }
