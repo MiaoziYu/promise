@@ -13,13 +13,13 @@ class StatisticController extends Controller
         $statistic = [
             'credits_earned' => $this->getCreditsEarned(),
             'credits_contributed' => $this->getCreditsContributed(),
-            'habit_checked' => $this->getHabitsChecked(),
+            'habits_checked' => $this->getHabitsChecked(),
             'max_streak' => $this->getMaxStreak(),
-            'weekly_challenge_checked' => $this->getWeeklyChallengeChecked(),
-            'weekly_challenge_finished' => $this->getWeeklyChallengeFinised(),
-            'weekly_challenge_failed' => $this->getWeeklyChallengeFailed(),
-            'promise_finished' => $this->getPromiseFinished(),
-            'wish_purchased' => $this->getWishPurchased(),
+            'weekly_challenges_checked' => $this->getWeeklyChallengesChecked(),
+            'weekly_challenges_finished' => $this->getWeeklyChallengesFinished(),
+            'weekly_challenges_failed' => $this->getWeeklyChallengesFailed(),
+            'promises_finished' => $this->getPromisesFinished(),
+            'wishes_purchased' => $this->getWishesPurchased(),
         ];
 
         return response()->json($statistic, 200);
@@ -51,35 +51,35 @@ class StatisticController extends Controller
         return auth()->user()->habits()->max('max_streak');
     }
 
-    private function getWeeklyChallengeChecked()
+    private function getWeeklyChallengesChecked()
     {
         return auth()->user()->userActivities()
             ->where('name', 'weekly_challenge_checked')
             ->count();
     }
 
-    private function getWeeklyChallengeFinised()
+    private function getWeeklyChallengesFinished()
     {
         return auth()->user()->userActivities()
             ->where('name', 'weekly_challenge_finished')
             ->count();
     }
 
-    private function getWeeklyChallengeFailed()
+    private function getWeeklyChallengesFailed()
     {
         return auth()->user()->userActivities()
             ->where('name', 'weekly_challenge_failed')
             ->count();
     }
 
-    private function getPromiseFinished()
+    private function getPromisesFinished()
     {
         return auth()->user()->userActivities()
             ->where('name', 'promise_finished')
             ->count();
     }
 
-    private function getWishPurchased()
+    private function getWishesPurchased()
     {
         return auth()->user()->wishTickets()->count();
     }
