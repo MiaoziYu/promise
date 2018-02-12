@@ -2,27 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Promise;
 use App\User;
 use App\UserProfile;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class UserProfileTest extends TestCase
 {
-    use DatabaseMigrations;
-
-    private $user;
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->disableExceptionHandling();
-
-        $this->user = factory(User::class)->create();
-    }
-
     /** @test */
     public function can_get_user_profile()
     {

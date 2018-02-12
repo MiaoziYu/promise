@@ -3,35 +3,10 @@
 namespace Tests\Feature;
 
 use App\User;
-use App\Wish;
-use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class WishTest extends TestCase
 {
-    use DatabaseMigrations;
-
-    private $user;
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->disableExceptionHandling();
-
-        $this->user = factory(User::class)->create();
-    }
-
-    private function createWish($data)
-    {
-        $wish = factory(Wish::class)->create($data);
-
-        $this->user->wishes()->attach($wish);
-
-        return $wish;
-    }
-
     /** @test */
     public function can_view_a_wish()
     {

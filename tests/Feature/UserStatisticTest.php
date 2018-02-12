@@ -4,49 +4,14 @@ namespace Tests\Feature;
 
 use App\Habit;
 use App\Promise;
-use App\User;
 use App\UserActivity;
 use App\UserProfile;
 use App\WeeklyChallenge;
 use App\Wish;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class UserStatisticTest extends TestCase
 {
-    use DatabaseMigrations;
-
-    private $user;
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->disableExceptionHandling();
-
-        $this->user = factory(User::class)->create();
-    }
-
-    private function createWish($data)
-    {
-        $wish = factory(Wish::class)->create($data);
-
-        $this->user->wishes()->attach($wish);
-
-        return $wish;
-    }
-
-    private function createWishTicket($wish, $claimedAt = null)
-    {
-        $wishTicket = $wish->wishTickets()->create([
-            'claimed_at' => $claimedAt
-        ]);
-
-        $this->user->wishTickets()->attach($wishTicket);
-
-        return $wishTicket;
-    }
-
     /** @test */
     public function can_view_user_statistic()
     {

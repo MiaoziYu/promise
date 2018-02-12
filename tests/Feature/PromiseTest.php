@@ -4,28 +4,13 @@ namespace Tests\Feature;
 
 use App\Checklist;
 use App\Promise;
-use App\User;
 use App\UserProfile;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class PromiseTest extends TestCase
 {
-    use DatabaseMigrations;
-
-    private $user;
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->disableExceptionHandling();
-
-        $this->user = factory(User::class)->create();
-    }
-
     /** @test */
     public function can_view_promise_with_checklists()
     {

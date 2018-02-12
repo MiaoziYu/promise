@@ -4,37 +4,13 @@ namespace Tests\Feature;
 
 use App\Habit;
 use App\Promise;
-use App\User;
 use App\UserProfile;
 use App\WeeklyChallenge;
 use App\Wish;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class UserActivityTest extends TestCase
 {
-    use DatabaseMigrations;
-
-    private $user;
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->disableExceptionHandling();
-
-        $this->user = factory(User::class)->create();
-    }
-
-    private function createWish($data)
-    {
-        $wish = factory(Wish::class)->create($data);
-
-        $this->user->wishes()->attach($wish);
-
-        return $wish;
-    }
-
     /** @test */
     public function can_update_user_activities_after_checking_a_habit()
     {

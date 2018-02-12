@@ -5,13 +5,10 @@ namespace Tests\Feature;
 use App\Checklist;
 use App\Promise;
 use App\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class ChecklistTest extends TestCase
 {
-    use DatabaseMigrations;
-
     /** @test */
     public function can_create_checklist()
     {
