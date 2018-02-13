@@ -11,6 +11,13 @@ use Tests\TestCase;
 
 class UserActivityTest extends TestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->artisan('db:seed');
+    }
+
     /** @test */
     public function can_update_user_activities_after_checking_a_habit()
     {

@@ -9,6 +9,12 @@ use Tests\TestCase;
 
 class HabitTest extends TestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->artisan('db:seed');
+    }
     /** @test */
     public function can_view_a_habit()
     {

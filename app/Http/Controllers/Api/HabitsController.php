@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Events\UserActed;
 use App\Habit;
 use App\Http\Controllers\Controller;
+use App\Utils\LootManager;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -56,7 +57,7 @@ class HabitsController extends Controller
         return response()->json([], 200);
     }
 
-    public function check($id)
+    public function check($id, LootManager $lootManager)
     {
         $user = auth()->user();
         $habit = $user->habits()->findOrFail($id);
@@ -75,9 +76,9 @@ class HabitsController extends Controller
             $this->updateUserProfile($user, $habit);
         });
 
-        //TODO LootGenerator
+        $loot = $lootManager->gave($user);
 
-        return response()->json([], 200);
+        return response()->json(['loot' => $loot], 200);
     }
 
     public function reorder()

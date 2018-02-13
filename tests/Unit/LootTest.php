@@ -10,7 +10,7 @@ use Tests\TestCase;
 class LootTest extends TestCase
 {
     /** @test */
-    public function can_generate_loot()
+    public function can_drop_loot()
     {
         // Arrange
         $holidayTicket = $this->createLoot([
@@ -42,13 +42,12 @@ class LootTest extends TestCase
             'value' => '1'
         ]);
 
-        $lootManager = new LootManager();
-
         // Act
+        $lootManager = new LootManager();
         $loots = [];
 
         foreach(range(0, 999) as $num) {
-            $loots[] = $lootManager->generate();
+            $loots[] = $lootManager->drop();
         }
 
         // Assert
@@ -77,6 +76,27 @@ class LootTest extends TestCase
         $this->assertTrue(count($freezers) / 1000 <= $freezer->drop_rate * $coefficient / $accumulation );
         $this->assertTrue(count($boosters) / 1000 <= $booster->drop_rate * $coefficient / $accumulation );
         $this->assertTrue(count($crystals) / 1000 <= $crystal->drop_rate * $coefficient / $accumulation );
+    }
+
+    /** @test */
+    public function can_attach_loot()
+    {
+        // Arrange
+        $holidayTicket = $holidayTicket = $this->createLoot([
+            'type' => 'HolidayTicket',
+            'name' => 'holiday ticket',
+            'drop_rate' => '5',
+            'rarity' => 'legendary',
+        ]);
+
+        // Act
+        $lootManager = new LootManager();
+        $lootManager->attach($holidayTicket, $this->user);
+
+        // Assertion
+        $userLoot = $this->user->loots()->find($holidayTicket->id);
+        $this->assertNotNull($userLoot);
+        $this->assertEquals('holiday ticket', $userLoot->name);
     }
 
     /** @test */
