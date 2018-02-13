@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\UserActivity');
     }
+
+    public function loots()
+    {
+        return $this->belongsToMany('App\Loot', 'loot_user')->withPivot('applied_at');
+    }
 }

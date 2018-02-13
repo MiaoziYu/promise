@@ -3,6 +3,7 @@
 namespace Tests;
 
 use App\Exceptions\Handler;
+use App\Loot;
 use App\User;
 use App\Wish;
 use Exception;
@@ -18,6 +19,8 @@ abstract class TestCase extends BaseTestCase
 
     protected $user;
 
+    protected $api_token;
+
     protected function setUp()
     {
         parent::setUp();
@@ -25,6 +28,7 @@ abstract class TestCase extends BaseTestCase
         $this->disableExceptionHandling();
 
         $this->user = factory(User::class)->create();
+        $this->api_token = $this->user->api_token;
     }
 
     protected function disableExceptionHandling()
@@ -58,5 +62,14 @@ abstract class TestCase extends BaseTestCase
         $this->user->wishTickets()->attach($wishTicket);
 
         return $wishTicket;
+    }
+
+    protected function createLoot($data)
+    {
+        $loot = factory(Loot::class)->create($data);
+
+        $this->user->loots()->attach($loot);
+
+        return $loot;
     }
 }

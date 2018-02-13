@@ -63,4 +63,6 @@ Route::group(
     route::delete('/weekly-challenges/{id}', 'WeeklyChallengesController@destroy');
 
     route::get('/statistic/', 'StatisticController@index');
+
+    Route::put('/loots/{id}/apply', 'LootsController@apply');
 });

@@ -18,7 +18,8 @@ class Habit extends Model
         'streak',
         'max_streak',
         'checked_at',
-        'order'
+        'order',
+        'frozen',
     ];
 
     protected $dates = [

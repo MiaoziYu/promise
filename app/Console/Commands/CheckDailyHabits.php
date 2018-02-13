@@ -42,6 +42,14 @@ class CheckDailyHabits extends Command
         $habits = Habit::all();
 
         collect($habits)->each(function($habit) {
+            if ($habit->frozen) {
+                $habit->update([
+                    'frozen' => false
+                ]);
+
+                return true;
+            }
+
             if ($habit->checked_at === null) {
                 return $habit;
             }

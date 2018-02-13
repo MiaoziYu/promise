@@ -9,6 +9,7 @@ class UserProfile extends Model
     protected $fillable = [
         'user_id',
         'picture',
+        'crystal',
         'credits',
         'credits_earned',
         'credits_contributed',

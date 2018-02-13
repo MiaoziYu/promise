@@ -75,6 +75,8 @@ class HabitsController extends Controller
             $this->updateUserProfile($user, $habit);
         });
 
+        //TODO LootGenerator
+
         return response()->json([], 200);
     }
 
