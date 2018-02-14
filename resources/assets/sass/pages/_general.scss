@@ -9,7 +9,6 @@
 }
 
 .form {
-
   .form-group {
     margin: $space-small 0;
 
@@ -35,6 +34,24 @@
       margin-bottom: $space-xsmall;
       font-size: 14px;
     }
+
+    &.checkbox-group {
+      label,
+      input {
+        display: inline-block;
+        width: auto;
+        vertical-align: top;
+      }
+
+      .label {
+        margin-bottom: 0;
+        cursor: pointer;
+      }
+
+      .checkbox {
+        margin-right: 6px;
+      }
+    }
   }
 
   .form-label {
@@ -53,6 +70,18 @@
     display: block;
     margin-top: $space-small * 2;
     font-size: 18px;
+  }
+
+  .form-error {
+    color: $red;
+
+    .error-item {
+      margin-bottom: 4px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 }
 

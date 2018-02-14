@@ -44,11 +44,11 @@ class LoginController extends Controller
 
     public function store()
     {
-        if (auth()->attempt(request(['email', 'password']))) {
+        if (auth()->attempt(request(['email', 'password']), request('remember'))) {
             return redirect('/');
         }
 
-        return back();
+        return back()->withInput()->withErrors(['the username and password do not match']);
     }
 
     public function destroy()

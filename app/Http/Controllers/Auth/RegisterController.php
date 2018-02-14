@@ -61,6 +61,14 @@ class RegisterController extends Controller
      */
     protected function store()
     {
+        $validator = $this->validator(request()->input());
+
+        if ($validator->fails()) {
+            return redirect('/register')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
         $user = User::create([
             'name' => request('name'),
             'email' => request('email'),
@@ -68,9 +76,7 @@ class RegisterController extends Controller
             'api_token' => str_random(60)
         ]);
 
-        $user->userProfile()->create([
-            'credits' => 0
-        ]);
+        $user->userProfile()->create();
 
         auth()->login($user);
 

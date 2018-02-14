@@ -1,0 +1,17 @@
+.auth-page {
+  max-width: 600px;
+  margin-right: auto;
+  margin-left: auto;
+  padding: $space-small * 2;
+
+  .brand {
+    margin-bottom: $space-small * 2;
+    font-size: 40px;
+    color: $green;
+  }
+
+  .extra-msg {
+    margin-top: $space-small;
+    padding-left: $space-xsmall;
+  }
+}
