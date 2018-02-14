@@ -124,6 +124,25 @@
                     </li>
                 </ul>
             </div>
+
+            <!-- ========== loot list ========== -->
+            <div class="loot-block">
+                <h2 class="task-title">Loots</h2>
+                <ul id="loot-list" class="loot-list task-list">
+                    <li v-for="loot in loots"
+                        class="loot-item task-item" :class="loot[0].rarity">
+                        <div class="o-card">
+                            <div class="loot-icon-wrapper">
+                                <i v-if="loot[0].type === 'HolidayTicket'" class="loot-icon fa fa-plane"></i>
+                                <i v-if="loot[0].type === 'HabitFreezer'" class="loot-icon fa fa-pause"></i>
+                                <i v-if="loot[0].type === 'HabitBooster'" class="loot-icon fa fa-bolt"></i>
+                                <span v-if="loot.length > 1" class="loot-count">{{ loot.length }}</span>
+                            </div>
+                            <p class="loot-name">{{ loot[0].name }}</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <!-- ========== new habit form ========== -->
@@ -321,6 +340,7 @@
                 challenge: null,
                 challenges: null,
                 challengeForm: false,
+                loots: null,
                 descriptionEditor: false,
                 successMsg: null,
             }
@@ -333,6 +353,7 @@
             this.getHabits();
             this.getChallenges();
             this.getPromises();
+            this.getLoots();
             EventBus.$emit("setPageName", "promises");
         },
 
@@ -407,6 +428,12 @@
             getChallenge(id) {
                 api.getChallenge(id).then(data => {
                     this.challenge = data;
+                })
+            },
+
+            getLoots() {
+                api.getLoots().then(data => {
+                    this.loots = data;
                 })
             },
 

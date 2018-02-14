@@ -64,5 +64,6 @@ Route::group(
 
     route::get('/statistic/', 'StatisticController@index');
 
+    Route::get('/loots/', 'LootsController@index');
     Route::put('/loots/{id}/apply', 'LootsController@apply');
 });

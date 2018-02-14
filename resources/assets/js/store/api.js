@@ -66,6 +66,10 @@ export default {
         return get(`weekly-challenges/${id}`);
     },
 
+    getLoots() {
+        return get(`loots/`);
+    },
+
     getWishes() {
         return get(`wishes/`);
     },

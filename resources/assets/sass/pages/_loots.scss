@@ -1,0 +1,68 @@
+.loot-block {
+  .loot-item {
+    text-align: center;
+    cursor: pointer;
+    text-transform: capitalize;
+
+    .loot-icon-wrapper {
+      position: relative;
+
+      .loot-icon {
+        width: 70%;
+        padding: $space-xsmall;
+        border-radius: 3px;
+        color: #FFF;
+        font-size: 40px;
+        transition: all .3s;
+      }
+
+      .loot-count {
+        position: absolute;
+        right: 5px;
+        bottom: -5px;
+        width: 20px;
+        border-radius: 50%;
+        background-color: $text-color-secondary;
+        color: #FFF;
+        font-size: 10px;
+        line-height: 20px;
+      }
+    }
+
+    &.legendary {
+      .loot-icon {
+        background-color: $orange;
+      }
+    }
+
+    &.epic {
+      .loot-icon {
+        background-color: $purple;
+      }
+    }
+
+    &.rare {
+      .loot-icon {
+        background-color: $blue;
+      }
+    }
+
+    &:hover {
+      &.legendary .loot-icon {
+        background-color: darken($orange, 10%);
+      }
+
+      &.epic .loot-icon {
+        background-color: darken($purple, 10%);
+      }
+
+      &.rare .loot-icon {
+        background-color: darken($blue, 10%);
+      }
+    }
+
+    .loot-name {
+      margin-top: $space-xsmall;
+    }
+  }
+}

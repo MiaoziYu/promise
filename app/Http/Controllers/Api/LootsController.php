@@ -8,6 +8,19 @@ use Illuminate\Http\Request;
 
 class LootsController extends Controller
 {
+    public function index()
+    {
+        $loots = auth()->user()->loots()->orderBy('drop_rate')->get();
+
+        $lootsGroup = [];
+
+        foreach ($loots as $loot) {
+            $lootsGroup[$loot->id][] = $loot;
+        }
+
+        return response()->json($lootsGroup, 200);
+    }
+
     public function apply($id)
     {
         $loot = auth()->user()->loots()->findOrFail($id);

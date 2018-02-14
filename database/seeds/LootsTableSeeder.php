@@ -25,23 +25,16 @@ class LootsTableSeeder extends Seeder
             [
                 'type' => 'HabitFreezer',
                 'name' => 'habit freezer',
-                'drop_rate' => '20',
-                'rarity' => 'rare',
+                'drop_rate' => '10',
+                'rarity' => 'epic',
                 'created_at' => Carbon::now(),
             ],
             [
                 'type' => 'HabitBooster',
                 'name' => 'habit booster',
-                'drop_rate' => '20',
+                'drop_rate' => '10',
                 'rarity' => 'rare',
-                'created_at' => Carbon::now(),
-            ],
-            [
-                'type' => 'Crystal',
-                'name' => 'crystal',
-                'drop_rate' => '50',
-                'rarity' => 'common',
-                'value' => '1',
+                'value' => '50',
                 'created_at' => Carbon::now(),
             ]
         ];

@@ -4,11 +4,37 @@ namespace Tests\Feature;
 
 use App\Habit;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LootTest extends TestCase
 {
+    /** @test */
+    public function can_get_all_loots()
+    {
+        // Arrange
+        $holidayTicket = $this->createLoot([
+            'type' => 'HolidayTicket',
+            'name' => 'holiday ticket',
+            'drop_rate' => '5',
+            'rarity' => 'legendary',
+        ]);
+
+        $freezer = $this->createLoot([
+            'type' => 'HabitFreezer',
+            'name' => 'habit freezer',
+            'drop_rate' => '10',
+            'rarity' => 'epic',
+        ]);
+
+        // Act
+        $response = $this->get("/api/loots/?api_token=$this->api_token");
+
+        // Assert
+        $response->assertSee('holiday ticket');
+        $response->assertSee('legendary');
+        $response->assertSee('habit freezer');
+        $response->assertSee('epic');
+    }
+
     /** @test */
     public function can_apply_holiday_ticket()
     {

@@ -6,7 +6,11 @@
     justify-content: space-between;
 
     .task-block {
-      width: 32%;
+      width: 28%;
+    }
+
+    .loot-block {
+      width: 10%;
     }
 
     .task-title {
@@ -19,7 +23,8 @@
     }
 
     @media (max-width: $breakpoint-md) {
-      .task-block {
+      .task-block,
+      .loot-block {
         width: 49%;
       }
     }
