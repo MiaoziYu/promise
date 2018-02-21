@@ -55,7 +55,7 @@ class LootTest extends TestCase
         $freezers = [];
         $boosters = [];
         $crystals = [];
-        $accumulation = Loot::all()->sum('drop_rate') * 2;
+        $accumulation = Loot::all()->sum('drop_rate');
         $coefficient = 1.2;
 
         foreach ($loots as $loot) {

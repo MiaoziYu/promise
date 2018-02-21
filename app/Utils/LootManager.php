@@ -10,12 +10,15 @@ class LootManager
     public function drop()
     {
         $possibleLoots = Loot::orderBy('drop_rate')->get();
-        $dropRate = random_int(1, $possibleLoots->sum('drop_rate') * 2);
+        $dropRate = random_int(1, $possibleLoots->sum('drop_rate'));
         $accumulator = 0;
 
         foreach ($possibleLoots as $loot) {
             $accumulator+= $loot->drop_rate;
             if ($dropRate < $accumulator) {
+                if ($loot->type === 'Stone') {
+                    return null;
+                }
                 return $loot;
             }
         }
