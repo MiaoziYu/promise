@@ -164,6 +164,30 @@
       }
     }
   }
+
+  .o-overlay-success {
+    text-align: center;
+
+    .success-msg {
+      margin: $space-small * 2 0;
+      font-size: 20px;
+    }
+
+    .success-points {
+      margin-bottom: $space-small * 2;
+      font-size: 40px;
+
+      i {
+        margin-right: 4px;
+      }
+    }
+
+    .success-btn {
+      @include button($green);
+      margin-bottom: $space-small * 2;
+      font-size: 20px;
+    }
+  }
 }
 
 .u-margin-b-1 {

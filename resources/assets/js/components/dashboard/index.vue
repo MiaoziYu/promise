@@ -310,7 +310,7 @@
 
         <!-- ========== promise success message ========== -->
         <div v-if="successMsg !== null" class="o-overlay">
-            <div class="promise-success o-card o-overlay-content">
+            <div class="o-overlay-success o-card o-overlay-content">
                 <div class="success-msg">
                     <p>Congrats! you've finished a promise!!</p>
                     <p>and you got</p>
@@ -319,6 +319,25 @@
                     <i class="fa fa-diamond" aria-hidden="true"></i><span>{{ successMsg.credits }}</span>
                 </div>
                 <div @click="successMsg = null" class="success-btn"><i class="fa fa-smile-o" aria-hidden="true"></i> YAY!</div>
+            </div>
+        </div>
+
+        <!-- ========== loot drop message ========== -->
+        <div v-if="loot !== null" class="o-overlay">
+            <div class="loot-drop o-overlay-success o-card o-overlay-content">
+                <div class="success-msg">
+                    <p>Congrats! you've discovered a {{ loot.rarity}} loot!!!</p>
+                </div>
+                <div class="loot-item" :class="loot.rarity">
+                    <div class="loot-icon-wrapper">
+                        <i v-if="loot.type === 'HolidayTicket'" class="loot-icon fa fa-plane"></i>
+                        <i v-if="loot.type === 'HabitFreezer'" class="loot-icon fa fa-pause"></i>
+                        <i v-if="loot.type === 'HabitBooster'" class="loot-icon fa fa-bolt"></i>
+                        <span v-if="loot.length > 1" class="loot-count">{{ loot.length }}</span>
+                    </div>
+                    <p class="loot-name">{{ loot.name }}</p>
+                </div>
+                <div @click="loot = null" class="success-btn"><i class="fa fa-smile-o" aria-hidden="true"></i> YAY!</div>
             </div>
         </div>
     </div>
@@ -341,6 +360,7 @@
                 challenges: null,
                 challengeForm: false,
                 loots: null,
+                loot: null,
                 descriptionEditor: false,
                 successMsg: null,
             }
@@ -520,6 +540,12 @@
             checkHabit(id) {
                 api.checkHabit(id).then(response => {
                     this.getHabits();
+
+                    if (response.data.loot !== null) {
+                        this.loot = response.data.loot;
+                        this.getLoots();
+                    }
+
                     EventBus.$emit("checkHabit");
                 });
             },
