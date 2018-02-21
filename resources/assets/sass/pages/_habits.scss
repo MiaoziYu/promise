@@ -108,4 +108,12 @@
       }
     }
   }
+
+  .frozen {
+    .habit-streak .streak-item,
+    .habit-credits-wrapper .habit-bonus,
+    .habit-btn button {
+        background-color: $blue !important;
+    }
+  }
 }

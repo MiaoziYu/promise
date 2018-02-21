@@ -20,7 +20,7 @@
             <div class="task-block">
                 <h2 class="task-title">Habits</h2>
                 <ul id="habit-list" class="habit-list task-list">
-                    <li v-for="habit in habits" class="habit-item task-item" :data-id="habit.id">
+                    <li v-for="habit in habits" class="habit-item task-item" :data-id="habit.id" :class="{frozen: habit.frozen}">
                         <div class="o-card">
                             <div class="habit-content">
                                 <div @click="getHabit(habit.id)" class="habit-text">
