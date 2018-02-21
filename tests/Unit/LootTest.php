@@ -43,7 +43,7 @@ class LootTest extends TestCase
         ]);
 
         // Act
-        $lootManager = new LootManager();
+        $lootManager = new LootManager($this->user);
         $loots = [];
 
         foreach(range(0, 999) as $num) {
@@ -90,7 +90,7 @@ class LootTest extends TestCase
         ]);
 
         // Act
-        $lootManager = new LootManager();
+        $lootManager = new LootManager($this->user);
         $lootManager->attach($holidayTicket, $this->user);
 
         // Assertion
@@ -100,29 +100,37 @@ class LootTest extends TestCase
     }
 
     /** @test */
-    public function can_freeze_all_habits()
+    public function can_freeze_habit()
     {
         // Arrange
+        $freezer = $this->createLoot([
+            'type' => 'HabitFreezer',
+        ]);
+
+        $habit = factory(Habit::class)->create([
+            'user_id' => $this->user->id,
+        ]);
 
         // Act
+        $lootManager = new LootManager($this->user);
+        $lootManager->apply($freezer->type, $habit->id);
         
         // Assert
+        $this->assertEquals(1, $this->user->habits()->findOrFail($habit->id)->frozen);
     }
 
     /** @test */
-    public function can_release_holiday_ticket_after_one_day()
+    public function can_release_frozen_habits_after_one_day()
     {
         // Arrange
-        $this->createLoot([
-            'type' => 'HolidayTicket',
+        factory(Habit::class)->create([
+            'user_id' => $this->user->id,
+            'frozen' => 1
         ]);
 
         factory(Habit::class)->create([
             'user_id' => $this->user->id,
-        ]);
-
-        factory(Habit::class)->create([
-            'user_id' => $this->user->id,
+            'frozen' => 1
         ]);
 
         // Act

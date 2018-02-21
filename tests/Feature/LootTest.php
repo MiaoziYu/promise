@@ -61,4 +61,27 @@ class LootTest extends TestCase
         $this->assertEquals(1, $habits[0]->frozen);
         $this->assertEquals(1, $habits[1]->frozen);
     }
+
+    /** @test */
+    public function can_apply_habit_freezer()
+    {
+        // Arrange
+        $freezer = $this->createLoot([
+            'type' => 'HabitFreezer',
+        ]);
+
+        $habit = factory(Habit::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        // Act
+        $response = $this->put("/api/loots/$freezer->id/apply?api_token=$this->api_token", [
+            'target_id' => $habit->id
+        ]);
+
+        // Assert
+        $response->assertStatus(200);
+
+        $this->assertEquals(1, $this->user->habits()->findOrFail($habit->id)->frozen);
+    }
 }

@@ -7,6 +7,13 @@ use App\User;
 
 class LootManager
 {
+    private $user;
+
+    public function __construct($user)
+    {
+        $this->user = $user;
+    }
+
     public function drop()
     {
         $possibleLoots = Loot::orderBy('drop_rate')->get();
@@ -41,18 +48,25 @@ class LootManager
         return $loot;
     }
 
-    public function apply($type)
+    public function apply($type, $targetId = null)
     {
         $method = 'apply' . $type;
-        $this->$method();
+        $this->$method($targetId);
     }
 
     private function applyHolidayTicket()
     {
-        foreach (auth()->user()->habits()->get() as $habit) {
+        foreach ($this->user->habits()->get() as $habit) {
             $habit->update([
                 'frozen' => true
             ]);
         }
+    }
+
+    private function applyHabitFreezer($id)
+    {
+        $this->user->habits()->findOrFail($id)->update([
+            'frozen' => true
+        ]);
     }
 }

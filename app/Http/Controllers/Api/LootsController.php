@@ -25,9 +25,9 @@ class LootsController extends Controller
     {
         $loot = auth()->user()->loots()->findOrFail($id);
 
-        $lootManager = new LootManager();
+        $lootManager = new LootManager(auth()->user());
 
-        $lootManager->apply($loot->type);
+        $lootManager->apply($loot->type, request('target_id'));
 
         return response()->json([], 200);
     }
