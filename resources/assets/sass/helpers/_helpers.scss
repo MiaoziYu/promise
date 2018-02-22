@@ -97,6 +97,42 @@
       margin-right: 4px;
     }
   }
+
+  &.blink {
+    animation: blink-animation .6s steps(5, start) infinite;
+    -webkit-animation: blink-animation .6s steps(5, start) infinite;
+  }
+
+  @keyframes blink-animation {
+    to {
+      background-color: darken(white, 5%);
+      transition: all .5s;
+    }
+  }
+  @-webkit-keyframes blink-animation {
+    to {
+      background-color: darken(white, 5%);
+      transition: all .5s;
+    }
+  }
+}
+
+.o-banner-bottom {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 60px;
+  background-color: $green;
+  line-height: 60px;
+  color: #FFF;
+  font-size: 20px;
+  text-align: center;
+
+  .cancel-btn {
+    @include button($dark-gray);
+    margin-left: $space-small;
+  }
 }
 
 .o-list-4 {

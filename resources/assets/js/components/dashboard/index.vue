@@ -20,10 +20,13 @@
             <div class="task-block">
                 <h2 class="task-title">Habits</h2>
                 <ul id="habit-list" class="habit-list task-list">
-                    <li v-for="habit in habits" class="habit-item task-item" :data-id="habit.id" :class="{frozen: habit.frozen}">
-                        <div class="o-card">
+                    <li v-for="habit in habits"
+                        class="habit-item task-item"
+                        :data-id="habit.id"
+                        :class="{frozen: habit.frozen}">
+                        <div class="o-card" :class="{blink: lootToApply}">
                             <div class="habit-content">
-                                <div @click="getHabit(habit.id)" class="habit-text">
+                                <div @click="lootToApply ? habitToApply = habit : getHabit(habit.id)" class="habit-text">
                                     <p class="o-card-title">{{ habit.name }}</p>
                                     <p class="o-card-description">{{ habit.description }}</p>
                                     <p class="habit-credits-wrapper">
@@ -130,6 +133,7 @@
                 <h2 class="task-title">Loots</h2>
                 <ul id="loot-list" class="loot-list task-list">
                     <li v-for="loot in loots"
+                        @click="chooseLootTarget(loot[0])"
                         class="loot-item task-item" :class="loot[0].rarity">
                         <div class="o-card">
                             <div class="loot-icon-wrapper">
@@ -323,22 +327,38 @@
         </div>
 
         <!-- ========== loot drop message ========== -->
-        <div v-if="loot !== null" class="o-overlay">
+        <div v-if="lootDropped !== null" class="o-overlay">
             <div class="loot-drop o-overlay-success o-card o-overlay-content">
                 <div class="success-msg">
-                    <p>Congrats! you've discovered a {{ loot.rarity}} loot!!!</p>
+                    <p>Congrats! you've discovered a {{ lootDropped.rarity}} loot!!!</p>
                 </div>
-                <div class="loot-item" :class="loot.rarity">
+                <div class="loot-item" :class="lootDropped.rarity">
                     <div class="loot-icon-wrapper">
-                        <i v-if="loot.type === 'HolidayTicket'" class="loot-icon fa fa-plane"></i>
-                        <i v-if="loot.type === 'HabitFreezer'" class="loot-icon fa fa-pause"></i>
-                        <i v-if="loot.type === 'HabitBooster'" class="loot-icon fa fa-bolt"></i>
-                        <span v-if="loot.length > 1" class="loot-count">{{ loot.length }}</span>
+                        <i v-if="lootDropped.type === 'HolidayTicket'" class="loot-icon fa fa-plane"></i>
+                        <i v-if="lootDropped.type === 'HabitFreezer'" class="loot-icon fa fa-pause"></i>
+                        <i v-if="lootDropped.type === 'HabitBooster'" class="loot-icon fa fa-bolt"></i>
+                        <span v-if="lootDropped.length > 1" class="loot-count">{{ lootDropped.length }}</span>
                     </div>
-                    <p class="loot-name">{{ loot.name }}</p>
+                    <p class="loot-name">{{ lootDropped.name }}</p>
                 </div>
-                <div @click="loot = null" class="success-btn"><i class="fa fa-smile-o" aria-hidden="true"></i> YAY!</div>
+                <div @click="lootDropped = null" class="success-btn"><i class="fa fa-smile-o" aria-hidden="true"></i> YAY!</div>
             </div>
+        </div>
+
+        <!-- ========== loot apply message ========== -->
+        <div v-if="habitToApply" class="o-overlay">
+            <div class="action-confirmation o-card o-overlay-content">
+                <div class="confirmation-msg">
+                    <p>Do you want to apply {{ lootToApply.name }} to {{ habitToApply.name }}?</p>
+                </div>
+                <div @click="applyLoot(lootToApply.id, habitToApply.id)" class="confirmation-btn">yes</div>
+                <div @click="cancelLootApply" class="cancel-btn">cancel</div>
+            </div>
+        </div>
+
+        <div v-if="lootToApply && !habitToApply" class="o-banner-bottom">
+            <span>Which habit do you want to aplly?</span>
+            <button @click="cancelLootApply" class="cancel-btn">cancel</button>
         </div>
     </div>
 </template>
@@ -360,7 +380,10 @@
                 challenges: null,
                 challengeForm: false,
                 loots: null,
-                loot: null,
+                lootDropped: null,
+                lootToApply: null,
+                lootBanner: false,
+                habitToApply: null,
                 descriptionEditor: false,
                 successMsg: null,
             }
@@ -542,7 +565,7 @@
                     this.getHabits();
 
                     if (response.data.loot !== null) {
-                        this.loot = response.data.loot;
+                        this.lootDropped = response.data.loot;
                         this.getLoots();
                     }
 
@@ -653,6 +676,25 @@
                     });
                 });
             },
+
+            chooseLootTarget(loot) {
+                this.lootToApply = loot;
+                this.lootBanner = true;
+            },
+
+            applyLoot(lootId, targetId) {
+                api.applyLoot(lootId, targetId).then(response => {
+                    this.lootToApply = null;
+                    this.habitToApply = null;
+                    this.getHabits();
+                });
+            },
+
+            cancelLootApply() {
+                this.habitToApply = null;
+                this.lootToApply = null;
+                this.lootBanner = false;
+            }
         }
     }
 </script>

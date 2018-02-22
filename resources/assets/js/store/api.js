@@ -142,6 +142,12 @@ export default {
         return put(`wish-tickets/${id}/claim`, [])
     },
 
+    applyLoot(lootId, targetId) {
+        return put(`loots/${lootId}/apply`, {
+            target_id: targetId
+        });
+    },
+
     createPromise(data) {
         return post(`promises/`, data);
     },
