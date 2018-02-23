@@ -285,7 +285,7 @@
                     </div>
                     <div class="credits-wrapper">
                         <i class="fa fa-diamond" aria-hidden="true"></i>
-                        <input v-model="promise.reward_credits"
+                        <input v-model="promise.credits"
                                @blur="promise ? updatePromise : null"
                                @keyup.enter="updatePromise"
                                class="credits">
