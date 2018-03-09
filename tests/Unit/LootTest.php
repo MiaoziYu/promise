@@ -113,10 +113,11 @@ class LootTest extends TestCase
 
         // Act
         $lootManager = new LootManager($this->user);
-        $lootManager->apply($freezer->type, $habit->id);
+        $lootManager->apply($freezer->id, $habit->id);
         
         // Assert
         $this->assertEquals(1, $this->user->habits()->findOrFail($habit->id)->frozen);
+        $this->assertNull($this->user->loots()->find($freezer->id));
     }
 
     /** @test */

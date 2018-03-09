@@ -4,6 +4,7 @@ namespace App\Utils;
 
 use App\Loot;
 use App\User;
+use Illuminate\Support\Facades\DB;
 
 class LootManager
 {
@@ -48,10 +49,16 @@ class LootManager
         return $loot;
     }
 
-    public function apply($type, $targetId = null)
+    public function apply($lootId, $targetId = null)
     {
-        $method = 'apply' . $type;
-        $this->$method($targetId);
+        $loot = $this->user->loots()->findOrFail($lootId);
+
+        $method = 'apply' . $loot->type;
+
+        DB::transaction(function () use ($targetId, $method, $loot) {
+            $this->$method($targetId);
+            $loot->delete();
+        });
     }
 
     private function applyHolidayTicket()

@@ -60,6 +60,7 @@ class LootTest extends TestCase
         $habits = $this->user->habits()->get();
         $this->assertEquals(1, $habits[0]->frozen);
         $this->assertEquals(1, $habits[1]->frozen);
+        $this->assertNull($this->user->loots()->find($holidayTicket->id));
     }
 
     /** @test */
@@ -83,5 +84,6 @@ class LootTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertEquals(1, $this->user->habits()->findOrFail($habit->id)->frozen);
+        $this->assertNull($this->user->loots()->find($freezer->id));
     }
 }

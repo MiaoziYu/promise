@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Loot extends Model
 {
+    use SoftDeletes;
 
     protected $fillable = [
         'type',
@@ -13,6 +15,10 @@ class Loot extends Model
         'drop_rate',
         'rarity',
         'value',
+    ];
+
+    protected $dates = [
+        'deleted_at'
     ];
 
     public function users()
